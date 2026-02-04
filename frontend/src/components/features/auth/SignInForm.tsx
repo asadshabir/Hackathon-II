@@ -3,15 +3,14 @@
 /**
  * SignInForm Component
  *
- * User authentication form with real-time validation and 3D animations
+ * User authentication form with clean styling
  * Uses React Hook Form + Zod for validation
  */
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
-import { motion } from "framer-motion"
-import { AnimatedButton } from "@/components/ui/animated-button"
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -21,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { useAuth } from "@/hooks/useAuth"
 import { signInSchema, type SignInFormData } from "@/schemas/auth"
 
@@ -29,7 +29,7 @@ export function SignInForm() {
 
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
-    mode: "onChange", // Real-time validation
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -43,65 +43,45 @@ export function SignInForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-slate-700 dark:text-white/90">Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="you@example.com"
-                    {...field}
-                    disabled={isLoading}
-                    className="bg-white/80 dark:bg-white/10 border-slate-300 dark:border-white/20 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-white/50 focus:border-purple-500 dark:focus:border-purple-500/50 focus:ring-purple-500/30"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </motion.div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-slate-700 dark:text-slate-300">Email</FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="you@example.com"
+                  {...field}
+                  disabled={isLoading}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-slate-700 dark:text-white/90">Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="••••••••"
-                    {...field}
-                    disabled={isLoading}
-                    className="bg-white/80 dark:bg-white/10 border-slate-300 dark:border-white/20 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-white/50 focus:border-purple-500 dark:focus:border-purple-500/50 focus:ring-purple-500/30"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </motion.div>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-slate-700 dark:text-slate-300">Password</FormLabel>
+              <FormControl>
+                <PasswordInput
+                  placeholder="••••••••"
+                  {...field}
+                  disabled={isLoading}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex items-center justify-between"
-        >
+        <div className="flex items-center justify-between">
           <FormField
             control={form.control}
             name="rememberMe"
@@ -113,10 +93,10 @@ export function SignInForm() {
                     checked={field.value}
                     onChange={field.onChange}
                     disabled={isLoading}
-                    className="h-4 w-4 rounded border-slate-400 dark:border-white/40 bg-white dark:bg-white/10 text-purple-600 focus:ring-purple-500/50 focus:ring-offset-0 accent-purple-600"
+                    className="h-4 w-4 rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-0"
                   />
                 </FormControl>
-                <FormLabel className="!mt-0 text-sm font-normal text-slate-700 dark:text-white/70 cursor-pointer">
+                <FormLabel className="!mt-0 text-sm font-normal text-slate-600 dark:text-slate-400 cursor-pointer">
                   Remember me
                 </FormLabel>
               </FormItem>
@@ -125,27 +105,19 @@ export function SignInForm() {
 
           <Link
             href="/forgot-password"
-            className="text-sm font-medium text-slate-600 dark:text-white/80 hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors duration-150"
           >
             Forgot password?
           </Link>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isLoading}
         >
-          <AnimatedButton
-            type="submit"
-            variant="primary"
-            className="w-full"
-            isLoading={isLoading}
-            disabled={isLoading}
-          >
-            Sign In
-          </AnimatedButton>
-        </motion.div>
+          {isLoading ? "Signing in..." : "Sign In"}
+        </Button>
       </form>
     </Form>
   )

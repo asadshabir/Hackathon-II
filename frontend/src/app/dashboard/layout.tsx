@@ -4,15 +4,14 @@
  * Dashboard Layout
  *
  * Protected layout for authenticated users with premium header
- * Includes enhanced glassmorphism header, animated background, and floating particles
+ * Clean, performance-optimized design with solid backgrounds
  */
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
 import { DashboardHeader } from "@/components/layout/DashboardHeader"
-import { AnimatedBackground } from "@/components/ui/animated-background"
-import { FloatingParticles } from "@/components/ui/floating-particles"
+import { FloatingChatButton } from "@/components/ui/floating-chat-button"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -28,8 +27,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   // Show loading state while checking auth
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
       </div>
     )
   }
@@ -40,18 +39,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <>
-      {/* Animated Background */}
-      <AnimatedBackground />
-      <FloatingParticles count={25} />
+    <div className="relative min-h-screen bg-slate-50 dark:bg-slate-950">
+      {/* Enhanced Header */}
+      <DashboardHeader onSignOut={signOut} userEmail={user?.email} />
 
-      <div className="relative min-h-screen">
-        {/* Enhanced Header */}
-        <DashboardHeader onSignOut={signOut} userEmail={user?.email} />
+      {/* Main Content with top padding for fixed header */}
+      <main className="container mx-auto px-4 py-8 pt-28">{children}</main>
 
-        {/* Main Content with top padding for fixed header */}
-        <main className="container mx-auto px-4 py-8 pt-28">{children}</main>
-      </div>
-    </>
+      {/* Floating Chat Button - Mobile friendly shortcut */}
+      <FloatingChatButton />
+    </div>
   )
 }

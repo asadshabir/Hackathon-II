@@ -1,13 +1,10 @@
 "use client"
 
 import { useState, useMemo, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { Plus, Search, CheckCircle, Clock, AlertCircle, TrendingUp } from "lucide-react"
-import { AnimatedBackground } from "@/components/ui/animated-background"
-import { FloatingParticles } from "@/components/ui/floating-particles"
 import { AnimatedButton } from "@/components/ui/animated-button"
 import { GlassCard } from "@/components/ui/glass-card"
-import { GradientText } from "@/components/ui/gradient-text"
 import { TodoCard } from "@/components/features/todos/TodoCard"
 import { StatsCard } from "@/components/features/todos/StatsCard"
 import { TodoDialog } from "@/components/features/todos/TodoDialog"
@@ -23,7 +20,7 @@ import type { Todo, TodoPriority, TodoCategory, TodoFormData } from "@/types/tod
 /**
  * TodoDashboard Page
  *
- * Advanced todo management dashboard with 3D UI, filters, search, and statistics
+ * Advanced todo management dashboard with clean UI, filters, search, and statistics
  * Features: Full CRUD operations, API persistence, toast notifications
  */
 
@@ -381,72 +378,57 @@ export default function TodoDashboard() {
 
   if (isLoading) {
     return (
-      <>
-        <AnimatedBackground />
-        <div className="relative min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-slate-600 dark:text-white/80">Loading your tasks...</p>
-          </div>
+      <div className="relative min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-400">Loading your tasks...</p>
         </div>
-      </>
+      </div>
     )
   }
 
   return (
     <>
-      <AnimatedBackground />
-      <FloatingParticles count={30} />
-
       <div className="relative min-h-screen p-6">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center"
-          >
-            <GradientText className="text-5xl mb-4">Your Tasks</GradientText>
-            <p className="text-slate-600 dark:text-white/80 text-lg">Manage your todos with style and efficiency</p>
-          </motion.div>
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">Your Tasks</h1>
+            <p className="text-slate-600 dark:text-slate-400 text-lg">Manage your todos with style and efficiency</p>
+          </div>
 
           {/* Statistics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatsCard title="Total Tasks" value={stats.total} icon={TrendingUp} gradient="from-purple-500 to-pink-500" delay={0} />
-            <StatsCard title="Completed" value={stats.completed} icon={CheckCircle} gradient="from-green-500 to-emerald-500" delay={0.1} />
-            <StatsCard title="In Progress" value={stats.inProgress} icon={Clock} gradient="from-blue-500 to-cyan-500" delay={0.2} />
-            <StatsCard title="Pending" value={stats.pending} icon={AlertCircle} gradient="from-yellow-500 to-orange-500" delay={0.3} />
+            <StatsCard title="Total Tasks" value={stats.total} icon={TrendingUp} gradient="from-indigo-500 to-indigo-600" accentBorder="bg-indigo-500" />
+            <StatsCard title="Completed" value={stats.completed} icon={CheckCircle} gradient="from-green-500 to-emerald-500" accentBorder="bg-emerald-500" />
+            <StatsCard title="In Progress" value={stats.inProgress} icon={Clock} gradient="from-blue-500 to-cyan-500" accentBorder="bg-cyan-500" />
+            <StatsCard title="Pending" value={stats.pending} icon={AlertCircle} gradient="from-yellow-500 to-orange-500" accentBorder="bg-orange-500" />
           </div>
 
           {/* Controls */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
+          <div>
             <GlassCard className="p-6">
               <div className="flex flex-col lg:flex-row gap-4">
                 {/* Search */}
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 dark:text-white/40" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
                       type="text"
                       placeholder="Search tasks..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/80 dark:bg-white/10 border border-slate-300 dark:border-white/20 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-white/50 focus:border-purple-500 dark:focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-colors"
+                      className="w-full pl-12 pr-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors"
                     />
                   </div>
                 </div>
 
                 {/* Filters */}
-                <div className="flex gap-3">
+                <div className="flex gap-3 flex-wrap">
                   <select
                     value={filterPriority}
                     onChange={(e) => setFilterPriority(e.target.value as TodoPriority | "all")}
-                    className="px-4 py-3 rounded-xl bg-white/80 dark:bg-white/10 border border-slate-300 dark:border-white/20 text-slate-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-500/50 focus:outline-none transition-colors appearance-none"
+                    className="px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors appearance-none min-w-[140px]"
                   >
                     <option value="all">All Priorities</option>
                     <option value="high">High</option>
@@ -457,7 +439,7 @@ export default function TodoDashboard() {
                   <select
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value as TodoCategory | "all")}
-                    className="px-4 py-3 rounded-xl bg-white/80 dark:bg-white/10 border border-slate-300 dark:border-white/20 text-slate-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-500/50 focus:outline-none transition-colors appearance-none"
+                    className="px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors appearance-none min-w-[140px]"
                   >
                     <option value="all">All Categories</option>
                     <option value="work">Work</option>
@@ -470,7 +452,7 @@ export default function TodoDashboard() {
                   <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value as "all" | "completed" | "active")}
-                    className="px-4 py-3 rounded-xl bg-white/80 dark:bg-white/10 border border-slate-300 dark:border-white/20 text-slate-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-500/50 focus:outline-none transition-colors appearance-none"
+                    className="px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors appearance-none min-w-[120px]"
                   >
                     <option value="all">All Status</option>
                     <option value="active">Active</option>
@@ -485,15 +467,10 @@ export default function TodoDashboard() {
                 </AnimatedButton>
               </div>
             </GlassCard>
-          </motion.div>
+          </div>
 
           {/* Todo List */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="space-y-4"
-          >
+          <div className="space-y-4">
             <AnimatePresence mode="popLayout">
               {filteredTodos.length > 0 ? (
                 filteredTodos.map((todo) => (
@@ -507,12 +484,13 @@ export default function TodoDashboard() {
                 ))
               ) : (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
                 >
                   <GlassCard className="p-12 text-center">
-                    <p className="text-slate-600 dark:text-white/80 text-lg">
+                    <p className="text-slate-600 dark:text-slate-400 text-lg">
                       {searchQuery || filterPriority !== "all" || filterCategory !== "all" || filterStatus !== "all"
                         ? "No tasks match your filters"
                         : "No tasks yet. Create your first task!"}
@@ -521,7 +499,7 @@ export default function TodoDashboard() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </div>
         </div>
       </div>
 

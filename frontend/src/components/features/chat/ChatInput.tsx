@@ -3,12 +3,12 @@
 /**
  * ChatInput Component
  *
- * Premium chat input with send button and keyboard shortcuts
+ * Clean chat input with send button and keyboard shortcuts
+ * No heavy animations - CSS transitions only
  */
 
 import { useState, useRef, useEffect, KeyboardEvent } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Send, Loader2, Sparkles } from "lucide-react"
+import { Send, Loader2 } from "lucide-react"
 
 interface ChatInputProps {
   onSend: (message: string) => void
@@ -55,29 +55,9 @@ export function ChatInput({
   const canSend = message.trim().length > 0 && !isLoading && !disabled
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="relative"
-    >
-      {/* Gradient Border Effect */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-blue-500/30 blur-sm" />
-
+    <div className="relative">
       {/* Input Container */}
-      <div className="relative flex items-end gap-3 p-3 rounded-2xl bg-white/80 dark:bg-black/40 backdrop-blur-xl border border-white/20">
-        {/* Sparkle Icon */}
-        <motion.div
-          className="flex-shrink-0 pb-0.5"
-          animate={{ rotate: isLoading ? 360 : 0 }}
-          transition={{
-            duration: 2,
-            repeat: isLoading ? Infinity : 0,
-            ease: "linear",
-          }}
-        >
-          <Sparkles className="w-5 h-5 text-purple-500" />
-        </motion.div>
-
+      <div className="flex items-end gap-3 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm">
         {/* Textarea */}
         <textarea
           ref={textareaRef}
@@ -87,39 +67,33 @@ export function ChatInput({
           placeholder={placeholder}
           disabled={disabled || isLoading}
           rows={1}
-          className="flex-1 bg-transparent resize-none outline-none text-foreground placeholder:text-foreground/40 min-h-[24px] max-h-[150px] py-0.5"
+          className="flex-1 bg-transparent resize-none outline-none text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 min-h-[24px] max-h-[150px] py-0.5"
         />
 
         {/* Send Button */}
-        <AnimatePresence mode="wait">
-          <motion.button
-            key={isLoading ? "loading" : "send"}
-            onClick={handleSubmit}
-            disabled={!canSend}
-            className={`flex-shrink-0 p-2.5 rounded-xl transition-all ${
-              canSend
-                ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105"
-                : "bg-foreground/10 text-foreground/30 cursor-not-allowed"
-            }`}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            whileTap={canSend ? { scale: 0.95 } : {}}
-          >
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <Send className="w-5 h-5" />
-            )}
-          </motion.button>
-        </AnimatePresence>
+        <button
+          onClick={handleSubmit}
+          disabled={!canSend}
+          className={`flex-shrink-0 p-2.5 rounded-lg transition-all duration-150 ${
+            canSend
+              ? "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800"
+              : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+          }`}
+          aria-label="Send message"
+        >
+          {isLoading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <Send className="w-5 h-5" />
+          )}
+        </button>
       </div>
 
       {/* Helper Text */}
-      <p className="text-xs text-foreground/40 mt-2 text-center">
-        Press <kbd className="px-1.5 py-0.5 rounded bg-foreground/10 font-mono text-xs">Enter</kbd> to send,{" "}
-        <kbd className="px-1.5 py-0.5 rounded bg-foreground/10 font-mono text-xs">Shift + Enter</kbd> for new line
+      <p className="text-xs text-slate-400 dark:text-slate-500 mt-2 text-center">
+        Press <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-xs">Enter</kbd> to send,{" "}
+        <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-xs">Shift + Enter</kbd> for new line
       </p>
-    </motion.div>
+    </div>
   )
 }

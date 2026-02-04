@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { AlertCircle } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -9,13 +9,14 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { AnimatedButton } from "@/components/ui/animated-button"
+import { Button } from "@/components/ui/button"
 import type { Todo, TodoFormData, TodoPriority, TodoCategory } from "@/types/todo"
 
 /**
  * TodoDialog Component
  *
  * Dialog for creating and editing todos
+ * Clean design with solid colors and no heavy animations
  */
 
 interface TodoDialogProps {
@@ -137,7 +138,7 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+          <DialogTitle className="text-2xl font-bold text-slate-900 dark:text-white">
             {mode === "create" ? "Create New Task" : "Edit Task"}
           </DialogTitle>
         </DialogHeader>
@@ -156,22 +157,19 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
               type="text"
               value={formData.title}
               onChange={(e) => handleChange("title", e.target.value)}
-              className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border ${
+              className={`w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border ${
                 errors.title
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
-                  : "border-slate-200 dark:border-slate-700 focus:border-purple-500 dark:focus:border-purple-500/50"
-              } text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-colors`}
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                  : "border-slate-200 dark:border-slate-700 focus:border-indigo-500"
+              } text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-colors duration-150`}
               placeholder="Enter task title..."
               maxLength={100}
             />
             {errors.title && (
-              <motion.p
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-red-500 text-sm mt-1"
-              >
+              <p className="flex items-center gap-1 text-red-500 text-sm mt-1.5">
+                <AlertCircle className="w-4 h-4" />
                 {errors.title}
-              </motion.p>
+              </p>
             )}
           </div>
 
@@ -187,23 +185,20 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
               id="description"
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
-              className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border ${
+              className={`w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border ${
                 errors.description
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
-                  : "border-slate-200 dark:border-slate-700 focus:border-purple-500 dark:focus:border-purple-500/50"
-              } text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-colors resize-none`}
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                  : "border-slate-200 dark:border-slate-700 focus:border-indigo-500"
+              } text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-colors duration-150 resize-none`}
               placeholder="Enter task description..."
               rows={3}
               maxLength={500}
             />
             {errors.description && (
-              <motion.p
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-red-500 text-sm mt-1"
-              >
+              <p className="flex items-center gap-1 text-red-500 text-sm mt-1.5">
+                <AlertCircle className="w-4 h-4" />
                 {errors.description}
-              </motion.p>
+              </p>
             )}
           </div>
 
@@ -220,7 +215,7 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
                 id="priority"
                 value={formData.priority}
                 onChange={(e) => handleChange("priority", e.target.value as TodoPriority)}
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors duration-150"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -239,7 +234,7 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
                 id="category"
                 value={formData.category}
                 onChange={(e) => handleChange("category", e.target.value as TodoCategory)}
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors duration-150"
               >
                 <option value="personal">Personal</option>
                 <option value="work">Work</option>
@@ -263,7 +258,7 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
               type="date"
               value={formData.dueDate}
               onChange={(e) => handleChange("dueDate", e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-purple-500 dark:focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition-colors"
+              className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors duration-150"
             />
           </div>
 
@@ -275,23 +270,18 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
                 type="checkbox"
                 checked={formData.reminderEnabled}
                 onChange={(e) => handleReminderToggle(e.target.checked)}
-                className="w-5 h-5 rounded border-slate-300 dark:border-slate-600 text-purple-500 focus:ring-purple-500 focus:ring-offset-0 bg-slate-50 dark:bg-slate-800 cursor-pointer"
+                className="w-5 h-5 rounded border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-0 bg-slate-50 dark:bg-slate-800 cursor-pointer"
               />
               <label
                 htmlFor="reminderEnabled"
                 className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer select-none"
               >
-                🔔 Enable Reminder Notification
+                Enable Reminder Notification
               </label>
             </div>
 
             {formData.reminderEnabled && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-              >
+              <div>
                 <label
                   htmlFor="reminderTime"
                   className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
@@ -303,45 +293,41 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
                   type="datetime-local"
                   value={formData.reminderTime}
                   onChange={(e) => handleChange("reminderTime", e.target.value)}
-                  className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border ${
+                  className={`w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border ${
                     errors.reminderTime
-                      ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
-                      : "border-slate-200 dark:border-slate-700 focus:border-purple-500 dark:focus:border-purple-500/50"
-                  } text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-colors`}
+                      ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                      : "border-slate-200 dark:border-slate-700 focus:border-indigo-500"
+                  } text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-colors duration-150`}
                 />
                 {errors.reminderTime && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1"
-                  >
+                  <p className="flex items-center gap-1 text-red-500 text-sm mt-1.5">
+                    <AlertCircle className="w-4 h-4" />
                     {errors.reminderTime}
-                  </motion.p>
+                  </p>
                 )}
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   You&apos;ll receive a browser notification at this time
                 </p>
-              </motion.div>
+              </div>
             )}
           </div>
 
           <DialogFooter className="gap-2 sm:gap-0">
-            <button
+            <Button
               type="button"
+              variant="secondary"
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
-              className="px-6 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
-            </button>
-            <AnimatedButton
+            </Button>
+            <Button
               type="submit"
-              variant="primary"
               disabled={isSubmitting}
               className="min-w-[100px]"
             >
               {isSubmitting ? "Saving..." : mode === "create" ? "Create Task" : "Save Changes"}
-            </AnimatedButton>
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -10,23 +10,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Apple-inspired neutral palette
+        // Premium UI - Slate neutral palette
         background: "hsl(0, 0%, 100%)",
-        foreground: "hsl(0, 0%, 3.9%)",
+        foreground: "hsl(222.2, 84%, 4.9%)",
         muted: {
-          DEFAULT: "hsl(0, 0%, 96.1%)",
-          foreground: "hsl(0, 0%, 45.1%)",
+          DEFAULT: "hsl(210, 40%, 96.1%)",
+          foreground: "hsl(215.4, 16.3%, 46.9%)",
         },
-        // Priority color coding
+        // Priority color coding (semantic)
         priority: {
           high: "hsl(0, 84.2%, 60.2%)",     // Red
-          medium: "hsl(47.9, 95.8%, 53.1%)", // Yellow
+          medium: "hsl(45, 93%, 47%)",       // Amber
           low: "hsl(142.1, 70.6%, 45.3%)",  // Green
         },
-        // Accent for primary actions
+        // Primary accent - Indigo
         primary: {
-          DEFAULT: "hsl(222.2, 47.4%, 11.2%)", // Dark blue-gray
-          foreground: "hsl(210, 40%, 98%)",
+          DEFAULT: "hsl(238.7, 83.5%, 66.7%)", // Indigo-600
+          foreground: "hsl(0, 0%, 100%)",
         },
         secondary: {
           DEFAULT: "hsl(210, 40%, 96.1%)",
@@ -34,11 +34,16 @@ const config: Config = {
         },
         destructive: {
           DEFAULT: "hsl(0, 84.2%, 60.2%)",
-          foreground: "hsl(210, 40%, 98%)",
+          foreground: "hsl(0, 0%, 100%)",
+        },
+        // Accent colors for interactive elements
+        accent: {
+          DEFAULT: "hsl(238.7, 83.5%, 66.7%)", // Indigo-600
+          foreground: "hsl(0, 0%, 100%)",
         },
         border: "hsl(214.3, 31.8%, 91.4%)",
         input: "hsl(214.3, 31.8%, 91.4%)",
-        ring: "hsl(222.2, 47.4%, 11.2%)",
+        ring: "hsl(238.7, 83.5%, 66.7%)", // Indigo for focus rings
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
@@ -49,6 +54,7 @@ const config: Config = {
         DEFAULT: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
         md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
         lg: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
         card: "0 2px 8px 0 rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.02)",
       },
       borderRadius: {

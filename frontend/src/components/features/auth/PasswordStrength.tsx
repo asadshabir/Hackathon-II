@@ -26,10 +26,10 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
 
   // Color classes for each strength level
   const colorClasses = {
-    weak: "bg-gray-300",
+    weak: "bg-slate-300 dark:bg-slate-600",
     fair: "bg-red-500",
-    good: "bg-yellow-500",
-    strong: "bg-green-500",
+    good: "bg-amber-500",
+    strong: "bg-emerald-500",
   }
 
   const currentColor = colorClasses[strength]
@@ -52,23 +52,23 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
         {[0, 1, 2, 3].map((index) => (
           <div
             key={index}
-            className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-              index <= strengthLevel ? currentColor : "bg-gray-200"
+            className={`h-1 flex-1 rounded-full transition-colors duration-150 ${
+              index <= strengthLevel ? currentColor : "bg-slate-200 dark:bg-slate-700"
             }`}
           />
         ))}
       </div>
-      <p className="text-xs text-muted-foreground">
+      <p className="text-xs text-slate-500 dark:text-slate-400">
         Password strength:{" "}
         <span
           className={`font-medium ${
             strength === "weak"
-              ? "text-gray-600"
+              ? "text-slate-500 dark:text-slate-400"
               : strength === "fair"
-                ? "text-red-600"
+                ? "text-red-600 dark:text-red-400"
                 : strength === "good"
-                  ? "text-yellow-600"
-                  : "text-green-600"
+                  ? "text-amber-600 dark:text-amber-400"
+                  : "text-emerald-600 dark:text-emerald-400"
           }`}
         >
           {labels[strength]}

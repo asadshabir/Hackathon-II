@@ -1,13 +1,13 @@
 "use client"
 
-import { motion } from "framer-motion"
 import Link from "next/link"
 import { Github, Twitter, Linkedin, Mail, Heart } from "lucide-react"
 
 /**
  * Footer Component
  *
- * Glassmorphism footer with social links and hover effects
+ * Clean footer with social links
+ * No heavy animations - CSS transitions only
  */
 
 export function Footer() {
@@ -49,91 +49,70 @@ export function Footer() {
   ]
 
   return (
-    <footer className="relative border-t border-white/10 backdrop-blur-xl bg-black/20">
+    <footer className="relative border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
       <div className="container mx-auto px-4 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
-                TaskFlow 3D
-              </h3>
-              <p className="text-white/60 mb-6 max-w-sm">
-                The future of task management. Beautiful, powerful, and designed to help you achieve more.
-              </p>
+            <h3 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">
+              TaskFlow
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-sm">
+              The future of task management. Beautiful, powerful, and designed to help you achieve more.
+            </p>
 
-              {/* Social Links */}
-              <div className="flex gap-4">
-                {socialLinks.map((social, index) => (
-                  <motion.a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-white/30 transition-colors"
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={social.label}
-                  >
-                    <social.icon className="w-5 h-5" />
-                  </motion.a>
-                ))}
-              </div>
-            </motion.div>
+            {/* Social Links */}
+            <div className="flex gap-3">
+              {socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors duration-150"
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Links Sections */}
           {footerLinks.map((section, sectionIndex) => (
-            <motion.div
-              key={sectionIndex}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: sectionIndex * 0.1 }}
-            >
-              <h4 className="text-white font-semibold mb-4">{section.title}</h4>
+            <div key={sectionIndex}>
+              <h4 className="text-slate-900 dark:text-white font-semibold mb-4">{section.title}</h4>
               <ul className="space-y-3">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <Link
                       href={link.href}
-                      className="text-white/60 hover:text-white transition-colors"
+                      className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 text-sm"
                     >
                       {link.label}
                     </Link>
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Bottom Bar */}
-        <motion.div
-          className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <p className="text-white/60 text-sm flex items-center gap-2">
-            © 2024 TaskFlow 3D. Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> by amazing developers
+        <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-2">
+            © 2026 TaskFlow. Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> by amazing developers
           </p>
           <div className="flex gap-6 text-sm">
-            <Link href="#privacy" className="text-white/60 hover:text-white transition-colors">
+            <Link href="#privacy" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-150">
               Privacy Policy
             </Link>
-            <Link href="#terms" className="text-white/60 hover:text-white transition-colors">
+            <Link href="#terms" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-150">
               Terms of Service
             </Link>
           </div>
-        </motion.div>
+        </div>
       </div>
     </footer>
   )

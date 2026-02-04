@@ -1,68 +1,46 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 /**
- * Glassmorphism Card Component
+ * Premium Card Component
  *
  * Features:
- * - Glass morphism effect with backdrop blur
- * - 3D hover animations
- * - Border glow on hover
- * - Smooth transitions
+ * - Solid background (no backdrop-blur on mobile for performance)
+ * - Subtle shadow elevation
+ * - Clean border styling
+ * - Simple CSS transitions (150ms)
  */
 
 interface GlassCardProps {
   children: ReactNode
   className?: string
-  hover3d?: boolean
+  hover3d?: boolean // Deprecated - kept for backwards compatibility, no longer uses 3D
 }
 
-export function GlassCard({ children, className, hover3d = true }: GlassCardProps) {
+export function GlassCard({ children, className }: GlassCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, rotateX: -10 }}
-      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-      transition={{
-        duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1],
-      }}
-      whileHover={
-        hover3d
-          ? {
-              scale: 1.02,
-              rotateX: 5,
-              rotateY: 5,
-              transition: { duration: 0.3 },
-            }
-          : undefined
-      }
+    <div
       className={cn(
-        "relative overflow-hidden rounded-2xl",
-        "bg-white/70 dark:bg-white/10 backdrop-blur-xl",
-        "border border-slate-300 dark:border-white/20",
-        "shadow-2xl shadow-black/10 dark:shadow-black/20",
-        "before:absolute before:inset-0",
-        "before:rounded-2xl before:p-[1px]",
-        "before:bg-gradient-to-br before:from-slate-300/50 dark:before:from-white/20 before:to-transparent",
-        "before:-z-10",
-        "after:absolute after:inset-0",
-        "after:rounded-2xl",
-        "after:bg-gradient-to-br after:from-transparent after:via-slate-200/30 dark:after:via-white/5 after:to-transparent",
-        "after:-z-10",
-        "hover:border-slate-400 dark:hover:border-white/30",
-        "hover:shadow-3xl hover:shadow-purple-500/30 dark:hover:shadow-purple-500/20",
-        "transition-all duration-300",
+        "relative overflow-hidden rounded-xl",
+        // Solid background - better performance than backdrop-blur
+        "bg-white dark:bg-slate-900",
+        // Desktop-only glass effect (enabled via media query in globals.css)
+        "md:glass",
+        // Border
+        "border border-slate-200 dark:border-slate-800",
+        // Shadow - subtle elevation
+        "shadow-card",
+        // Hover state - lift + border shift
+        "hover:border-indigo-200 dark:hover:border-slate-600",
+        "hover:shadow-xl",
+        // Performance-optimized transitions
+        "transition-all duration-150",
         className
       )}
-      style={{
-        transformStyle: "preserve-3d",
-        perspective: "1000px",
-      }}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }

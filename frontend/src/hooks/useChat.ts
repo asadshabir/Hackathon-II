@@ -7,7 +7,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from "react"
-import { apiClient, type Message, type Conversation } from "@/lib/api"
+import { apiClient, type Conversation } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
 
 export interface ChatMessage {

@@ -52,7 +52,7 @@ export function ChatContainer({ initialConversationId }: ChatContainerProps) {
           {/* New Chat Button */}
           <button
             onClick={startNewConversation}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-all mb-4"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 active:bg-indigo-800 shadow-sm hover:shadow-md transition-all duration-150 mb-4"
           >
             <MessageSquarePlus className="w-5 h-5" />
             New Conversation
@@ -60,11 +60,11 @@ export function ChatContainer({ initialConversationId }: ChatContainerProps) {
 
           {/* Conversations List */}
           <div className="flex items-center gap-2 mb-3 px-2">
-            <History className="w-4 h-4 text-foreground/60" />
-            <span className="text-sm font-medium text-foreground/60">Recent</span>
+            <History className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Recent</span>
           </div>
 
-          <div className="flex-1 overflow-y-auto space-y-2 pr-1 scrollbar-thin scrollbar-thumb-foreground/10 scrollbar-track-transparent">
+          <div className="flex-1 overflow-y-auto space-y-2 pr-1">
             <AnimatePresence>
               {conversations.map((conv, index) => (
                 <ConversationItem
@@ -78,9 +78,9 @@ export function ChatContainer({ initialConversationId }: ChatContainerProps) {
             </AnimatePresence>
 
             {conversations.length === 0 && (
-              <div className="text-center py-8 text-foreground/40">
-                <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No conversations yet</p>
+              <div className="text-center py-8">
+                <MessageCircle className="w-8 h-8 mx-auto mb-2 text-slate-400 dark:text-slate-500" />
+                <p className="text-sm text-slate-400 dark:text-slate-500">No conversations yet</p>
               </div>
             )}
           </div>
@@ -97,7 +97,7 @@ export function ChatContainer({ initialConversationId }: ChatContainerProps) {
           {/* Messages Area */}
           <div
             ref={messagesContainerRef}
-            className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-foreground/10 scrollbar-track-transparent"
+            className="flex-1 overflow-y-auto p-6 space-y-6"
           >
             {messages.length === 0 ? (
               <EmptyState />
@@ -112,7 +112,7 @@ export function ChatContainer({ initialConversationId }: ChatContainerProps) {
           </div>
 
           {/* Input Area */}
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-slate-200 dark:border-slate-700">
             <ChatInput onSend={sendMessage} isLoading={isLoading} />
           </div>
         </GlassCard>
@@ -147,27 +147,27 @@ function ConversationItem({
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
       onClick={onClick}
-      className={`w-full text-left px-4 py-3 rounded-xl transition-all ${
+      className={`w-full text-left px-4 py-3 rounded-xl transition-colors duration-150 ${
         isActive
-          ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30"
-          : "hover:bg-white/5 border border-transparent"
+          ? "bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800"
+          : "hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent"
       }`}
     >
       <div className="flex items-center gap-3">
         <div
           className={`w-8 h-8 rounded-lg flex items-center justify-center ${
             isActive
-              ? "bg-gradient-to-br from-purple-500 to-pink-500"
-              : "bg-foreground/10"
+              ? "bg-indigo-600"
+              : "bg-slate-100 dark:bg-slate-800"
           }`}
         >
-          <MessageCircle className={`w-4 h-4 ${isActive ? "text-white" : "text-foreground/60"}`} />
+          <MessageCircle className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-500 dark:text-slate-400"}`} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">
+          <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
             Conversation
           </p>
-          <p className="text-xs text-foreground/50">{timeString}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{timeString}</p>
         </div>
       </div>
     </motion.button>
@@ -185,25 +185,15 @@ function EmptyState() {
       className="h-full flex items-center justify-center"
     >
       <div className="text-center max-w-md">
-        {/* Animated Bot Icon */}
-        <motion.div
-          className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-6"
-          animate={{
-            boxShadow: [
-              "0 0 20px rgba(168, 85, 247, 0.3)",
-              "0 0 40px rgba(168, 85, 247, 0.5)",
-              "0 0 20px rgba(168, 85, 247, 0.3)",
-            ],
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
+        {/* Bot Icon */}
+        <div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/20">
           <Bot className="w-10 h-10 text-white" />
-        </motion.div>
+        </div>
 
-        <h3 className="text-2xl font-bold text-foreground mb-3">
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
           AI Task Assistant
         </h3>
-        <p className="text-foreground/60 mb-6">
+        <p className="text-slate-600 dark:text-slate-400 mb-6">
           I can help you manage your tasks using natural language. Try saying
           things like:
         </p>
@@ -221,9 +211,9 @@ function EmptyState() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.1 }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-foreground/5 border border-foreground/10 text-sm text-foreground/70"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-400"
             >
-              <Sparkles className="w-3 h-3 text-purple-400" />
+              <Sparkles className="w-3 h-3 text-indigo-500" />
               {suggestion}
             </motion.div>
           ))}

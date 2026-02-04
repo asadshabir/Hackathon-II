@@ -18,7 +18,8 @@ interface User {
   id: string
   email: string
   name?: string
-  createdAt: string
+  createdAt?: string
+  created_at?: string
 }
 
 interface Session {
@@ -117,9 +118,10 @@ export function useAuth() {
       return { success: false, error: new Error("Sign up failed") }
     } catch (error) {
       console.error("Sign up error:", error)
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred"
       toast({
         title: "Sign up failed",
-        description: "An unexpected error occurred. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       })
       return { success: false, error }
@@ -171,9 +173,10 @@ export function useAuth() {
       return { success: false, error: new Error("Sign in failed") }
     } catch (error) {
       console.error("Sign in error:", error)
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred"
       toast({
         title: "Sign in failed",
-        description: "An unexpected error occurred. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       })
       return { success: false, error }

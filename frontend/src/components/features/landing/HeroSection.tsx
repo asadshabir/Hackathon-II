@@ -1,145 +1,78 @@
 "use client"
 
-import { motion } from "framer-motion"
 import Link from "next/link"
-import { AnimatedButton } from "@/components/ui/animated-button"
-import { GradientText } from "@/components/ui/gradient-text"
+import { Button } from "@/components/ui/button"
 import { CheckCircle2, Sparkles, Zap, Star } from "lucide-react"
 
 /**
  * Hero Section Component
  *
- * Eye-catching landing page hero with 3D animations and call-to-action
+ * Clean, performance-optimized landing page hero with clear CTA hierarchy
+ * No heavy animations - CSS transitions only
  */
 
 export function HeroSection() {
   const features = [
     { icon: CheckCircle2, text: "Smart Task Management" },
-    { icon: Sparkles, text: "Beautiful 3D Interface" },
+    { icon: Sparkles, text: "AI-Powered Assistant" },
     { icon: Zap, text: "Lightning Fast" },
     { icon: Star, text: "Priority System" },
   ]
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-20">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-20 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       {/* Hero Content */}
-      <div className="relative z-10 max-w-6xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          {/* Badge */}
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
-            <Sparkles className="w-4 h-4 text-yellow-400" />
-            <span className="text-sm text-white/80">Powered by AI & 3D Magic</span>
-          </motion.div>
+      <div className="relative z-10 max-w-5xl mx-auto text-center">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 mb-8">
+          <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+          <span className="text-sm text-indigo-700 dark:text-indigo-300 font-medium">Powered by AI</span>
+        </div>
 
-          {/* Main Heading */}
-          <GradientText className="text-5xl md:text-7xl lg:text-8xl mb-6 leading-tight">
-            Organize Your Life
-            <br />
-            In 3D Style
-          </GradientText>
+        {/* Main Heading */}
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+          Organize Your Life
+          <br />
+          <span className="text-indigo-600 dark:text-indigo-400">With Ease</span>
+        </h1>
 
-          {/* Subheading */}
-          <motion.p
-            className="text-xl md:text-2xl text-white/70 mb-12 max-w-3xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-          >
-            Experience task management like never before with stunning 3D animations,
-            smart prioritization, and an interface that makes productivity feel magical.
-          </motion.p>
+        {/* Subheading */}
+        <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+          Experience task management like never before with AI assistance,
+          smart prioritization, and an interface designed for productivity.
+        </p>
 
-          {/* CTA Buttons */}
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-          >
-            <Link href="/signup">
-              <AnimatedButton variant="primary" className="text-lg px-8 py-4">
-                Get Started Free
-              </AnimatedButton>
-            </Link>
-            <Link href="/signin">
-              <AnimatedButton variant="outline" className="text-lg px-8 py-4">
-                Sign In
-              </AnimatedButton>
-            </Link>
-          </motion.div>
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <Link href="/signup">
+            <Button size="lg" className="text-base px-8 py-6 h-auto min-w-[180px] shadow-md shadow-indigo-500/25 hover:shadow-lg hover:shadow-indigo-500/30 transition-shadow duration-150">
+              Get Started Free
+            </Button>
+          </Link>
+          <Link href="/signin">
+            <Button variant="outline" size="lg" className="text-base px-8 py-6 h-auto min-w-[180px]">
+              Sign In
+            </Button>
+          </Link>
+        </div>
 
-          {/* Features Grid */}
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-          >
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
-                whileHover={{
-                  scale: 1.05,
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  borderColor: "rgba(255, 255, 255, 0.3)",
-                }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                <feature.icon className="w-8 h-8 text-purple-400" />
-                <span className="text-sm text-white/80">{feature.text}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
+        {/* Features Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center gap-3 p-5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30 transition-all duration-150"
+            >
+              <feature.icon className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
+              <span className="text-sm text-slate-700 dark:text-slate-300 font-medium text-center">{feature.text}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Floating 3D Elements */}
-      <motion.div
-        className="absolute top-20 left-10 w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-xl"
-        animate={{
-          y: [0, -20, 0],
-          rotate: [0, 10, 0],
-        }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-20 right-10 w-32 h-32 rounded-full bg-gradient-to-br from-blue-500/30 to-cyan-500/30 backdrop-blur-xl"
-        animate={{
-          y: [0, 30, 0],
-          rotate: [0, -10, 0],
-        }}
-        transition={{
-          duration: 6,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute top-1/2 right-20 w-16 h-16 rounded-lg bg-gradient-to-br from-yellow-500/30 to-orange-500/30 backdrop-blur-xl"
-        animate={{
-          y: [0, -25, 0],
-          x: [0, 10, 0],
-          rotate: [0, 45, 0],
-        }}
-        transition={{
-          duration: 7,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {/* Subtle background decorations - static, no animation */}
+      <div className="absolute top-1/4 left-10 w-64 h-64 rounded-full bg-indigo-100 dark:bg-indigo-950/40 blur-3xl opacity-60" />
+      <div className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-purple-100 dark:bg-purple-950/40 blur-3xl opacity-50" />
     </section>
   )
 }

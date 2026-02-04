@@ -1,13 +1,13 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { LucideIcon } from "lucide-react"
 import { GlassCard } from "@/components/ui/glass-card"
 
 /**
  * StatsCard Component
  *
- * Animated statistics card with icon and count
+ * Clean statistics card with icon and count
+ * No heavy animations - static display
  */
 
 interface StatsCardProps {
@@ -15,39 +15,30 @@ interface StatsCardProps {
   value: number
   icon: LucideIcon
   gradient: string
-  delay?: number
+  accentBorder?: string
+  delay?: number // Deprecated - kept for backwards compatibility
 }
 
-export function StatsCard({ title, value, icon: Icon, gradient, delay = 0 }: StatsCardProps) {
+export function StatsCard({ title, value, icon: Icon, gradient, accentBorder }: StatsCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-    >
-      <GlassCard hover3d={true} className="p-6">
+    <GlassCard className="overflow-hidden">
+      {accentBorder && <div className={`h-0.5 ${accentBorder}`} />}
+      <div className="p-5">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-slate-600 dark:text-white/60 text-sm mb-1">{title}</p>
-            <motion.p
-              className="text-3xl font-bold text-slate-900 dark:text-white"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 200, delay: delay + 0.2 }}
-            >
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-1">{title}</p>
+            <p className="text-3xl font-bold text-slate-900 dark:text-white">
               {value}
-            </motion.p>
+            </p>
           </div>
 
-          <motion.div
-            className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center`}
-            whileHover={{ rotate: 360, scale: 1.1 }}
-            transition={{ duration: 0.6 }}
+          <div
+            className={`w-14 h-14 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-sm`}
           >
-            <Icon className="w-8 h-8 text-white" />
-          </motion.div>
+            <Icon className="w-7 h-7 text-white" />
+          </div>
         </div>
-      </GlassCard>
-    </motion.div>
+      </div>
+    </GlassCard>
   )
 }

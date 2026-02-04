@@ -1,20 +1,19 @@
 "use client"
 
-import { motion, HTMLMotionProps } from "framer-motion"
-import { ReactNode, forwardRef } from "react"
+import { ReactNode, forwardRef, ButtonHTMLAttributes } from "react"
 import { cn } from "@/lib/utils"
 
 /**
- * Animated 3D Button Component
+ * Premium Button Component
  *
  * Features:
- * - 3D press effect
- * - Shimmer animation on hover
- * - Ripple effect on click
- * - Loading state animation
+ * - Clean hover states with CSS transitions (150ms)
+ * - Loading state with spinner
+ * - Multiple variants: primary, secondary, outline, ghost
+ * - No heavy animations or shimmer effects
  */
 
-interface AnimatedButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
+interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
   variant?: "primary" | "secondary" | "outline" | "ghost"
   isLoading?: boolean
@@ -23,74 +22,37 @@ interface AnimatedButtonProps extends Omit<HTMLMotionProps<"button">, "children"
 export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
   ({ children, className, variant = "primary", isLoading, disabled, ...props }, ref) => {
     const variants = {
-      primary: "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700",
-      secondary: "bg-gradient-to-r from-slate-700 to-slate-800 text-white hover:from-slate-800 hover:to-slate-900",
-      outline: "border-2 border-white/30 bg-white/5 text-white hover:bg-white/10 hover:border-white/50",
-      ghost: "bg-transparent text-white hover:bg-white/10",
+      primary: "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 shadow-sm",
+      secondary: "bg-slate-700 text-white hover:bg-slate-800 active:bg-slate-900 dark:bg-slate-600 dark:hover:bg-slate-700",
+      outline: "border-2 border-indigo-600 text-indigo-600 bg-transparent hover:bg-indigo-50 dark:border-indigo-400 dark:text-indigo-400 dark:hover:bg-indigo-950/50",
+      ghost: "bg-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800",
     }
 
     return (
-      <motion.button
+      <button
         ref={ref}
         disabled={disabled || isLoading}
         className={cn(
-          "relative overflow-hidden rounded-xl px-6 py-3 font-semibold",
-          "shadow-lg shadow-black/20",
-          "transition-all duration-300",
+          "relative overflow-hidden rounded-lg px-6 py-3 font-semibold",
+          "transition-all duration-150",
           "disabled:opacity-50 disabled:cursor-not-allowed",
-          "before:absolute before:inset-0 before:z-0",
-          "before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent",
-          "before:translate-x-[-200%]",
-          "hover:before:translate-x-[200%]",
-          "before:transition-transform before:duration-700",
+          "focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:ring-offset-2",
           variants[variant],
           className
         )}
-        whileHover={{
-          scale: disabled || isLoading ? 1 : 1.05,
-          boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
-        }}
-        whileTap={{
-          scale: disabled || isLoading ? 1 : 0.95,
-        }}
         {...props}
       >
-        <motion.span
-          className="relative z-10 flex items-center justify-center gap-2"
-          animate={isLoading ? { opacity: [1, 0.5, 1] } : {}}
-          transition={isLoading ? { duration: 1.5, repeat: Infinity } : {}}
-        >
+        <span className="relative z-10 flex items-center justify-center gap-2">
           {isLoading ? (
             <>
-              <motion.div
-                className="h-5 w-5 rounded-full border-2 border-white/30 border-t-white"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              />
+              <div className="h-5 w-5 rounded-full border-2 border-current/30 border-t-current animate-spin" />
               <span>Loading...</span>
             </>
           ) : (
             children
           )}
-        </motion.span>
-
-        {/* Shimmer effect */}
-        <motion.div
-          className="absolute inset-0 z-0"
-          animate={{
-            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{
-            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
-            backgroundSize: "200% 100%",
-          }}
-        />
-      </motion.button>
+        </span>
+      </button>
     )
   }
 )

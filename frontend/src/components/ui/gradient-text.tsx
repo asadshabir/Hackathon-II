@@ -1,54 +1,33 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 /**
- * Animated Gradient Text Component
+ * Gradient Text Component
  *
  * Features:
- * - Animated gradient colors
- * - Shimmer effect
- * - Text shadow glow
+ * - Static gradient colors (no animation for performance)
+ * - Configurable via className
+ * - Uses indigo as primary accent color
  */
 
 interface GradientTextProps {
   children: ReactNode
   className?: string
-  animate?: boolean
+  animate?: boolean // Deprecated - kept for backwards compatibility, no longer animates
 }
 
-export function GradientText({ children, className, animate = true }: GradientTextProps) {
+export function GradientText({ children, className }: GradientTextProps) {
   return (
-    <motion.h1
+    <h1
       className={cn(
-        "bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent",
+        "bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent",
         "font-bold",
-        animate && "bg-[length:200%_auto]",
         className
       )}
-      animate={
-        animate
-          ? {
-              backgroundPosition: ["0% center", "200% center", "0% center"],
-            }
-          : undefined
-      }
-      transition={
-        animate
-          ? {
-              duration: 5,
-              repeat: Infinity,
-              ease: "linear",
-            }
-          : undefined
-      }
-      style={{
-        backgroundSize: animate ? "200% auto" : undefined,
-      }}
     >
       {children}
-    </motion.h1>
+    </h1>
   )
 }
