@@ -9,13 +9,43 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import SQLAlchemyError
 
+# OpenTelemetry imports for observability (optional dependency)
+try:
+    from opentelemetry import trace
+    from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
+    from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+    OTEL_AVAILABLE = True
+except ImportError:
+    OTEL_AVAILABLE = False
+
 from src.api import (
+    analytics_router,
     auth_router,
     chat_router,
     conversations_router,
     health_router,
+    metrics_router,
+    preferences_router,
+    reminders_router,
+    tags_router,
     tasks_router,
+    websocket_router,
 )
+
+# Events router (optional - requires dapr)
+try:
+    from src.events.handlers import router as events_router
+
+    EVENTS_AVAILABLE = True
+except ImportError:
+    events_router = None
+    EVENTS_AVAILABLE = False
+
 from src.config import get_settings
 from src.database import close_db
 from src.init_db import init_database
@@ -45,6 +75,25 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting Todo AI Chatbot API...")
 
+    # Initialize OpenTelemetry (if available)
+    if OTEL_AVAILABLE:
+        try:
+            resource = Resource(attributes={
+                SERVICE_NAME: "todo-ai-chatbot-api"
+            })
+            tracer_provider = TracerProvider(resource=resource)
+            otlp_exporter = OTLPSpanExporter(endpoint="http://jaeger:4318/v1/traces")
+            span_processor = BatchSpanProcessor(otlp_exporter)
+            tracer_provider.add_span_processor(span_processor)
+            trace.set_tracer_provider(tracer_provider)
+            FastAPIInstrumentor.instrument_app(app)
+            SQLAlchemyInstrumentor().instrument()
+            logger.info("OpenTelemetry instrumentation initialized")
+        except Exception as e:
+            logger.warning(f"OpenTelemetry initialization skipped: {e}")
+    else:
+        logger.info("OpenTelemetry not installed - tracing disabled")
+
     try:
         await init_database()
         logger.info("Database initialized successfully")
@@ -60,6 +109,15 @@ async def lifespan(app: FastAPI):
 
     # Shutdown
     logger.info("Shutting down Todo AI Chatbot API...")
+
+    # Shutdown OpenTelemetry
+    if OTEL_AVAILABLE:
+        try:
+            trace.get_tracer_provider().shutdown()
+            logger.info("OpenTelemetry tracer provider shut down")
+        except Exception as e:
+            logger.error(f"Error shutting down OpenTelemetry: {e}")
+
     await close_db()
     logger.info("Database connections closed")
 
@@ -98,7 +156,15 @@ app.include_router(health_router, prefix="/api")
 app.include_router(auth_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
 app.include_router(tasks_router, prefix="/api")
+app.include_router(analytics_router, prefix="/api")
+app.include_router(metrics_router)  # Metrics endpoint at /metrics
+app.include_router(preferences_router, prefix="/api")
+app.include_router(reminders_router, prefix="/api")
+app.include_router(tags_router, prefix="/api")
 app.include_router(conversations_router, prefix="/api")
+if EVENTS_AVAILABLE and events_router is not None:
+    app.include_router(events_router)
+app.include_router(websocket_router)
 
 
 @app.get("/")

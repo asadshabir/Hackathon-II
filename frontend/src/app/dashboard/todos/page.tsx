@@ -1,14 +1,19 @@
 "use client"
 
-import { useState, useMemo, useEffect, useRef } from "react"
+import { useState, useMemo, useEffect, useRef, useCallback } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { Plus, Search, CheckCircle, Clock, AlertCircle, TrendingUp } from "lucide-react"
+import { Plus, CheckCircle, Clock, AlertCircle, TrendingUp } from "lucide-react"
 import { AnimatedButton } from "@/components/ui/animated-button"
 import { GlassCard } from "@/components/ui/glass-card"
 import { TodoCard } from "@/components/features/todos/TodoCard"
 import { StatsCard } from "@/components/features/todos/StatsCard"
 import { TodoDialog } from "@/components/features/todos/TodoDialog"
+import { SearchBar } from "@/components/features/search/SearchBar"
+import { FilterPanel } from "@/components/features/search/FilterPanel"
+import { SortSelector } from "@/components/features/search/SortSelector"
 import { useToast } from "@/hooks/use-toast"
+import { useWebSocket } from "@/hooks/useWebSocket"
+import { useAuth } from "@/hooks/useAuth"
 import { apiClient } from "@/lib/api"
 import {
   requestPermissionWithUI,
@@ -16,6 +21,7 @@ import {
   cancelScheduledNotification,
 } from "@/lib/notifications"
 import type { Todo, TodoPriority, TodoCategory, TodoFormData } from "@/types/todo"
+import type { WebSocketEvent } from "@/hooks/useWebSocket"
 
 /**
  * TodoDashboard Page
@@ -26,6 +32,7 @@ import type { Todo, TodoPriority, TodoCategory, TodoFormData } from "@/types/tod
 
 export default function TodoDashboard() {
   const { toast } = useToast()
+  const { session } = useAuth()
 
   // State
   const [todos, setTodos] = useState<Todo[]>([])
@@ -34,6 +41,57 @@ export default function TodoDashboard() {
   const [filterPriority, setFilterPriority] = useState<TodoPriority | "all">("all")
   const [filterCategory, setFilterCategory] = useState<TodoCategory | "all">("all")
   const [filterStatus, setFilterStatus] = useState<"all" | "completed" | "active">("all")
+  const [sortBy, setSortBy] = useState<"created_at" | "priority" | "due_date" | "title">("created_at")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
+  const [dueDateFilter, setDueDateFilter] = useState<"all" | "today" | "this_week" | "overdue">("all")
+
+  // WebSocket real-time sync
+  const handleWebSocketEvent = useCallback((event: WebSocketEvent) => {
+    const data = event.data as Record<string, unknown> | undefined
+    if (!data) return
+
+    if (event.type === "full_state_snapshot") {
+      const tasks = (data.tasks as Todo[]) || []
+      setTodos(tasks)
+    } else if (event.type === "task.created") {
+      if (data.recurrence_type && data.recurrence_type !== "none") {
+        toast({
+          title: "Recurring Task Created",
+          description: `Next occurrence of "${data.title}" has been scheduled`,
+        })
+      }
+      setTodos(prev => [data as unknown as Todo, ...prev])
+    } else if (event.type === "task.updated") {
+      const taskId = data.task_id as string
+      const after = data.after as Record<string, unknown> | undefined
+      if (after) {
+        setTodos(prev =>
+          prev.map(t => t.id === taskId ? { ...t, ...after } as Todo : t)
+        )
+      }
+    } else if (event.type === "task.completed") {
+      const taskId = data.task_id as string
+      setTodos((prev) =>
+        prev.map((t) =>
+          t.id === taskId ? { ...t, completed: true, status: "completed" as const } : t
+        )
+      )
+    } else if (event.type === "task.deleted") {
+      const taskId = data.task_id as string
+      setTodos((prev) => prev.filter((t) => t.id !== taskId))
+    } else if (event.type === "notification.sent") {
+      toast({
+        title: "Notification",
+        description: data.message as string,
+      })
+    }
+  }, [toast])
+
+  useWebSocket({
+    userId: session?.user?.id ?? null,
+    onEvent: handleWebSocketEvent,
+    enabled: !!session?.user?.id,
+  })
 
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -66,7 +124,13 @@ export default function TodoDashboard() {
 
   // Filter and search todos
   const filteredTodos = useMemo(() => {
-    return todos.filter((todo) => {
+    const now = new Date()
+    const todayStr = now.toISOString().split("T")[0]
+    const endOfWeek = new Date(now)
+    endOfWeek.setDate(now.getDate() + (7 - now.getDay()))
+    const endOfWeekStr = endOfWeek.toISOString().split("T")[0]
+
+    const filtered = todos.filter((todo) => {
       const matchesSearch =
         todo.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         todo.description?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -78,9 +142,46 @@ export default function TodoDashboard() {
         (filterStatus === "completed" && todo.completed) ||
         (filterStatus === "active" && !todo.completed)
 
-      return matchesSearch && matchesPriority && matchesCategory && matchesStatus
+      let matchesDueDate = true
+      if (dueDateFilter !== "all" && todo.dueDate) {
+        const dueDateStr = todo.dueDate.split("T")[0]
+        if (dueDateFilter === "today") {
+          matchesDueDate = dueDateStr === todayStr
+        } else if (dueDateFilter === "this_week") {
+          matchesDueDate = dueDateStr >= todayStr && dueDateStr <= endOfWeekStr
+        } else if (dueDateFilter === "overdue") {
+          matchesDueDate = dueDateStr < todayStr && !todo.completed
+        }
+      } else if (dueDateFilter !== "all" && !todo.dueDate) {
+        matchesDueDate = false
+      }
+
+      return matchesSearch && matchesPriority && matchesCategory && matchesStatus && matchesDueDate
     })
-  }, [todos, searchQuery, filterPriority, filterCategory, filterStatus])
+
+    // Apply sorting
+    filtered.sort((a, b) => {
+      let comparison = 0
+
+      if (sortBy === "priority") {
+        const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 }
+        comparison = priorityOrder[a.priority] - priorityOrder[b.priority]
+      } else if (sortBy === "due_date") {
+        if (!a.dueDate && !b.dueDate) comparison = 0
+        else if (!a.dueDate) comparison = sortOrder === "asc" ? 1 : -1
+        else if (!b.dueDate) comparison = sortOrder === "asc" ? -1 : 1
+        else comparison = new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+      } else if (sortBy === "title") {
+        comparison = a.title.localeCompare(b.title)
+      } else { // created_at
+        comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      }
+
+      return sortOrder === "asc" ? comparison : -comparison
+    })
+
+    return filtered
+  }, [todos, searchQuery, filterPriority, filterCategory, filterStatus, dueDateFilter, sortBy, sortOrder])
 
   // Calculate statistics
   const stats = useMemo(() => {
@@ -408,63 +509,51 @@ export default function TodoDashboard() {
           {/* Controls */}
           <div>
             <GlassCard className="p-6">
-              <div className="flex flex-col lg:flex-row gap-4">
-                {/* Search */}
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      type="text"
-                      placeholder="Search tasks..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors"
+              <div className="space-y-4">
+                {/* Search Bar */}
+                <SearchBar
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  resultCount={filteredTodos.length}
+                  className="lg:max-w-md"
+                />
+
+                {/* Filters and Sort */}
+                <div className="flex flex-col lg:flex-row gap-4">
+                  <div className="flex-1">
+                    <FilterPanel
+                      filters={{
+                        priority: filterPriority,
+                        category: filterCategory,
+                        status: filterStatus,
+                        dueDateFilter: dueDateFilter,
+                      }}
+                      onFilterChange={(key, value) => {
+                        if (key === "priority") setFilterPriority(value as TodoPriority | "all")
+                        else if (key === "category") setFilterCategory(value as TodoCategory | "all")
+                        else if (key === "status") setFilterStatus(value as "all" | "completed" | "active")
+                        else if (key === "dueDateFilter") setDueDateFilter(value as "all" | "today" | "this_week" | "overdue")
+                      }}
                     />
                   </div>
+
+                  <div className="flex gap-3">
+                    <SortSelector
+                      sortBy={sortBy}
+                      sortOrder={sortOrder}
+                      onChange={(newSortBy, newSortOrder) => {
+                        setSortBy(newSortBy)
+                        setSortOrder(newSortOrder)
+                      }}
+                    />
+
+                    {/* Add Button */}
+                    <AnimatedButton variant="primary" className="whitespace-nowrap" onClick={handleOpenCreateDialog}>
+                      <Plus className="w-5 h-5 mr-2" />
+                      Add Task
+                    </AnimatedButton>
+                  </div>
                 </div>
-
-                {/* Filters */}
-                <div className="flex gap-3 flex-wrap">
-                  <select
-                    value={filterPriority}
-                    onChange={(e) => setFilterPriority(e.target.value as TodoPriority | "all")}
-                    className="px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors appearance-none min-w-[140px]"
-                  >
-                    <option value="all">All Priorities</option>
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                  </select>
-
-                  <select
-                    value={filterCategory}
-                    onChange={(e) => setFilterCategory(e.target.value as TodoCategory | "all")}
-                    className="px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors appearance-none min-w-[140px]"
-                  >
-                    <option value="all">All Categories</option>
-                    <option value="work">Work</option>
-                    <option value="personal">Personal</option>
-                    <option value="shopping">Shopping</option>
-                    <option value="health">Health</option>
-                    <option value="other">Other</option>
-                  </select>
-
-                  <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value as "all" | "completed" | "active")}
-                    className="px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors appearance-none min-w-[120px]"
-                  >
-                    <option value="all">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="completed">Completed</option>
-                  </select>
-                </div>
-
-                {/* Add Button */}
-                <AnimatedButton variant="primary" className="whitespace-nowrap" onClick={handleOpenCreateDialog}>
-                  <Plus className="w-5 h-5 mr-2" />
-                  Add Task
-                </AnimatedButton>
               </div>
             </GlassCard>
           </div>

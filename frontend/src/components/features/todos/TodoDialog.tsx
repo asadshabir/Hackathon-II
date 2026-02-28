@@ -10,6 +10,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { RecurrenceSelector } from "@/components/ui/recurrence-selector"
 import type { Todo, TodoFormData, TodoPriority, TodoCategory } from "@/types/todo"
 
 /**
@@ -36,6 +37,8 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
     dueDate: "",
     reminderTime: "",
     reminderEnabled: false,
+    recurrenceType: "none",
+    recurrenceInterval: 1,
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof TodoFormData, string>>>({})
@@ -44,14 +47,20 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
   // Reset form when dialog opens/closes or todo changes
   useEffect(() => {
     if (open && todo && mode === "edit") {
+      // Extract YYYY-MM-DD from ISO datetime for date input
+      const dueDateValue = todo.dueDate ? todo.dueDate.split("T")[0] : ""
+      // Extract YYYY-MM-DDTHH:MM for datetime-local input
+      const reminderValue = todo.reminderTime ? todo.reminderTime.slice(0, 16) : ""
       setFormData({
         title: todo.title,
         description: todo.description || "",
         priority: todo.priority,
         category: todo.category,
-        dueDate: todo.dueDate || "",
-        reminderTime: todo.reminderTime || "",
+        dueDate: dueDateValue,
+        reminderTime: reminderValue,
         reminderEnabled: todo.reminderEnabled || false,
+        recurrenceType: todo.recurrenceType || "none",
+        recurrenceInterval: todo.recurrenceInterval || 1,
       })
     } else if (open && mode === "create") {
       setFormData({
@@ -62,6 +71,8 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
         dueDate: "",
         reminderTime: "",
         reminderEnabled: false,
+        recurrenceType: "none",
+        recurrenceInterval: 1,
       })
     }
     setErrors({})
@@ -118,11 +129,11 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
     }
   }
 
-  const handleChange = (field: keyof TodoFormData, value: string) => {
+  const handleChange = (field: keyof TodoFormData, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }))
+    if (errors[field as keyof TodoFormData]) {
+      setErrors((prev) => ({ ...prev, [field as keyof TodoFormData]: undefined }))
     }
   }
 
@@ -220,6 +231,7 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
+                <option value="urgent">Urgent</option>
               </select>
             </div>
 
@@ -259,6 +271,22 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
               value={formData.dueDate}
               onChange={(e) => handleChange("dueDate", e.target.value)}
               className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors duration-150"
+            />
+          </div>
+
+          {/* Recurrence */}
+          <div>
+            <label
+              htmlFor="recurrenceType"
+              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+            >
+              Recurrence
+            </label>
+            <RecurrenceSelector
+              recurrenceType={formData.recurrenceType || "none"}
+              recurrenceInterval={formData.recurrenceInterval || 1}
+              onTypeChange={(type) => handleChange("recurrenceType", type)}
+              onIntervalChange={(interval) => setFormData(prev => ({...prev, recurrenceInterval: interval}))}
             />
           </div>
 

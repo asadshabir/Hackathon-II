@@ -1,0 +1,11 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: reminder-binding
+spec:
+  type: bindings.cron
+  metadata:
+    - name: schedule
+      value: "* * * * *"
+    - name: operation
+      value: trigger_reminders

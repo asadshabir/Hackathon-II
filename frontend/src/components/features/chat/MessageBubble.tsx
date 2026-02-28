@@ -33,8 +33,8 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       <div
         className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${
           isUser
-            ? "bg-indigo-600"
-            : "bg-gradient-to-br from-blue-500 to-cyan-500"
+            ? "bg-gradient-to-br from-blue-500 to-indigo-600"
+            : "bg-gradient-to-br from-blue-500 to-teal-500"
         }`}
       >
         {isUser ? (
@@ -49,8 +49,8 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         <div
           className={`relative group px-4 py-3 rounded-2xl ${
             isUser
-              ? "bg-indigo-600 text-white rounded-tr-sm"
-              : "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-tl-sm"
+              ? "bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-tr-sm shadow-neu"
+              : "bg-gradient-to-r from-white to-slate-50 dark:from-slate-800 dark:to-slate-700 text-slate-900 dark:text-white rounded-tl-sm neumorphic"
           }`}
         >
           {/* Message Text */}

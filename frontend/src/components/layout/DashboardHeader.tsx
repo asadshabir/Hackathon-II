@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
-import { CheckSquare, Menu, X, LayoutDashboard, ListTodo, LogOut, User, MessageSquare } from "lucide-react"
+import { CheckSquare, Menu, X, LayoutDashboard, ListTodo, LogOut, User, MessageSquare, CalendarDays, BarChart3, Settings } from "lucide-react"
 
 /**
  * DashboardHeader Component
@@ -41,6 +41,24 @@ export function DashboardHeader({ onSignOut, userEmail }: DashboardHeaderProps) 
       href: "/dashboard/todos",
       icon: ListTodo,
       active: pathname === "/dashboard/todos"
+    },
+    {
+      label: "Calendar",
+      href: "/dashboard/calendar",
+      icon: CalendarDays,
+      active: pathname === "/dashboard/calendar"
+    },
+    {
+      label: "Analytics",
+      href: "/dashboard/analytics",
+      icon: BarChart3,
+      active: pathname === "/dashboard/analytics"
+    },
+    {
+      label: "Settings",
+      href: "/dashboard/settings",
+      icon: Settings,
+      active: pathname === "/dashboard/settings"
     },
   ]
 

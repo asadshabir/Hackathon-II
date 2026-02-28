@@ -20,24 +20,24 @@ export function HeroSection() {
   ]
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-20 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-20 bg-gradient-to-br from-indigo-600 to-blue-700 dark:from-slate-900 dark:to-slate-800">
       {/* Hero Content */}
       <div className="relative z-10 max-w-5xl mx-auto text-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 mb-8">
-          <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-          <span className="text-sm text-indigo-700 dark:text-indigo-300 font-medium">Powered by AI</span>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 mb-8">
+          <Sparkles className="w-4 h-4 text-white" />
+          <span className="text-sm text-white font-medium">Powered by AI</span>
         </div>
 
         {/* Main Heading */}
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in">
           Organize Your Life
           <br />
-          <span className="text-indigo-600 dark:text-indigo-400">With Ease</span>
+          <span className="text-white drop-shadow-lg">With Ease</span>
         </h1>
 
         {/* Subheading */}
-        <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
           Experience task management like never before with AI assistance,
           smart prioritization, and an interface designed for productivity.
         </p>
@@ -45,7 +45,7 @@ export function HeroSection() {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
           <Link href="/signup">
-            <Button size="lg" className="text-base px-8 py-6 h-auto min-w-[180px] shadow-md shadow-indigo-500/25 hover:shadow-lg hover:shadow-indigo-500/30 transition-shadow duration-150">
+            <Button size="lg" className="text-base px-8 py-6 h-auto min-w-[180px]">
               Get Started Free
             </Button>
           </Link>
@@ -61,18 +61,18 @@ export function HeroSection() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex flex-col items-center gap-3 p-5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30 transition-all duration-150"
+              className="flex flex-col items-center gap-3 p-5 rounded-xl neumorphic"
             >
-              <feature.icon className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
-              <span className="text-sm text-slate-700 dark:text-slate-300 font-medium text-center">{feature.text}</span>
+              <feature.icon className="w-7 h-7 text-indigo-600" />
+              <span className="text-sm text-slate-700 font-medium text-center">{feature.text}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Subtle background decorations - static, no animation */}
-      <div className="absolute top-1/4 left-10 w-64 h-64 rounded-full bg-indigo-100 dark:bg-indigo-950/40 blur-3xl opacity-60" />
-      <div className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-purple-100 dark:bg-purple-950/40 blur-3xl opacity-50" />
+      <div className="absolute top-1/4 left-10 w-64 h-64 rounded-full bg-indigo-400/20 blur-3xl opacity-60" />
+      <div className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-blue-400/20 blur-3xl opacity-50" />
     </section>
   )
 }

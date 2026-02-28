@@ -4,7 +4,7 @@
  * TypeScript interfaces for todo items and related data
  */
 
-export type TodoPriority = "low" | "medium" | "high"
+export type TodoPriority = "low" | "medium" | "high" | "urgent"
 export type TodoStatus = "pending" | "in-progress" | "completed"
 export type TodoCategory = "personal" | "work" | "shopping" | "health" | "other"
 
@@ -22,6 +22,8 @@ export interface Todo {
   userId: string
   reminderTime?: string // ISO string of when to show notification reminder
   reminderEnabled?: boolean // Whether the reminder is active
+  recurrenceType?: string
+  recurrenceInterval?: number
 }
 
 export interface TodoFormData {
@@ -32,6 +34,8 @@ export interface TodoFormData {
   dueDate?: string
   reminderTime?: string
   reminderEnabled?: boolean
+  recurrenceType?: string
+  recurrenceInterval?: number
 }
 
 export interface TodoStats {
@@ -39,6 +43,7 @@ export interface TodoStats {
   completed: number
   pending: number
   inProgress: number
+  urgent: number
   high: number
   medium: number
   low: number

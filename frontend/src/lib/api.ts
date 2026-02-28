@@ -3,7 +3,11 @@
  *
  * Comprehensive API client supporting:
  * - Authentication (JWT via localStorage)
- * - Todo CRUD operations
+ * - Todo CRUD operations with priority, due dates, recurrence
+ * - Tags management
+ * - Reminders management
+ * - Analytics
+ * - User preferences
  * - AI Chat functionality
  * - Conversations management
  */
@@ -34,6 +38,48 @@ export interface Task {
   completed: boolean
   created_at: string
   completed_at: string | null
+  priority: string
+  due_date: string | null
+  recurrence_type: string
+  recurrence_interval: number
+}
+
+export interface Tag {
+  id: string
+  name: string
+  color: string
+  created_at: string
+}
+
+export interface Reminder {
+  id: string
+  task_id: string
+  reminder_time: string
+  status: string
+  created_at: string
+}
+
+export interface AnalyticsData {
+  completion_today: number
+  completion_week: number
+  completion_month: number
+  streak: { current: number; longest: number }
+  priority_distribution: Record<string, number>
+  tag_distribution: Record<string, number>
+  overdue_count: number
+  trends: Array<{ date: string; completions: number }>
+  last_updated: string
+}
+
+export interface UserPreferences {
+  id?: string
+  user_id: string
+  notification_channel: string
+  timezone: string
+  reminder_offset_minutes: number
+  default_priority: string
+  sort_order: string
+  theme: string
 }
 
 export interface Message {
@@ -97,10 +143,17 @@ class ApiClient {
       headers["Authorization"] = `Bearer ${token}`
     }
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    })
+    let response: Response
+    try {
+      response = await fetch(url, {
+        ...options,
+        headers,
+      })
+    } catch (_networkError) {
+      throw new Error(
+        "Unable to connect to the server. Please check that the backend is running."
+      )
+    }
 
     const data = await response.json().catch(() => null)
 
@@ -115,9 +168,6 @@ class ApiClient {
 
   // ==================== AUTH ====================
 
-  /**
-   * Sign up a new user
-   */
   async signup(
     email: string,
     password: string,
@@ -129,9 +179,6 @@ class ApiClient {
     })
   }
 
-  /**
-   * Sign in an existing user
-   */
   async signin(email: string, password: string): Promise<AuthResponse> {
     return this.request<AuthResponse>("/api/auth/signin", {
       method: "POST",
@@ -139,9 +186,6 @@ class ApiClient {
     })
   }
 
-  /**
-   * Sign out the current user
-   */
   async signout(): Promise<{ message: string }> {
     const result = await this.request<{ message: string }>("/api/auth/signout", {
       method: "POST",
@@ -152,9 +196,6 @@ class ApiClient {
     return result
   }
 
-  /**
-   * Get current user info
-   */
   async getMe(): Promise<User> {
     return this.request<User>("/api/auth/me")
   }
@@ -170,71 +211,79 @@ class ApiClient {
       title: task.title,
       completed: task.completed,
       status: task.completed ? "completed" : "pending",
-      priority: "medium",
+      priority: (task.priority as Todo["priority"]) || "medium",
       category: "personal",
       createdAt: task.created_at,
       updatedAt: task.completed_at || task.created_at,
       userId: "",
+      dueDate: task.due_date || undefined,
+      recurrenceType: task.recurrence_type,
+      recurrenceInterval: task.recurrence_interval,
     }
   }
 
-  /**
-   * Get all todos for the current user
-   */
-  async getTodos(filter: "all" | "pending" | "completed" = "all"): Promise<Todo[]> {
+  async getTodos(
+    filter: "all" | "pending" | "completed" = "all",
+    sortBy?: string,
+    q?: string,
+    priority?: string,
+  ): Promise<Todo[]> {
+    const params = new URLSearchParams({ filter })
+    if (sortBy) params.set("sort_by", sortBy)
+    if (q) params.set("q", q)
+    if (priority) params.set("priority", priority)
+
     const response = await this.request<{ tasks: Task[]; count: number }>(
-      `/api/tasks?filter=${filter}`
+      `/api/tasks?${params.toString()}`
     )
     return response.tasks.map((task) => this.mapTaskToTodo(task))
   }
 
-  /**
-   * Create a new todo
-   */
   async createTodo(todoData: Partial<TodoFormData> & { title: string }): Promise<Todo> {
     const task = await this.request<Task>("/api/tasks", {
       method: "POST",
-      body: JSON.stringify({ title: todoData.title }),
+      body: JSON.stringify({
+        title: todoData.title,
+        priority: todoData.priority || "medium",
+        due_date: todoData.dueDate || null,
+        recurrence_type: todoData.recurrenceType || "none",
+        recurrence_interval: todoData.recurrenceInterval || 1,
+      }),
     })
     return {
       ...this.mapTaskToTodo(task),
       description: todoData.description,
-      priority: todoData.priority || "medium",
       category: todoData.category || "personal",
-      dueDate: todoData.dueDate,
       reminderTime: todoData.reminderTime,
       reminderEnabled: todoData.reminderEnabled,
     }
   }
 
-  /**
-   * Update an existing todo
-   */
   async updateTodo(
     id: string,
     updates: Partial<TodoFormData> & { completed?: boolean }
   ): Promise<Todo> {
+    const body: Record<string, unknown> = {}
+    if (updates.title !== undefined) body.title = updates.title
+    if (updates.completed !== undefined) body.completed = updates.completed
+    if (updates.priority !== undefined) body.priority = updates.priority
+    if (updates.dueDate !== undefined) body.due_date = updates.dueDate || ""
+    if (updates.recurrenceType !== undefined) body.recurrence_type = updates.recurrenceType
+    if (updates.recurrenceInterval !== undefined) body.recurrence_interval = updates.recurrenceInterval
+
     const task = await this.request<Task>(`/api/tasks/${id}`, {
       method: "PATCH",
-      body: JSON.stringify({
-        title: updates.title,
-        completed: updates.completed,
-      }),
+      body: JSON.stringify(body),
     })
     return {
       ...this.mapTaskToTodo(task),
       description: updates.description,
-      priority: updates.priority || "medium",
       category: updates.category || "personal",
-      dueDate: updates.dueDate,
       reminderTime: updates.reminderTime,
       reminderEnabled: updates.reminderEnabled,
     }
   }
 
-  /**
-   * Toggle todo completion status
-   */
   async toggleTodoCompletion(id: string, completed: boolean): Promise<Todo> {
     const task = await this.request<Task>(`/api/tasks/${id}`, {
       method: "PATCH",
@@ -243,20 +292,77 @@ class ApiClient {
     return this.mapTaskToTodo(task)
   }
 
-  /**
-   * Delete a todo
-   */
   async deleteTodo(id: string): Promise<{ message: string }> {
     return this.request<{ message: string }>(`/api/tasks/${id}`, {
       method: "DELETE",
     })
   }
 
+  // ==================== TAGS ====================
+
+  async getTags(): Promise<Tag[]> {
+    const response = await this.request<{ tags: Tag[]; count: number }>("/api/tags")
+    return response.tags
+  }
+
+  async createTag(name: string, color?: string): Promise<Tag> {
+    return this.request<Tag>("/api/tags", {
+      method: "POST",
+      body: JSON.stringify({ name, color: color || "#6B7280" }),
+    })
+  }
+
+  async deleteTag(tagId: string): Promise<{ message: string }> {
+    return this.request<{ message: string }>(`/api/tags/${tagId}`, {
+      method: "DELETE",
+    })
+  }
+
+  // ==================== REMINDERS ====================
+
+  async getReminders(): Promise<Reminder[]> {
+    const response = await this.request<{ reminders: Reminder[]; count: number }>(
+      "/api/reminders"
+    )
+    return response.reminders
+  }
+
+  async createReminder(taskId: string, reminderTime: string): Promise<Reminder> {
+    return this.request<Reminder>("/api/reminders", {
+      method: "POST",
+      body: JSON.stringify({ task_id: taskId, reminder_time: reminderTime }),
+    })
+  }
+
+  async cancelReminder(reminderId: string): Promise<{ message: string }> {
+    return this.request<{ message: string }>(`/api/reminders/${reminderId}`, {
+      method: "DELETE",
+    })
+  }
+
+  // ==================== ANALYTICS ====================
+
+  async getAnalytics(): Promise<AnalyticsData> {
+    return this.request<AnalyticsData>("/api/analytics/")
+  }
+
+  // ==================== PREFERENCES ====================
+
+  async getPreferences(): Promise<UserPreferences> {
+    return this.request<UserPreferences>("/api/preferences/")
+  }
+
+  async updatePreferences(
+    updates: Partial<UserPreferences>
+  ): Promise<UserPreferences> {
+    return this.request<UserPreferences>("/api/preferences/", {
+      method: "PATCH",
+      body: JSON.stringify(updates),
+    })
+  }
+
   // ==================== CHAT ====================
 
-  /**
-   * Send a message to the AI chatbot
-   */
   async sendMessage(
     message: string,
     conversationId?: string
@@ -272,9 +378,6 @@ class ApiClient {
 
   // ==================== CONVERSATIONS ====================
 
-  /**
-   * Get all conversations for the current user
-   */
   async getConversations(limit: number = 20): Promise<Conversation[]> {
     const response = await this.request<{
       conversations: Conversation[]
@@ -283,9 +386,6 @@ class ApiClient {
     return response.conversations
   }
 
-  /**
-   * Get messages for a specific conversation
-   */
   async getConversationMessages(
     conversationId: string,
     limit: number = 100
@@ -298,9 +398,6 @@ class ApiClient {
 
   // ==================== HEALTH ====================
 
-  /**
-   * Check API health status
-   */
   async healthCheck(): Promise<{ status: string; timestamp: string }> {
     return this.request<{ status: string; timestamp: string }>("/api/health")
   }

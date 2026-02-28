@@ -24,19 +24,18 @@ export function GlassCard({ children, className }: GlassCardProps) {
     <div
       className={cn(
         "relative overflow-hidden rounded-xl",
-        // Solid background - better performance than backdrop-blur
-        "bg-white dark:bg-slate-900",
-        // Desktop-only glass effect (enabled via media query in globals.css)
-        "md:glass",
+        // Neumorphic background
+        "bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900",
+        // Neumorphic shadow
+        "shadow-neu",
         // Border
-        "border border-slate-200 dark:border-slate-800",
-        // Shadow - subtle elevation
-        "shadow-card",
-        // Hover state - lift + border shift
-        "hover:border-indigo-200 dark:hover:border-slate-600",
-        "hover:shadow-xl",
+        "border border-transparent",
+        // Hover state - lift effect
+        "hover:shadow-neuHover card-lift",
+        // Active state
+        "active:shadow-neuInner",
         // Performance-optimized transitions
-        "transition-all duration-150",
+        "transition-all duration-180 ease-[cubic-bezier(0.4,0,0.2,1)]",
         className
       )}
     >

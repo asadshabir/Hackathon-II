@@ -104,3 +104,6 @@ ENV/
 # Specify memory and templates (keep these in git)
 # .specify/memory/ - KEEP IN GIT
 # .specify/templates/ - KEEP IN GIT
+
+.vercel
+.env*.local

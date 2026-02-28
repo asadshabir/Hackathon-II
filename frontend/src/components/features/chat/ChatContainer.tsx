@@ -97,22 +97,24 @@ export function ChatContainer({ initialConversationId }: ChatContainerProps) {
           {/* Messages Area */}
           <div
             ref={messagesContainerRef}
-            className="flex-1 overflow-y-auto p-6 space-y-6"
+            className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-br from-blue-50 to-teal-50 dark:from-slate-900 dark:to-slate-800"
           >
             {messages.length === 0 ? (
               <EmptyState />
             ) : (
               <>
-                {messages.map((message) => (
-                  <MessageBubble key={message.id} message={message} />
-                ))}
+                <div className="flex flex-col space-y-4">
+                  {messages.map((message) => (
+                    <MessageBubble key={message.id} message={message} />
+                  ))}
+                </div>
                 <div ref={messagesEndRef} />
               </>
             )}
           </div>
 
           {/* Input Area */}
-          <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+          <div className="p-4 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
             <ChatInput onSend={sendMessage} isLoading={isLoading} />
           </div>
         </GlassCard>
@@ -186,7 +188,7 @@ function EmptyState() {
     >
       <div className="text-center max-w-md">
         {/* Bot Icon */}
-        <div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/20">
+        <div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20">
           <Bot className="w-10 h-10 text-white" />
         </div>
 

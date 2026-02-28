@@ -8,7 +8,17 @@ from sqlmodel import SQLModel
 from src.database import engine
 
 # Import all models to register them with SQLModel metadata
-from src.models import Conversation, Message, Task, User  # noqa: F401
+from src.models import (  # noqa: F401
+    AuditLog,
+    Conversation,
+    Message,
+    Reminder,
+    Tag,
+    Task,
+    TaskTag,
+    User,
+    UserPreference,
+)
 
 
 async def init_database() -> None:

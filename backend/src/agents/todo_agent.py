@@ -3,6 +3,7 @@ Todo Agent using Google Gemini for natural language task management.
 """
 
 import uuid
+from datetime import datetime
 from typing import Any
 
 from google import genai
@@ -24,13 +25,29 @@ TASK_TOOLS = [
         function_declarations=[
             types.FunctionDeclaration(
                 name="create_task",
-                description="Creates a new task for the user's todo list",
+                description="Creates a new task for the user's todo list. Can set title, priority, due date, and recurrence in one call.",
                 parameters=types.Schema(
                     type=types.Type.OBJECT,
                     properties={
                         "title": types.Schema(
                             type=types.Type.STRING,
                             description="The title/description of the task to create",
+                        ),
+                        "priority": types.Schema(
+                            type=types.Type.STRING,
+                            description="Priority level: low, medium, high, or urgent. Defaults to medium.",
+                        ),
+                        "due_date": types.Schema(
+                            type=types.Type.STRING,
+                            description="Due date in ISO format (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS). Example: 2025-01-15 or 2025-01-15T14:00:00",
+                        ),
+                        "recurrence_type": types.Schema(
+                            type=types.Type.STRING,
+                            description="Recurrence pattern: none, daily, weekly, or monthly. Requires due_date if not 'none'.",
+                        ),
+                        "recurrence_interval": types.Schema(
+                            type=types.Type.INTEGER,
+                            description="Recurrence interval (e.g., 2 for every 2 days/weeks/months). Defaults to 1.",
                         ),
                     },
                     required=["title"],
@@ -95,6 +112,115 @@ TASK_TOOLS = [
                     required=["task_id", "new_title"],
                 ),
             ),
+            types.FunctionDeclaration(
+                name="set_priority",
+                description="Sets the priority of a task (low, medium, high, urgent)",
+                parameters=types.Schema(
+                    type=types.Type.OBJECT,
+                    properties={
+                        "task_id": types.Schema(
+                            type=types.Type.STRING,
+                            description="The ID of the task to update",
+                        ),
+                        "priority": types.Schema(
+                            type=types.Type.STRING,
+                            description="The priority level: low, medium, high, or urgent",
+                        ),
+                    },
+                    required=["task_id", "priority"],
+                ),
+            ),
+            types.FunctionDeclaration(
+                name="assign_tags",
+                description="Assigns tags to a task",
+                parameters=types.Schema(
+                    type=types.Type.OBJECT,
+                    properties={
+                        "task_id": types.Schema(
+                            type=types.Type.STRING,
+                            description="The ID of the task to update",
+                        ),
+                        "tag_names": types.Schema(
+                            type=types.Type.ARRAY,
+                            items=types.Schema(type=types.Type.STRING),
+                            description="List of tag names to assign to the task",
+                        ),
+                    },
+                    required=["task_id", "tag_names"],
+                ),
+            ),
+            types.FunctionDeclaration(
+                name="set_due_date",
+                description="Sets the due date of a task in ISO format",
+                parameters=types.Schema(
+                    type=types.Type.OBJECT,
+                    properties={
+                        "task_id": types.Schema(
+                            type=types.Type.STRING,
+                            description="The ID of the task to update",
+                        ),
+                        "due_date": types.Schema(
+                            type=types.Type.STRING,
+                            description="The due date in ISO format (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS)",
+                        ),
+                    },
+                    required=["task_id", "due_date"],
+                ),
+            ),
+            types.FunctionDeclaration(
+                name="set_recurrence",
+                description="Sets the recurrence pattern of a task",
+                parameters=types.Schema(
+                    type=types.Type.OBJECT,
+                    properties={
+                        "task_id": types.Schema(
+                            type=types.Type.STRING,
+                            description="The ID of the task to update",
+                        ),
+                        "recurrence_type": types.Schema(
+                            type=types.Type.STRING,
+                            description="The recurrence type: none, daily, weekly, or monthly",
+                        ),
+                        "interval": types.Schema(
+                            type=types.Type.INTEGER,
+                            description="The interval for recurrence (default 1)",
+                        ),
+                    },
+                    required=["task_id", "recurrence_type"],
+                ),
+            ),
+            types.FunctionDeclaration(
+                name="query_analytics",
+                description="Queries user analytics and productivity metrics",
+                parameters=types.Schema(
+                    type=types.Type.OBJECT,
+                    properties={
+                        "user_id": types.Schema(
+                            type=types.Type.STRING,
+                            description="The ID of the user to query analytics for",
+                        ),
+                    },
+                    required=["user_id"],
+                ),
+            ),
+            types.FunctionDeclaration(
+                name="update_preferences",
+                description="Updates user preferences",
+                parameters=types.Schema(
+                    type=types.Type.OBJECT,
+                    properties={
+                        "user_id": types.Schema(
+                            type=types.Type.STRING,
+                            description="The ID of the user whose preferences to update",
+                        ),
+                        "updates": types.Schema(
+                            type=types.Type.OBJECT,
+                            description="Dictionary of preference updates",
+                        ),
+                    },
+                    required=["user_id", "updates"],
+                ),
+            ),
         ]
     )
 ]
@@ -109,12 +235,36 @@ async def execute_tool(
     """Execute a tool function and return the result."""
     try:
         if tool_name == "create_task":
+            # Parse due_date string to datetime if provided
+            due_date_val = None
+            due_date_str = tool_args.get("due_date")
+            if due_date_str:
+                try:
+                    if "T" in due_date_str:
+                        due_date_val = datetime.fromisoformat(due_date_str)
+                    else:
+                        due_date_val = datetime.fromisoformat(due_date_str + "T00:00:00")
+                except ValueError:
+                    pass
+
             task = await task_service.create_task(
-                session, user_id, tool_args.get("title", "")
+                session,
+                user_id,
+                title=tool_args.get("title", ""),
+                priority=tool_args.get("priority", "medium"),
+                due_date=due_date_val,
+                recurrence_type=tool_args.get("recurrence_type", "none"),
+                recurrence_interval=tool_args.get("recurrence_interval", 1),
             )
             return {
                 "success": True,
-                "task": {"id": str(task.id), "title": task.title},
+                "task": {
+                    "id": str(task.id),
+                    "title": task.title,
+                    "priority": task.priority,
+                    "due_date": task.due_date.isoformat() if task.due_date else None,
+                    "recurrence_type": task.recurrence_type,
+                },
             }
 
         elif tool_name == "list_tasks":
@@ -123,7 +273,15 @@ async def execute_tool(
             return {
                 "success": True,
                 "tasks": [
-                    {"id": str(t.id), "title": t.title, "completed": t.completed}
+                    {
+                        "id": str(t.id),
+                        "title": t.title,
+                        "completed": t.completed,
+                        "priority": t.priority,
+                        "due_date": t.due_date.isoformat() if t.due_date else None,
+                        "recurrence_type": t.recurrence_type,
+                        "created_at": t.created_at.isoformat() if t.created_at else None,
+                    }
                     for t in tasks
                 ],
                 "count": len(tasks),
@@ -158,6 +316,60 @@ async def execute_tool(
                     "task": {"id": str(task.id), "title": task.title},
                 }
             return {"success": False, "error": "Task not found"}
+
+        elif tool_name == "set_priority":
+            task_id = uuid.UUID(tool_args.get("task_id", ""))
+            priority = tool_args.get("priority", "medium")
+
+            # Import the advanced tool function
+            from src.tools.set_priority_tool import set_priority
+            result = await set_priority(str(task_id), priority)
+            return result
+
+        elif tool_name == "assign_tags":
+            task_id = uuid.UUID(tool_args.get("task_id", ""))
+            tag_names = tool_args.get("tag_names", [])
+
+            # Import the advanced tool function
+            from src.tools.assign_tags_tool import assign_tags
+            result = await assign_tags(str(task_id), tag_names)
+            return result
+
+        elif tool_name == "set_due_date":
+            task_id = uuid.UUID(tool_args.get("task_id", ""))
+            due_date = tool_args.get("due_date", "")
+
+            # Import the advanced tool function
+            from src.tools.set_due_date_tool import set_due_date
+            result = await set_due_date(str(task_id), due_date)
+            return result
+
+        elif tool_name == "set_recurrence":
+            task_id = uuid.UUID(tool_args.get("task_id", ""))
+            recurrence_type = tool_args.get("recurrence_type", "none")
+            interval = tool_args.get("interval", 1)
+
+            # Import the advanced tool function
+            from src.tools.set_recurrence_tool import set_recurrence
+            result = await set_recurrence(str(task_id), recurrence_type, interval)
+            return result
+
+        elif tool_name == "query_analytics":
+            user_id_arg = tool_args.get("user_id", "")
+
+            # Import the advanced tool function
+            from src.tools.query_analytics_tool import query_analytics
+            result = await query_analytics(user_id_arg)
+            return result
+
+        elif tool_name == "update_preferences":
+            user_id_arg = tool_args.get("user_id", "")
+            updates = tool_args.get("updates", {})
+
+            # Import the advanced tool function
+            from src.tools.update_preferences_tool import update_preferences
+            result = await update_preferences(user_id_arg, updates)
+            return result
 
         return {"success": False, "error": f"Unknown tool: {tool_name}"}
 

@@ -10,7 +10,9 @@ from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from src.models.conversation import Conversation
+    from src.models.tag import Tag
     from src.models.task import Task
+    from src.models.user_preference import UserPreference
 
 
 class User(SQLModel, table=True):
@@ -27,6 +29,8 @@ class User(SQLModel, table=True):
     # Relationships
     tasks: list["Task"] = Relationship(back_populates="user")
     conversations: list["Conversation"] = Relationship(back_populates="user")
+    tags: list["Tag"] = Relationship(back_populates="user")
+    preferences: list["UserPreference"] = Relationship(back_populates="user")
 
 
 class UserCreate(SQLModel):

@@ -1,0 +1,25 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+  namespace: default
+spec:
+  type: pubsub.kafka
+  version: v1
+  metadata:
+    - name: brokers
+      value: "kafka:9092"
+    - name: consumerGroup
+      value: "todo-app-group"
+    - name: authType
+      value: "none"
+    - name: maxMessageBytes
+      value: "1048576"
+    - name: consumeRetryInterval
+      value: "200ms"
+    - name: version
+      value: "2.0.0"
+    - name: disableTls
+      value: "true"
+    - name: initialOffset
+      value: "oldest"

@@ -1,9 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Check, Clock, Trash2, Edit, Flag, Calendar } from "lucide-react"
+import { Check, Clock, Trash2, Edit, Calendar } from "lucide-react"
 import type { Todo } from "@/types/todo"
-import { GlassCard } from "@/components/ui/glass-card"
+import { PriorityBadge } from "@/components/ui/priority-badge"
+import { cn } from "@/lib/utils"
 
 /**
  * TodoCard Component
@@ -19,16 +20,11 @@ interface TodoCardProps {
   onEdit: (todo: Todo) => void
 }
 
-const priorityColors = {
-  low: "bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400",
-  medium: "bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400",
-  high: "bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-400",
-}
-
 const priorityBorder = {
   low: "border-l-green-500",
   medium: "border-l-amber-500",
-  high: "border-l-red-500",
+  high: "border-l-orange-500",
+  urgent: "border-l-red-500",
 }
 
 const categoryColors = {
@@ -48,7 +44,22 @@ export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.15 }}
     >
-      <GlassCard className={`p-5 border-l-4 ${priorityBorder[todo.priority]}`}>
+      <div className={cn(
+        "relative overflow-hidden rounded-xl",
+        // Neumorphic background
+        "bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900",
+        // Neumorphic shadow
+        "shadow-neu",
+        // Border for priority
+        `border-l-4 ${priorityBorder[todo.priority]}`,
+        // Hover state - lift effect
+        "hover:shadow-neuHover card-lift",
+        // Active state
+        "active:shadow-neuInner",
+        // Performance-optimized transitions
+        "transition-all duration-180 ease-[cubic-bezier(0.4,0,0.2,1)]",
+        "p-5"
+      )}>
         <div className="space-y-4">
           {/* Header */}
           <div className="flex items-start justify-between gap-4">
@@ -58,8 +69,8 @@ export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
                 onClick={() => onToggle(todo.id)}
                 className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg border-2 flex items-center justify-center transition-colors duration-150 ${
                   todo.completed
-                    ? "bg-indigo-600 border-indigo-600"
-                    : "border-slate-300 dark:border-slate-600 hover:border-indigo-500"
+                    ? "bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-600 shadow-neuInner"
+                    : "bg-gradient-to-br from-white to-slate-50 border-slate-300 dark:border-slate-600 shadow-neu hover:shadow-neuHover"
                 }`}
                 aria-label={todo.completed ? "Mark as incomplete" : "Mark as complete"}
               >
@@ -82,12 +93,7 @@ export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
             </div>
 
             {/* Priority Badge */}
-            <div
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${priorityColors[todo.priority]}`}
-            >
-              <Flag className="w-3 h-3" />
-              <span className="capitalize">{todo.priority}</span>
-            </div>
+            <PriorityBadge priority={todo.priority} size="md" />
           </div>
 
           {/* Meta Info */}
@@ -98,15 +104,36 @@ export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
             </span>
 
             {/* Due Date */}
-            {todo.dueDate && (
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs">
-                <Calendar className="w-3 h-3" />
-                {new Date(todo.dueDate).toLocaleDateString()}
+            {todo.dueDate && (() => {
+              try {
+                const date = new Date(todo.dueDate);
+                if (isNaN(date.getTime())) {
+                  return null;
+                }
+                return (
+                  <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 text-slate-600 dark:text-slate-400 text-xs neumorphic">
+                    <Calendar className="w-3 h-3" />
+                    {date.toLocaleDateString()}
+                  </span>
+                );
+              } catch (e) {
+                return null;
+              }
+            })()}
+
+            {/* Recurring Indicator */}
+            {todo.recurrenceType && todo.recurrenceType !== "none" && (
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-indigo-900/50 dark:to-indigo-950/50 text-indigo-700 dark:text-indigo-400 text-xs neumorphic">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 12a9 9 0 1 0-9 9c0-1.3 0.2-2.6 0.5-3.9" />
+                  <path d="M16 3v4h-4" />
+                </svg>
+                {(todo.recurrenceInterval ?? 1) > 1 ? `${todo.recurrenceInterval} ` : ''}{todo.recurrenceType}{(todo.recurrenceInterval ?? 1) > 1 ? 's' : ''}
               </span>
             )}
 
             {/* Status */}
-            <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs">
+            <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 text-slate-600 dark:text-slate-400 text-xs neumorphic">
               <Clock className="w-3 h-3" />
               {todo.status.replace("-", " ")}
             </span>
@@ -116,7 +143,7 @@ export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
           <div className="flex gap-2 pt-1">
             <button
               onClick={() => onEdit(todo)}
-              className="min-h-[44px] flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium transition-colors duration-150"
+              className="min-h-[44px] flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 dark:from-slate-800 dark:to-slate-900 dark:hover:from-slate-700 dark:hover:to-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium transition-all duration-150 neumorphic"
               aria-label="Edit task"
             >
               <Edit className="w-4 h-4" />
@@ -125,7 +152,7 @@ export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
 
             <button
               onClick={() => onDelete(todo.id)}
-              className="min-h-[44px] flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-red-50 hover:bg-red-100 dark:bg-red-950/30 dark:hover:bg-red-950/50 text-red-600 dark:text-red-400 text-sm font-medium transition-colors duration-150"
+              className="min-h-[44px] flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-gradient-to-br from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 dark:from-red-900/30 dark:to-red-900/50 dark:hover:from-red-900/50 dark:hover:to-red-800/50 text-red-600 dark:text-red-400 text-sm font-medium transition-all duration-150 neumorphic"
               aria-label="Delete task"
             >
               <Trash2 className="w-4 h-4" />
@@ -133,7 +160,7 @@ export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
             </button>
           </div>
         </div>
-      </GlassCard>
+      </div>
     </motion.div>
   )
 }

@@ -1,0 +1,19 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: statestore
+  namespace: default
+spec:
+  type: state.postgresql
+  version: v1
+  metadata:
+    - name: connectionString
+      value: "host=postgres user=postgres password=postgres port=5432 dbname=todoapp sslmode=disable"
+    - name: tableName
+      value: "dapr_state"
+    - name: metadataTableName
+      value: "dapr_metadata"
+    - name: cleanupIntervalInSeconds
+      value: "300"
+    - name: actorStateStore
+      value: "true"

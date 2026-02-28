@@ -1,0 +1,179 @@
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: task-created-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: task.created
+  routes:
+    default: /events/task-created
+  deadLetterTopic: task.created.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: task-updated-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: task.updated
+  routes:
+    default: /events/task-updated
+  deadLetterTopic: task.updated.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: task-completed-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: task.completed
+  routes:
+    default: /events/task-completed
+  deadLetterTopic: task.completed.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: task-deleted-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: task.deleted
+  routes:
+    default: /events/task-deleted
+  deadLetterTopic: task.deleted.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: reminder-due-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: reminder.due
+  routes:
+    default: /events/reminder-due
+  deadLetterTopic: reminder.due.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: notification-sent-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: notification.sent
+  routes:
+    default: /events/notification-sent
+  deadLetterTopic: notification.sent.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: user-preference-changed-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: user.preference.changed
+  routes:
+    default: /events/user-preference-changed
+  deadLetterTopic: user.preference.changed.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: projection-updated-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: projection.updated
+  routes:
+    default: /events/projection-updated
+  deadLetterTopic: projection.updated.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: operation-failed-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: operation.failed
+  routes:
+    default: /events/operation-failed
+  deadLetterTopic: operation.failed.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: retry-scheduled-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: retry.scheduled
+  routes:
+    default: /events/retry-scheduled
+  deadLetterTopic: retry.scheduled.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: retry-exhausted-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: retry.exhausted
+  routes:
+    default: /events/retry-exhausted
+  deadLetterTopic: retry.exhausted.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: alert-triggered-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: alert.triggered
+  routes:
+    default: /events/alert-triggered
+  deadLetterTopic: alert.triggered.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: scale-recommendation-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: scale.recommendation
+  routes:
+    default: /events/scale-recommendation
+  deadLetterTopic: scale.recommendation.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: frontend-metrics-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: frontend.metrics
+  routes:
+    default: /events/frontend-metrics
+  deadLetterTopic: frontend.metrics.deadletter
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: anomaly-detected-sub
+  namespace: todo-app
+spec:
+  pubsubname: pubsub
+  topic: anomaly.detected
+  routes:
+    default: /events/anomaly-detected
+  deadLetterTopic: anomaly.detected.deadletter

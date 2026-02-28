@@ -57,7 +57,7 @@ export function ChatInput({
   return (
     <div className="relative">
       {/* Input Container */}
-      <div className="flex items-end gap-3 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div className="flex items-end gap-3 p-3 rounded-xl bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900 neumorphic">
         {/* Textarea */}
         <textarea
           ref={textareaRef}
@@ -67,7 +67,7 @@ export function ChatInput({
           placeholder={placeholder}
           disabled={disabled || isLoading}
           rows={1}
-          className="flex-1 bg-transparent resize-none outline-none text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 min-h-[24px] max-h-[150px] py-0.5"
+          className="flex-1 bg-transparent resize-none outline-none text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 min-h-[24px] max-h-[150px] py-0.5 input-neu px-3 rounded-lg"
         />
 
         {/* Send Button */}
@@ -76,8 +76,8 @@ export function ChatInput({
           disabled={!canSend}
           className={`flex-shrink-0 p-2.5 rounded-lg transition-all duration-150 ${
             canSend
-              ? "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800"
-              : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+              ? "bg-gradient-to-br from-teal-400 to-teal-500 text-white shadow-neu hover:shadow-neuHover active:shadow-neuInner active:transform active:translate-y-px"
+              : "bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed shadow-neu"
           }`}
           aria-label="Send message"
         >

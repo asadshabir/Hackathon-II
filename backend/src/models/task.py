@@ -1,15 +1,21 @@
 """
 Task model for todo items.
+Extended with priority, due_date, recurrence fields (Phase V).
 """
 
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from src.models.user import User
+    from src.models.tag import Tag, TaskTag
+
+# Valid enum values
+PRIORITY_VALUES = ("low", "medium", "high", "urgent")
+RECURRENCE_VALUES = ("none", "daily", "weekly", "monthly")
 
 
 class Task(SQLModel, table=True):
@@ -24,14 +30,25 @@ class Task(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     completed_at: datetime | None = Field(default=None)
 
+    # Phase V: Priority & scheduling fields (additive-only)
+    priority: str = Field(default="medium", max_length=10)
+    due_date: datetime | None = Field(default=None)
+    recurrence_type: str = Field(default="none", max_length=10)
+    recurrence_interval: int = Field(default=1)
+
     # Relationships
     user: "User" = Relationship(back_populates="tasks")
+    tag_links: list["TaskTag"] = Relationship(back_populates="task")
 
 
 class TaskCreate(SQLModel):
     """Schema for creating a task."""
 
     title: str
+    priority: str = "medium"
+    due_date: datetime | None = None
+    recurrence_type: str = "none"
+    recurrence_interval: int = 1
 
 
 class TaskUpdate(SQLModel):
@@ -39,6 +56,10 @@ class TaskUpdate(SQLModel):
 
     title: str | None = None
     completed: bool | None = None
+    priority: str | None = None
+    due_date: datetime | None = None
+    recurrence_type: str | None = None
+    recurrence_interval: int | None = None
 
 
 class TaskResponse(SQLModel):
@@ -49,3 +70,7 @@ class TaskResponse(SQLModel):
     completed: bool
     created_at: datetime
     completed_at: datetime | None = None
+    priority: str = "medium"
+    due_date: datetime | None = None
+    recurrence_type: str = "none"
+    recurrence_interval: int = 1
