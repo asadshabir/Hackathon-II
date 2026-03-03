@@ -3,9 +3,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 /**
- * RecurrenceSelector Component
- *
- * Dropdown: None/Daily/Weekly/Monthly with interval input
+ * RecurrenceSelector — AMOLED
  */
 
 interface RecurrenceSelectorProps {
@@ -24,16 +22,19 @@ export function RecurrenceSelector({
   className = ""
 }: RecurrenceSelectorProps) {
   const recurrenceOptions = [
-    { value: "none", label: "None" },
-    { value: "daily", label: "Daily" },
-    { value: "weekly", label: "Weekly" },
+    { value: "none",    label: "None" },
+    { value: "daily",   label: "Daily" },
+    { value: "weekly",  label: "Weekly" },
     { value: "monthly", label: "Monthly" },
   ]
 
   return (
-    <div className={`flex gap-2 ${className}`}>
+    <div className={`flex gap-2 items-center ${className}`}>
       <Select value={recurrenceType} onValueChange={onTypeChange}>
-        <SelectTrigger className="w-[120px]">
+        <SelectTrigger
+          className="w-[120px] rounded-xl text-sm border-0 focus:ring-1 focus:ring-violet-500/40"
+          style={{ background: "#1A1A1A", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}
+        >
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -47,15 +48,16 @@ export function RecurrenceSelector({
 
       {recurrenceType !== "none" && (
         <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-500">Every</span>
+          <span className="text-xs text-white/35">Every</span>
           <input
             type="number"
             min="1"
             value={recurrenceInterval}
             onChange={(e) => onIntervalChange(Math.max(1, parseInt(e.target.value) || 1))}
-            className="w-16 px-2 py-1.5 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-14 px-2 py-1.5 rounded-lg text-sm text-white outline-none focus:ring-1 focus:ring-violet-500/40"
+            style={{ background: "#1A1A1A", border: "1px solid rgba(255,255,255,0.08)" }}
           />
-          <span className="text-sm text-slate-500 capitalize">{recurrenceType}s</span>
+          <span className="text-xs text-white/35 capitalize">{recurrenceType}s</span>
         </div>
       )}
     </div>
