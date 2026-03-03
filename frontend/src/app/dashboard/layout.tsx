@@ -1,53 +1,61 @@
 "use client"
 
 /**
- * Dashboard Layout
+ * Dashboard Layout — AMOLED mobile-first
  *
- * Protected layout for authenticated users with premium header
- * Clean, performance-optimized design with solid backgrounds
+ * Mobile : 56px top header + 64px bottom nav. Content gets
+ *          pt-14 (header) + pb-20 (bottom nav clearance).
+ * Desktop: 56px header only. No bottom nav.
  */
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
 import { DashboardHeader } from "@/components/layout/DashboardHeader"
-import { FloatingChatButton } from "@/components/ui/floating-chat-button"
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const { signOut, user, isLoading, isAuthenticated } = useAuth()
 
-  // Redirect to signin if not authenticated
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push("/signin")
     }
   }, [isLoading, isAuthenticated, router])
 
-  // Show loading state while checking auth
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div
+          className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
+          style={{
+            borderTopColor: "#8B5CF6",
+            borderRightColor: "rgba(139,92,246,0.3)",
+            boxShadow: "0 0 16px rgba(139,92,246,0.4)",
+          }}
+        />
       </div>
     )
   }
 
-  // Don't render dashboard if not authenticated
-  if (!isAuthenticated) {
-    return null
-  }
+  if (!isAuthenticated) return null
 
   return (
-    <div className="relative min-h-screen bg-slate-50 dark:bg-slate-950">
-      {/* Enhanced Header */}
+    <div className="relative min-h-screen bg-background">
+      {/* Top header */}
       <DashboardHeader onSignOut={signOut} userEmail={user?.email} />
 
-      {/* Main Content with top padding for fixed header */}
-      <main className="container mx-auto px-4 py-8 pt-28">{children}</main>
+      {/* Main content
+          Mobile : pt-14 (header) + pb-20 (bottom nav + safe area)
+          Desktop: pt-14 (header) + pb-8
+      */}
+      <main className="container mx-auto px-4 pt-14 pb-24 md:pb-8">
+        {children}
+      </main>
 
-      {/* Floating Chat Button - Mobile friendly shortcut */}
-      <FloatingChatButton />
+      {/* Mobile bottom tab bar */}
+      <MobileBottomNav />
     </div>
   )
 }

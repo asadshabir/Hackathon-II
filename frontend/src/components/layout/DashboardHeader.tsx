@@ -1,17 +1,20 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
-import { CheckSquare, Menu, X, LayoutDashboard, ListTodo, LogOut, User, MessageSquare, CalendarDays, BarChart3, Settings } from "lucide-react"
+import {
+  CheckSquare, LayoutDashboard, ListTodo, LogOut,
+  User, MessageSquare, CalendarDays, BarChart3, Settings,
+} from "lucide-react"
 
 /**
- * DashboardHeader Component
+ * DashboardHeader — AMOLED mobile-first
  *
- * Premium header for authenticated dashboard with navigation, theme toggle, and user menu
- * Clean design with solid backgrounds and CSS-only transitions
+ * Mobile : slim 56px true-black bar — logo + avatar only.
+ *          Navigation is in MobileBottomNav (not here).
+ * Desktop: full horizontal nav + user chip + sign-out.
  */
 
 interface DashboardHeaderProps {
@@ -19,196 +22,101 @@ interface DashboardHeaderProps {
   userEmail?: string
 }
 
+const navItems = [
+  { label: "Dashboard",  href: "/dashboard",           icon: LayoutDashboard },
+  { label: "AI Chat",    href: "/dashboard/chat",       icon: MessageSquare   },
+  { label: "Todos",      href: "/dashboard/todos",      icon: ListTodo        },
+  { label: "Calendar",   href: "/dashboard/calendar",   icon: CalendarDays    },
+  { label: "Analytics",  href: "/dashboard/analytics",  icon: BarChart3       },
+  { label: "Settings",   href: "/dashboard/settings",   icon: Settings        },
+]
+
 export function DashboardHeader({ onSignOut, userEmail }: DashboardHeaderProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
-  const navItems = [
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: LayoutDashboard,
-      active: pathname === "/dashboard"
-    },
-    {
-      label: "AI Chat",
-      href: "/dashboard/chat",
-      icon: MessageSquare,
-      active: pathname === "/dashboard/chat"
-    },
-    {
-      label: "Todos",
-      href: "/dashboard/todos",
-      icon: ListTodo,
-      active: pathname === "/dashboard/todos"
-    },
-    {
-      label: "Calendar",
-      href: "/dashboard/calendar",
-      icon: CalendarDays,
-      active: pathname === "/dashboard/calendar"
-    },
-    {
-      label: "Analytics",
-      href: "/dashboard/analytics",
-      icon: BarChart3,
-      active: pathname === "/dashboard/analytics"
-    },
-    {
-      label: "Settings",
-      href: "/dashboard/settings",
-      icon: Settings,
-      active: pathname === "/dashboard/settings"
-    },
-  ]
-
   return (
-    <>
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 md:backdrop-blur-sm shadow-sm">
-        <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center shadow-md group-hover:bg-indigo-700 transition-colors duration-150">
-              <CheckSquare className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-slate-900 dark:text-white">
-                TaskFlow
-              </span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 -mt-0.5">
-                Dashboard
-              </span>
-            </div>
-          </Link>
+    <header
+      className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center border-b border-white/[0.06] bg-black/92"
+      style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
+    >
+      <div className="w-full flex items-center justify-between px-4">
 
-          {/* Navigation - Desktop */}
-          <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
+        {/* ── Logo ─────────────────────────────────────── */}
+        <Link href="/dashboard" className="flex items-center gap-2.5 shrink-0">
+          <div
+            className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-violet-700 flex items-center justify-center"
+            style={{ boxShadow: "0 0 14px rgba(139,92,246,0.55)" }}
+          >
+            <CheckSquare className="w-4 h-4 text-white" strokeWidth={2.5} />
+          </div>
+          <span className="font-bold text-[15px] text-white tracking-tight leading-none">
+            TaskFlow
+          </span>
+        </Link>
+
+        {/* ── Desktop nav ──────────────────────────────── */}
+        <nav className="hidden md:flex items-center gap-0.5">
+          {navItems.map((item) => {
+            const active =
+              pathname === item.href ||
+              (item.href !== "/dashboard" && pathname.startsWith(item.href))
+            return (
               <Link key={item.href} href={item.href}>
                 <button
                   className={`
-                    relative px-4 py-2 rounded-lg font-medium text-sm
-                    transition-colors duration-150 flex items-center gap-2
-                    ${item.active
-                      ? "bg-indigo-600 text-white"
-                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                    flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium
+                    transition-all duration-150
+                    ${active
+                      ? "bg-violet-600/20 text-violet-400"
+                      : "text-white/45 hover:text-white/80 hover:bg-white/[0.06]"
                     }
                   `}
+                  style={
+                    active
+                      ? { boxShadow: "0 0 0 1px rgba(139,92,246,0.25), 0 0 12px rgba(139,92,246,0.1)" }
+                      : undefined
+                  }
                 >
-                  <item.icon className="w-4 h-4" />
+                  <item.icon className="w-4 h-4" strokeWidth={active ? 2.5 : 1.8} />
                   {item.label}
                 </button>
               </Link>
-            ))}
-          </div>
-
-          {/* User Section - Desktop */}
-          <div className="hidden md:flex items-center gap-3">
-            <ThemeToggle />
-
-            {userEmail && (
-              <div className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-indigo-500" />
-                  <span className="text-sm text-slate-700 dark:text-slate-300 max-w-[150px] truncate">
-                    {userEmail}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            <Button
-              variant="outline"
-              onClick={onSignOut}
-              className="flex items-center gap-2 text-sm hover:border-red-500 hover:text-red-600 dark:hover:border-red-500 dark:hover:text-red-400"
-            >
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button & Theme Toggle */}
-          <div className="flex md:hidden items-center gap-2">
-            <ThemeToggle />
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-150"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? (
-                <X className="w-5 h-5 text-slate-700 dark:text-white" />
-              ) : (
-                <Menu className="w-5 h-5 text-slate-700 dark:text-white" />
-              )}
-            </button>
-          </div>
+            )
+          })}
         </nav>
-      </header>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setMobileMenuOpen(false)}
-          />
+        {/* ── Right section ────────────────────────────── */}
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
 
-          {/* Menu Content */}
-          <div className="absolute top-16 left-4 right-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl overflow-hidden">
-            <div className="p-4 space-y-4">
-              {/* User Info */}
-              {userEmail && (
-                <div className="px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-indigo-500" />
-                    <span className="text-sm text-slate-700 dark:text-slate-300 truncate">
-                      {userEmail}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Navigation Links */}
-              <div className="space-y-1">
-                {navItems.map((item) => (
-                  <Link key={item.href} href={item.href}>
-                    <button
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`
-                        w-full flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm transition-colors duration-150
-                        ${item.active
-                          ? "bg-indigo-600 text-white"
-                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-                        }
-                      `}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      {item.label}
-                    </button>
-                  </Link>
-                ))}
-              </div>
-
-              {/* Divider */}
-              <div className="h-px bg-slate-200 dark:bg-slate-700" />
-
-              {/* Sign Out Button */}
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  onSignOut()
-                }}
-                className="w-full flex items-center justify-center gap-2 hover:border-red-500 hover:text-red-600 dark:hover:border-red-500 dark:hover:text-red-400"
-              >
-                <LogOut className="w-4 h-4" />
-                Sign Out
-              </Button>
+          {userEmail && (
+            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/[0.05] border border-white/[0.06]">
+              <User className="w-3.5 h-3.5 text-violet-400" />
+              <span className="text-xs text-white/55 max-w-[130px] truncate">{userEmail}</span>
             </div>
-          </div>
+          )}
+
+          {/* Desktop sign out */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onSignOut}
+            className="hidden md:flex items-center gap-1.5 text-white/45 hover:text-rose-400 hover:bg-rose-500/10 h-8 px-2.5 rounded-xl"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="text-xs font-medium">Sign Out</span>
+          </Button>
+
+          {/* Mobile: avatar chip — tap to sign out */}
+          <button
+            onClick={onSignOut}
+            className="md:hidden w-8 h-8 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center active:scale-95 transition-transform"
+            aria-label="Sign out"
+          >
+            <User className="w-4 h-4 text-violet-400" />
+          </button>
         </div>
-      )}
-    </>
+      </div>
+    </header>
   )
 }

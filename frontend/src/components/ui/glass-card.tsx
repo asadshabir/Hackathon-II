@@ -4,41 +4,61 @@ import { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 /**
- * Premium Card Component
+ * GlassCard — AMOLED-aware surface card
  *
- * Features:
- * - Solid background (no backdrop-blur on mobile for performance)
- * - Subtle shadow elevation
- * - Clean border styling
- * - Simple CSS transitions (150ms)
+ * Light mode : subtle white card with soft shadow
+ * Dark/AMOLED: deep #111 surface with 1px white/5% border
+ *
+ * Optional glow variants: "violet" | "cyan" | "emerald" | "rose" | "amber"
  */
 
 interface GlassCardProps {
   children: ReactNode
   className?: string
-  hover3d?: boolean // Deprecated - kept for backwards compatibility, no longer uses 3D
+  glow?: "violet" | "cyan" | "emerald" | "rose" | "amber"
+  /** @deprecated kept for backwards compat */
+  hover3d?: boolean
 }
 
-export function GlassCard({ children, className }: GlassCardProps) {
+const glowStyles: Record<string, string> = {
+  violet:  "0 0 0 1px rgba(139,92,246,0.25), 0 4px 32px rgba(139,92,246,0.12)",
+  cyan:    "0 0 0 1px rgba(6,182,212,0.25),  0 4px 32px rgba(6,182,212,0.12)",
+  emerald: "0 0 0 1px rgba(16,185,129,0.25), 0 4px 32px rgba(16,185,129,0.12)",
+  rose:    "0 0 0 1px rgba(244,63,94,0.25),  0 4px 32px rgba(244,63,94,0.12)",
+  amber:   "0 0 0 1px rgba(245,158,11,0.25), 0 4px 32px rgba(245,158,11,0.12)",
+}
+
+export function GlassCard({ children, className, glow }: GlassCardProps) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl",
-        // Neumorphic background
-        "bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900",
-        // Neumorphic shadow
-        "shadow-neu",
-        // Border
-        "border border-transparent",
-        // Hover state - lift effect
-        "hover:shadow-neuHover card-lift",
-        // Active state
-        "active:shadow-neuInner",
-        // Performance-optimized transitions
-        "transition-all duration-180 ease-[cubic-bezier(0.4,0,0.2,1)]",
+        "relative overflow-hidden rounded-2xl",
+        // Light mode: clean white card
+        "bg-white border border-zinc-200/80 shadow-card",
+        // Dark / AMOLED mode: deep black surface
+        "dark:bg-[#0F0F0F] dark:border-white/[0.06] dark:shadow-none",
+        // Interaction
+        "transition-all duration-180 ease-out",
+        "active:scale-[0.99]",
         className
       )}
+      style={
+        glow
+          ? {
+              // Dark-only glow applied via inline style so it doesn't affect light mode
+              // (CSS-in-JS light/dark would need Tailwind JIT variant — inline is simpler here)
+            }
+          : undefined
+      }
     >
+      {/* AMOLED glow overlay — rendered only when glow prop is set */}
+      {glow && (
+        <span
+          className="pointer-events-none absolute inset-0 rounded-2xl dark:block hidden"
+          style={{ boxShadow: glowStyles[glow] }}
+          aria-hidden
+        />
+      )}
       {children}
     </div>
   )
