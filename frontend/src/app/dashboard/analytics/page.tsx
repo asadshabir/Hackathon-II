@@ -81,7 +81,7 @@ export default function AnalyticsDashboard() {
           <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 rounded-xl text-sm font-semibold text-white"
-            style={{ background: "linear-gradient(135deg,#7C3AED,#8B5CF6)" }}
+            style={{ background: "linear-gradient(135deg,#4F46E5,#6366F1)" }}
           >
             Retry
           </button>
@@ -95,7 +95,7 @@ export default function AnalyticsDashboard() {
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
-            style={{ borderTopColor: "#8B5CF6", borderRightColor: "rgba(139,92,246,0.3)", boxShadow: "0 0 16px rgba(139,92,246,0.4)" }} />
+            style={{ borderTopColor: "#6366F1", borderRightColor: "rgba(99,102,241,0.25)" }} />
           <p className="text-white/40 text-sm">Loading analytics...</p>
         </div>
       </div>
@@ -138,24 +138,24 @@ export default function AnalyticsDashboard() {
         {/* Stat Cards */}
         <div
           className="rounded-2xl p-4"
-          style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}
+          style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}
         >
           <StatCards stats={analytics} />
         </div>
 
         {/* Charts row 1 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="rounded-2xl p-4" style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}>
+          <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}>
             <CompletionTrendChart data={analytics.trends} />
           </div>
-          <div className="rounded-2xl p-4" style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}>
+          <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}>
             <PriorityDistributionChart data={priorityChartData} />
           </div>
         </div>
 
         {/* Charts row 2 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="rounded-2xl p-4" style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}>
+          <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}>
             <TagDistributionChart data={tagChartData} />
           </div>
 
@@ -163,8 +163,8 @@ export default function AnalyticsDashboard() {
           <div
             className="rounded-2xl p-5"
             style={{
-              background: "linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(6,182,212,0.08) 100%)",
-              boxShadow: "0 0 0 1px rgba(139,92,246,0.2)",
+              background: "linear-gradient(135deg, rgba(99,102,241,0.10) 0%, rgba(56,189,248,0.06) 100%)",
+              boxShadow: "0 0 0 1px rgba(99,102,241,0.18)",
             }}
           >
             <h3 className="text-sm font-semibold text-white/80 mb-4">Additional Insights</h3>

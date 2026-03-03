@@ -3,10 +3,6 @@
 import { X } from "lucide-react"
 import type { TodoPriority, TodoCategory } from "@/types/todo"
 
-/**
- * FilterPanel — AMOLED
- */
-
 interface ActiveFilters {
   priority: TodoPriority | "all"
   category: TodoCategory | "all"
@@ -21,9 +17,9 @@ interface FilterPanelProps {
 }
 
 const selectStyle = {
-  background: "#1A1A1A",
+  background: "#181B23",
   border: "1px solid rgba(255,255,255,0.08)",
-  color: "rgba(255,255,255,0.6)",
+  color: "rgba(255,255,255,0.60)",
 }
 
 export function FilterPanel({ filters, onFilterChange, className = "" }: FilterPanelProps) {
@@ -47,43 +43,35 @@ export function FilterPanel({ filters, onFilterChange, className = "" }: FilterP
   return (
     <div className={className}>
       <div className="flex gap-2 flex-wrap">
-        <select
-          value={filters.priority}
-          onChange={(e) => onFilterChange("priority", e.target.value as TodoPriority | "all")}
-          className="px-3 py-2.5 rounded-xl text-sm outline-none appearance-none transition-all duration-150 focus:ring-1 focus:ring-violet-500/40"
-          style={selectStyle}
-        >
-          <option value="all">All Priorities</option>
-          <option value="urgent">Urgent</option>
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
-        </select>
-
-        <select
-          value={filters.category}
-          onChange={(e) => onFilterChange("category", e.target.value as TodoCategory | "all")}
-          className="px-3 py-2.5 rounded-xl text-sm outline-none appearance-none transition-all duration-150 focus:ring-1 focus:ring-violet-500/40"
-          style={selectStyle}
-        >
-          <option value="all">All Categories</option>
-          <option value="work">Work</option>
-          <option value="personal">Personal</option>
-          <option value="shopping">Shopping</option>
-          <option value="health">Health</option>
-          <option value="other">Other</option>
-        </select>
-
-        <select
-          value={filters.status}
-          onChange={(e) => onFilterChange("status", e.target.value as "all" | "completed" | "active")}
-          className="px-3 py-2.5 rounded-xl text-sm outline-none appearance-none transition-all duration-150 focus:ring-1 focus:ring-violet-500/40"
-          style={selectStyle}
-        >
-          <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="completed">Completed</option>
-        </select>
+        {[
+          {
+            value: filters.priority,
+            onChange: (v: string) => onFilterChange("priority", v as TodoPriority | "all"),
+            options: [["all","All Priorities"],["urgent","Urgent"],["high","High"],["medium","Medium"],["low","Low"]],
+          },
+          {
+            value: filters.category,
+            onChange: (v: string) => onFilterChange("category", v as TodoCategory | "all"),
+            options: [["all","All Categories"],["work","Work"],["personal","Personal"],["shopping","Shopping"],["health","Health"],["other","Other"]],
+          },
+          {
+            value: filters.status,
+            onChange: (v: string) => onFilterChange("status", v as "all"|"completed"|"active"),
+            options: [["all","All Status"],["active","Active"],["completed","Completed"]],
+          },
+        ].map((sel, i) => (
+          <select
+            key={i}
+            value={sel.value}
+            onChange={(e) => sel.onChange(e.target.value)}
+            className="px-3 py-2.5 rounded-xl text-sm outline-none appearance-none transition-all duration-150 focus:ring-1 focus:ring-indigo-500/40"
+            style={selectStyle}
+          >
+            {sel.options.map(([val, label]) => (
+              <option key={val} value={val}>{label}</option>
+            ))}
+          </select>
+        ))}
       </div>
 
       {activeChips.length > 0 && (
@@ -94,9 +82,9 @@ export function FilterPanel({ filters, onFilterChange, className = "" }: FilterP
               onClick={() => onFilterChange(chip.key, chip.resetValue as never)}
               className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors active:scale-95"
               style={{
-                background: "rgba(139,92,246,0.12)",
-                color: "#A78BFA",
-                border: "1px solid rgba(139,92,246,0.25)",
+                background: "rgba(99,102,241,0.10)",
+                color: "#818CF8",
+                border: "1px solid rgba(99,102,241,0.22)",
               }}
             >
               {chip.label}
@@ -105,11 +93,11 @@ export function FilterPanel({ filters, onFilterChange, className = "" }: FilterP
           ))}
           <button
             onClick={clearAll}
-            className="px-3 py-1 rounded-full text-xs font-medium transition-colors active:scale-95"
+            className="px-3 py-1 rounded-full text-xs font-medium active:scale-95"
             style={{
-              background: "rgba(255,255,255,0.06)",
-              color: "rgba(255,255,255,0.4)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.05)",
+              color: "rgba(255,255,255,0.38)",
+              border: "1px solid rgba(255,255,255,0.07)",
             }}
           >
             Clear all

@@ -13,16 +13,16 @@ interface StatCardProps {
   value: number | string
   icon: ComponentType<{ className?: string; style?: CSSProperties }>
   accentColor: string
-  glowColor: string
+  glowColor?: string
 }
 
-export function StatCard({ title, value, icon: Icon, accentColor, glowColor }: StatCardProps) {
+export function StatCard({ title, value, icon: Icon, accentColor }: StatCardProps) {
   return (
     <div
       className="relative overflow-hidden rounded-xl p-4 flex flex-col gap-3"
       style={{
-        background: "#0F0F0F",
-        boxShadow: `0 0 0 1px rgba(255,255,255,0.05), 0 0 0 1px ${glowColor}20`,
+        background: "#111318",
+        boxShadow: `0 0 0 1px rgba(255,255,255,0.06)`,
       }}
     >
       <div className="flex items-center justify-between">
@@ -36,7 +36,7 @@ export function StatCard({ title, value, icon: Icon, accentColor, glowColor }: S
       </div>
       <p
         className="text-3xl font-bold"
-        style={{ color: accentColor, textShadow: `0 0 20px ${glowColor}` }}
+        style={{ color: accentColor }}
       >
         {value}
       </p>
@@ -63,8 +63,8 @@ export function StatCards({ stats }: StatCardsProps) {
       <StatCard
         title="Today"
         value={stats.completion_today}
-        accentColor="#8B5CF6"
-        glowColor="#8B5CF6"
+        accentColor="#6366F1"
+        glowColor="#6366F1"
         icon={({ className, style }) => (
           <svg xmlns="http://www.w3.org/2000/svg" className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M8 2v4"/><path d="M16 2v4"/>

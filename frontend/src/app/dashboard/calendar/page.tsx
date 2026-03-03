@@ -91,7 +91,7 @@ export default function CalendarPage() {
         </div>
 
         {/* Calendar card */}
-        <div className="rounded-2xl p-4" style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}>
+        <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}>
           {/* Month Nav */}
           <div className="flex items-center justify-between mb-4">
             <button onClick={prevMonth} className="w-8 h-8 rounded-xl bg-white/[0.05] flex items-center justify-center active:scale-95 transition-transform">
@@ -132,18 +132,18 @@ export default function CalendarPage() {
                   className="h-14 p-1 rounded-xl text-left transition-all duration-150 active:scale-95 flex flex-col"
                   style={{
                     background: isSelected
-                      ? "linear-gradient(135deg,#7C3AED,#06B6D4)"
+                      ? "linear-gradient(135deg,#4F46E5,#6366F1)"
                       : isToday
-                        ? "rgba(139,92,246,0.2)"
+                        ? "rgba(99,102,241,0.15)"
                         : isOverdue
-                          ? "rgba(244,63,94,0.12)"
+                          ? "rgba(244,63,94,0.10)"
                           : "rgba(255,255,255,0.03)",
                     boxShadow: isSelected
-                      ? "0 0 0 1px rgba(139,92,246,0.5)"
+                      ? "0 0 0 1px rgba(99,102,241,0.4)"
                       : isToday
-                        ? "0 0 0 1px rgba(139,92,246,0.25)"
+                        ? "0 0 0 1px rgba(99,102,241,0.22)"
                         : isOverdue
-                          ? "0 0 0 1px rgba(244,63,94,0.2)"
+                          ? "0 0 0 1px rgba(244,63,94,0.18)"
                           : "0 0 0 1px rgba(255,255,255,0.04)",
                   }}
                 >
@@ -151,7 +151,7 @@ export default function CalendarPage() {
                     className="text-xs font-semibold leading-none"
                     style={{
                       color: isSelected ? "#fff"
-                        : isToday ? "#A78BFA"
+                        : isToday ? "#818CF8"
                         : isOverdue ? "#FB7185"
                         : "rgba(255,255,255,0.6)",
                     }}
@@ -162,10 +162,10 @@ export default function CalendarPage() {
                     <span
                       className="mt-auto text-[9px] font-bold px-1 py-0.5 rounded-md self-start"
                       style={{
-                        background: isOverdue ? "rgba(244,63,94,0.3)"
-                          : isSelected ? "rgba(255,255,255,0.25)"
-                          : "rgba(139,92,246,0.3)",
-                        color: isSelected ? "#fff" : isOverdue ? "#FB7185" : "#A78BFA",
+                        background: isOverdue ? "rgba(244,63,94,0.25)"
+                          : isSelected ? "rgba(255,255,255,0.22)"
+                          : "rgba(99,102,241,0.25)",
+                        color: isSelected ? "#fff" : isOverdue ? "#FB7185" : "#818CF8",
                       }}
                     >
                       {dayTodos.length}
@@ -179,7 +179,7 @@ export default function CalendarPage() {
 
         {/* Selected date tasks */}
         {selectedDate && (
-          <div className="rounded-2xl p-4" style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(139,92,246,0.2)" }}>
+          <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(99,102,241,0.18)" }}>
             <h3 className="text-sm font-semibold text-white/80 mb-3">
               {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
             </h3>

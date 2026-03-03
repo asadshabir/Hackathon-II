@@ -83,7 +83,7 @@ export default function SettingsPage() {
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
-            style={{ borderTopColor: "#8B5CF6", borderRightColor: "rgba(139,92,246,0.3)", boxShadow: "0 0 16px rgba(139,92,246,0.4)" }} />
+            style={{ borderTopColor: "#6366F1", borderRightColor: "rgba(99,102,241,0.25)" }} />
           <p className="text-white/40 text-sm">Loading settings...</p>
         </div>
       </div>
@@ -102,7 +102,7 @@ export default function SettingsPage() {
   const labelClass = "text-sm font-semibold text-white/80"
   const descClass = "text-xs text-white/35 mt-0.5"
   const sectionClass = "rounded-2xl p-5 space-y-4"
-  const sectionStyle = { background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }
+  const sectionStyle = { background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }
 
   return (
     <div className="min-h-screen pt-5 pb-2 animate-fade-in">
@@ -225,14 +225,14 @@ export default function SettingsPage() {
             <div className="flex items-center gap-3">
               <span className={`text-xs ${preferences.theme === "light" ? "text-white/70 font-semibold" : "text-white/30"}`}>Light</span>
               <Switch checked={preferences.theme === "dark"} onCheckedChange={(c) => handlePreferenceChange("theme", c ? "dark" : "light")} />
-              <span className={`text-xs ${preferences.theme === "dark" ? "text-violet-400 font-semibold" : "text-white/30"}`}>Dark</span>
+              <span className={`text-xs ${preferences.theme === "dark" ? "text-indigo-400 font-semibold" : "text-white/30"}`}>Dark</span>
             </div>
           </div>
         </div>
 
         {saving && (
           <div className="flex justify-center">
-            <div className="px-4 py-2 rounded-xl text-xs font-medium text-violet-300 bg-violet-500/15 border border-violet-500/20">
+            <div className="px-4 py-2 rounded-xl text-xs font-medium text-indigo-300 bg-indigo-500/15 border border-indigo-500/20">
               Saving changes...
             </div>
           </div>

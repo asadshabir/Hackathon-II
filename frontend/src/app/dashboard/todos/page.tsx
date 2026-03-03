@@ -299,7 +299,7 @@ export default function TodoDashboard() {
         <div className="flex flex-col items-center gap-3">
           <div
             className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
-            style={{ borderTopColor: "#8B5CF6", borderRightColor: "rgba(139,92,246,0.3)", boxShadow: "0 0 16px rgba(139,92,246,0.4)" }}
+            style={{ borderTopColor: "#6366F1", borderRightColor: "rgba(99,102,241,0.25)" }}
           />
           <p className="text-white/40 text-sm">Loading your tasks...</p>
         </div>
@@ -323,7 +323,7 @@ export default function TodoDashboard() {
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <StatsCard title="Total" value={stats.total} icon={TrendingUp} accentColor="#8B5CF6" />
+            <StatsCard title="Total" value={stats.total} icon={TrendingUp} accentColor="#6366F1" />
             <StatsCard title="Done" value={stats.completed} icon={CheckCircle} accentColor="#10B981" />
             <StatsCard title="Active" value={stats.inProgress} icon={Clock} accentColor="#06B6D4" />
             <StatsCard title="Pending" value={stats.pending} icon={AlertCircle} accentColor="#F59E0B" />
@@ -332,7 +332,7 @@ export default function TodoDashboard() {
           {/* Controls */}
           <div
             className="rounded-2xl p-4 space-y-3"
-            style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}
+            style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}
           >
             <SearchBar
               value={searchQuery}
@@ -395,7 +395,7 @@ export default function TodoDashboard() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
                   className="rounded-2xl p-10 text-center"
-                  style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}
+                  style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}
                 >
                   <p className="text-white/35 text-sm">
                     {searchQuery || filterPriority !== "all" || filterCategory !== "all" || filterStatus !== "all"

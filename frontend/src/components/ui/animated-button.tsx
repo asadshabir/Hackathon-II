@@ -3,10 +3,6 @@
 import { ReactNode, forwardRef, ButtonHTMLAttributes } from "react"
 import { cn } from "@/lib/utils"
 
-/**
- * AnimatedButton — AMOLED
- */
-
 interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
   variant?: "primary" | "secondary" | "outline" | "ghost"
@@ -16,10 +12,25 @@ interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
   ({ children, className, variant = "primary", isLoading, disabled, style, ...props }, ref) => {
     const variantStyles: Record<string, React.CSSProperties> = {
-      primary:   { background: "linear-gradient(135deg,#7C3AED,#8B5CF6)", color: "#fff", boxShadow: "0 0 16px rgba(139,92,246,0.3)" },
-      secondary: { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.08)" },
-      outline:   { background: "transparent", color: "#A78BFA", border: "1px solid rgba(139,92,246,0.4)" },
-      ghost:     { background: "transparent", color: "rgba(255,255,255,0.5)" },
+      primary:   {
+        background: "linear-gradient(135deg, #4F46E5, #6366F1)",
+        color: "#fff",
+        boxShadow: "0 0 16px rgba(99,102,241,0.28)",
+      },
+      secondary: {
+        background: "rgba(255,255,255,0.06)",
+        color: "rgba(255,255,255,0.70)",
+        border: "1px solid rgba(255,255,255,0.08)",
+      },
+      outline: {
+        background: "transparent",
+        color: "#818CF8",
+        border: "1px solid rgba(99,102,241,0.35)",
+      },
+      ghost: {
+        background: "transparent",
+        color: "rgba(255,255,255,0.50)",
+      },
     }
 
     return (
@@ -30,7 +41,7 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
           "relative overflow-hidden rounded-xl px-4 py-2.5 text-sm font-semibold",
           "transition-all duration-150 active:scale-95",
           "disabled:opacity-40 disabled:cursor-not-allowed",
-          "focus:outline-none focus:ring-1 focus:ring-violet-500/40",
+          "focus:outline-none focus:ring-1 focus:ring-indigo-500/40",
           className
         )}
         style={{ ...variantStyles[variant], ...style }}
@@ -42,9 +53,7 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
               <div className="h-4 w-4 rounded-full border-2 border-current/30 border-t-current animate-spin" />
               <span>Loading...</span>
             </>
-          ) : (
-            children
-          )}
+          ) : children}
         </span>
       </button>
     )

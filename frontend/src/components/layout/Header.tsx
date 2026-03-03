@@ -20,16 +20,16 @@ export function Header() {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center border-b border-white/[0.06] bg-black/90"
-        style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
+        className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center border-b border-white/[0.06]"
+        style={{ background: "rgba(10,11,15,0.92)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
       >
         <nav className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <div
-              className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-violet-700 flex items-center justify-center"
-              style={{ boxShadow: "0 0 14px rgba(139,92,246,0.5)" }}
+              className="w-8 h-8 rounded-xl flex items-center justify-center"
+              style={{ background: "linear-gradient(135deg, #4F46E5, #6366F1)" }}
             >
               <CheckSquare className="w-4 h-4 text-white" strokeWidth={2.5} />
             </div>
@@ -60,7 +60,7 @@ export function Header() {
             <Link href="/signup">
               <button
                 className="h-8 px-4 rounded-xl text-sm font-semibold text-white transition-all duration-150 active:scale-95"
-                style={{ background: "linear-gradient(135deg, #7C3AED, #8B5CF6)", boxShadow: "0 0 16px rgba(139,92,246,0.35)" }}
+                style={{ background: "linear-gradient(135deg, #4F46E5, #6366F1)", boxShadow: "0 0 16px rgba(99,102,241,0.30)" }}
               >
                 Get Started
               </button>
@@ -90,7 +90,7 @@ export function Header() {
           <div className="absolute inset-0 bg-black/70" onClick={() => setMobileMenuOpen(false)} />
           <div
             className="absolute top-14 left-4 right-4 rounded-2xl overflow-hidden"
-            style={{ background: "#111111", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), 0 16px 48px rgba(0,0,0,0.95)" }}
+            style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), 0 16px 48px rgba(0,0,0,0.90)" }}
           >
             <div className="p-4 space-y-2">
               {navItems.map((item) => (
@@ -112,7 +112,7 @@ export function Header() {
               <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
                 <button
                   className="w-full h-10 rounded-xl text-sm font-semibold text-white"
-                  style={{ background: "linear-gradient(135deg, #7C3AED, #8B5CF6)" }}
+                  style={{ background: "linear-gradient(135deg, #4F46E5, #6366F1)" }}
                 >
                   Get Started
                 </button>

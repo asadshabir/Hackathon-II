@@ -8,9 +8,8 @@ import {
 } from "lucide-react"
 
 /**
- * Dashboard Home — AMOLED mobile-first
- * 2-col grid on mobile, 3-col on desktop.
- * Electric color accents with HD icon pills.
+ * Dashboard Home — Deep Indigo
+ * Clean professional layout with indigo primary and semantic accents.
  */
 
 const quickCards = [
@@ -20,8 +19,8 @@ const quickCards = [
     href: "/dashboard/todos",
     icon: CheckSquare,
     color: "#10B981",
-    bg: "rgba(16,185,129,0.12)",
-    border: "rgba(16,185,129,0.2)",
+    bg: "rgba(16,185,129,0.10)",
+    border: "rgba(16,185,129,0.15)",
   },
   {
     label: "Analytics",
@@ -29,42 +28,42 @@ const quickCards = [
     href: "/dashboard/analytics",
     icon: BarChart3,
     color: "#F59E0B",
-    bg: "rgba(245,158,11,0.12)",
-    border: "rgba(245,158,11,0.2)",
+    bg: "rgba(245,158,11,0.10)",
+    border: "rgba(245,158,11,0.15)",
   },
   {
     label: "Calendar",
     desc: "Due dates",
     href: "/dashboard/calendar",
     icon: CalendarDays,
-    color: "#06B6D4",
-    bg: "rgba(6,182,212,0.12)",
-    border: "rgba(6,182,212,0.2)",
+    color: "#38BDF8",
+    bg: "rgba(56,189,248,0.10)",
+    border: "rgba(56,189,248,0.15)",
   },
   {
     label: "Conversations",
     desc: "Chat history",
     href: "/dashboard/chat",
     icon: MessageSquare,
-    color: "#EC4899",
-    bg: "rgba(236,72,153,0.12)",
-    border: "rgba(236,72,153,0.2)",
+    color: "#6366F1",
+    bg: "rgba(99,102,241,0.10)",
+    border: "rgba(99,102,241,0.15)",
   },
   {
     label: "Settings",
     desc: "Preferences",
     href: "/dashboard/settings",
     icon: Settings,
-    color: "#94A3B8",
-    bg: "rgba(148,163,184,0.1)",
-    border: "rgba(148,163,184,0.15)",
+    color: "rgba(255,255,255,0.45)",
+    bg: "rgba(255,255,255,0.05)",
+    border: "rgba(255,255,255,0.08)",
   },
 ]
 
 const features = [
-  { icon: Zap,   color: "#8B5CF6", label: "Natural Language",    desc: "Just type what you need" },
-  { icon: Clock, color: "#06B6D4", label: "Smart Reminders",     desc: "Never miss a deadline"  },
-  { icon: Star,  color: "#F59E0B", label: "Memory",              desc: "Picks up where you left off" },
+  { icon: Zap,   color: "#6366F1", label: "Natural Language",   desc: "Just type what you need" },
+  { icon: Clock, color: "#38BDF8", label: "Smart Reminders",    desc: "Never miss a deadline"  },
+  { icon: Star,  color: "#F59E0B", label: "Memory",             desc: "Picks up where you left off" },
 ]
 
 export default function DashboardPage() {
@@ -77,50 +76,65 @@ export default function DashboardPage() {
 
         {/* Greeting */}
         <div className="px-1">
-          <p className="text-xs font-medium text-white/35 mb-0.5 uppercase tracking-widest">Dashboard</p>
+          <p className="text-[10px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: "rgba(255,255,255,0.28)" }}>
+            Dashboard
+          </p>
           <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
-            Hey, <span className="gradient-violet-cyan">{firstName}</span> 👋
+            Hey, <span className="gradient-violet-cyan">{firstName}</span>
           </h1>
-          <p className="text-sm text-white/40 mt-1">Ready to crush your tasks today?</p>
+          <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.42)" }}>
+            Ready to crush your tasks today?
+          </p>
         </div>
 
-        {/* AI Chat — hero card */}
+        {/* AI Chat hero card */}
         <Link href="/dashboard/chat">
           <div
             className="relative overflow-hidden rounded-2xl p-5 flex items-center gap-4 active:scale-[0.985] transition-transform duration-150"
             style={{
-              background: "linear-gradient(135deg, #1C0F3A 0%, #0D0D1A 100%)",
-              boxShadow: "0 0 0 1px rgba(139,92,246,0.25), 0 8px 40px rgba(139,92,246,0.2)",
+              background: "linear-gradient(135deg, #0F1021 0%, #111318 100%)",
+              boxShadow: "0 0 0 1px rgba(99,102,241,0.2), 0 4px 24px rgba(0,0,0,0.5)",
             }}
           >
             {/* Icon */}
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+              className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
               style={{
-                background: "linear-gradient(135deg, #7C3AED, #9333EA)",
-                boxShadow: "0 0 20px rgba(139,92,246,0.5)",
+                background: "linear-gradient(135deg, #4F46E5, #6366F1)",
+                boxShadow: "0 0 20px rgba(99,102,241,0.30)",
               }}
             >
-              <Bot className="w-8 h-8 text-white" strokeWidth={1.8} />
+              <Bot className="w-6 h-6 text-white" strokeWidth={1.8} />
             </div>
 
             {/* Text */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
                 <p className="font-bold text-white text-base leading-tight">AI Task Assistant</p>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-violet-500/25 text-violet-300 border border-violet-500/25">
+                <span
+                  className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                  style={{
+                    background: "rgba(99,102,241,0.18)",
+                    color: "#818CF8",
+                    border: "1px solid rgba(99,102,241,0.2)",
+                  }}
+                >
                   Gemini
                 </span>
               </div>
-              <p className="text-xs text-white/45 leading-relaxed">
-                Manage tasks using natural language — create, complete, delete & more
+              <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
+                Manage tasks using natural language — create, complete, delete &amp; more
               </p>
               <div className="flex flex-wrap gap-1.5 mt-2.5">
                 {["Add task", "Show pending", "Mark done"].map((cmd) => (
                   <span
                     key={cmd}
-                    className="text-[10px] px-2 py-0.5 rounded-full border font-medium"
-                    style={{ borderColor: "rgba(139,92,246,0.25)", color: "rgba(167,139,250,0.8)", background: "rgba(139,92,246,0.08)" }}
+                    className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                    style={{
+                      border: "1px solid rgba(99,102,241,0.22)",
+                      color: "rgba(129,140,248,0.80)",
+                      background: "rgba(99,102,241,0.08)",
+                    }}
                   >
                     {cmd}
                   </span>
@@ -128,18 +142,17 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Arrow */}
-            <ArrowRight className="w-5 h-5 text-violet-400 shrink-0" strokeWidth={2.5} />
+            <ArrowRight className="w-4 h-4 shrink-0" style={{ color: "#818CF8" }} strokeWidth={2.5} />
 
-            {/* Decorative blob */}
+            {/* Decorative ambient glow */}
             <div
-              className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full opacity-15 blur-3xl pointer-events-none"
-              style={{ background: "#8B5CF6" }}
+              className="absolute -bottom-10 -right-10 w-36 h-36 rounded-full blur-3xl pointer-events-none opacity-10"
+              style={{ background: "#6366F1" }}
             />
           </div>
         </Link>
 
-        {/* Quick Action Cards */}
+        {/* Quick action cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {quickCards.map((card) => {
             const Icon = card.icon
@@ -148,19 +161,23 @@ export default function DashboardPage() {
                 <div
                   className="rounded-2xl p-4 flex flex-col gap-3 min-h-[100px] active:scale-[0.97] transition-transform duration-150"
                   style={{
-                    background: "#0F0F0F",
+                    background: "#111318",
                     boxShadow: `0 0 0 1px ${card.border}`,
                   }}
                 >
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center"
-                    style={{ background: card.bg, boxShadow: `0 0 0 1px ${card.border}` }}
+                    className="w-9 h-9 rounded-xl flex items-center justify-center"
+                    style={{ background: card.bg }}
                   >
-                    <Icon className="w-5 h-5" style={{ color: card.color }} strokeWidth={2} />
+                    <Icon className="w-4.5 h-4.5" style={{ color: card.color }} strokeWidth={2} />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white/90 leading-tight">{card.label}</p>
-                    <p className="text-[11px] text-white/35 mt-0.5">{card.desc}</p>
+                    <p className="text-sm font-semibold leading-tight" style={{ color: "rgba(255,255,255,0.88)" }}>
+                      {card.label}
+                    </p>
+                    <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+                      {card.desc}
+                    </p>
                   </div>
                 </div>
               </Link>
@@ -168,26 +185,35 @@ export default function DashboardPage() {
           })}
         </div>
 
-        {/* Feature row */}
+        {/* Capabilities row */}
         <div
           className="rounded-2xl p-4"
-          style={{ background: "#0A0A0A", boxShadow: "0 0 0 1px rgba(255,255,255,0.04)" }}
+          style={{
+            background: "#111318",
+            boxShadow: "0 0 0 1px rgba(255,255,255,0.06)",
+          }}
         >
-          <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-3">Capabilities</p>
+          <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.25)" }}>
+            Capabilities
+          </p>
           <div className="grid grid-cols-3 gap-2">
             {features.map((f) => {
               const Icon = f.icon
               return (
                 <div key={f.label} className="flex flex-col items-center text-center gap-2">
                   <div
-                    className="w-10 h-10 rounded-2xl flex items-center justify-center"
-                    style={{ background: `${f.color}18`, boxShadow: `0 0 0 1px ${f.color}28` }}
+                    className="w-9 h-9 rounded-xl flex items-center justify-center"
+                    style={{ background: `${f.color}15`, border: `1px solid ${f.color}22` }}
                   >
-                    <Icon className="w-5 h-5" style={{ color: f.color }} strokeWidth={2} />
+                    <Icon className="w-4 h-4" style={{ color: f.color }} strokeWidth={2} />
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold text-white/75 leading-tight">{f.label}</p>
-                    <p className="text-[10px] text-white/30 mt-0.5 leading-tight">{f.desc}</p>
+                    <p className="text-[11px] font-semibold leading-tight" style={{ color: "rgba(255,255,255,0.72)" }}>
+                      {f.label}
+                    </p>
+                    <p className="text-[10px] mt-0.5 leading-tight" style={{ color: "rgba(255,255,255,0.30)" }}>
+                      {f.desc}
+                    </p>
                   </div>
                 </div>
               )

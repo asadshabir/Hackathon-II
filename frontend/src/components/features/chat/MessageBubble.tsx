@@ -1,11 +1,5 @@
 "use client"
 
-/**
- * MessageBubble Component
- *
- * Displays a single chat message with AMOLED styling
- */
-
 import { User, Bot, Copy, Check } from "lucide-react"
 import { useState } from "react"
 import type { ChatMessage } from "@/hooks/useChat"
@@ -31,77 +25,70 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center"
         style={
           isUser
-            ? { background: "linear-gradient(135deg,#7C3AED,#8B5CF6)", boxShadow: "0 0 12px rgba(139,92,246,0.35)" }
-            : { background: "linear-gradient(135deg,#06B6D4,#8B5CF6)", boxShadow: "0 0 12px rgba(6,182,212,0.3)" }
+            ? { background: "linear-gradient(135deg, #4F46E5, #6366F1)" }
+            : { background: "#181B23", border: "1px solid rgba(255,255,255,0.08)" }
         }
       >
-        {isUser ? (
-          <User className="w-4 h-4 text-white" />
-        ) : (
-          <Bot className="w-4 h-4 text-white" />
-        )}
+        {isUser
+          ? <User className="w-4 h-4 text-white" />
+          : <Bot className="w-4 h-4" style={{ color: "#818CF8" }} />}
       </div>
 
-      {/* Message Content */}
+      {/* Content */}
       <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-[78%]`}>
         <div
           className="relative group px-4 py-3 rounded-2xl text-sm leading-relaxed"
           style={
             isUser
               ? {
-                  background: "linear-gradient(135deg,#7C3AED,#8B5CF6)",
+                  background: "linear-gradient(135deg, #4F46E5, #6366F1)",
                   color: "#fff",
                   borderBottomRightRadius: "4px",
-                  boxShadow: "0 0 16px rgba(139,92,246,0.25)",
                 }
               : {
-                  background: "#1A1A1A",
+                  background: "#181B23",
                   color: "rgba(255,255,255,0.82)",
                   borderBottomLeftRadius: "4px",
                   boxShadow: "0 0 0 1px rgba(255,255,255,0.07)",
                 }
           }
         >
-          {/* Message Text */}
           <div className="whitespace-pre-wrap break-words">
             {message.content || (
-              <span className="flex items-center gap-2 text-white/40">
+              <span className="flex items-center gap-2" style={{ color: "rgba(255,255,255,0.35)" }}>
                 <span>Thinking</span>
                 <span className="flex gap-1">
-                  <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-pulse" style={{ animationDelay: "0ms" }} />
-                  <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-pulse" style={{ animationDelay: "150ms" }} />
-                  <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-pulse" style={{ animationDelay: "300ms" }} />
+                  {[0, 150, 300].map((delay) => (
+                    <span
+                      key={delay}
+                      className="w-1.5 h-1.5 rounded-full animate-pulse"
+                      style={{ background: "#818CF8", animationDelay: `${delay}ms` }}
+                    />
+                  ))}
                 </span>
               </span>
             )}
           </div>
 
-          {/* Copy Button (for assistant messages) */}
           {!isUser && message.content && (
             <button
               onClick={handleCopy}
               className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 p-1.5 rounded-lg"
               style={{
-                background: "#2A2A2A",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "#1F2330",
+                border: "1px solid rgba(255,255,255,0.09)",
               }}
               aria-label={copied ? "Copied" : "Copy message"}
             >
-              {copied ? (
-                <Check className="w-3 h-3 text-emerald-400" />
-              ) : (
-                <Copy className="w-3 h-3 text-white/40" />
-              )}
+              {copied
+                ? <Check className="w-3 h-3 text-emerald-400" />
+                : <Copy className="w-3 h-3" style={{ color: "rgba(255,255,255,0.38)" }} />}
             </button>
           )}
         </div>
 
-        {/* Timestamp */}
-        <span className="text-[10px] text-white/20 mt-1 px-1">
-          {message.timestamp.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+        <span className="text-[10px] mt-1 px-1" style={{ color: "rgba(255,255,255,0.20)" }}>
+          {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
         </span>
       </div>
     </div>

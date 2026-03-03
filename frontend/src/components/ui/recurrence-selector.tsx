@@ -32,8 +32,8 @@ export function RecurrenceSelector({
     <div className={`flex gap-2 items-center ${className}`}>
       <Select value={recurrenceType} onValueChange={onTypeChange}>
         <SelectTrigger
-          className="w-[120px] rounded-xl text-sm border-0 focus:ring-1 focus:ring-violet-500/40"
-          style={{ background: "#1A1A1A", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}
+          className="w-[120px] rounded-xl text-sm border-0 focus:ring-1 focus:ring-indigo-500/40"
+          style={{ background: "#181B23", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}
         >
           <SelectValue />
         </SelectTrigger>
@@ -54,8 +54,8 @@ export function RecurrenceSelector({
             min="1"
             value={recurrenceInterval}
             onChange={(e) => onIntervalChange(Math.max(1, parseInt(e.target.value) || 1))}
-            className="w-14 px-2 py-1.5 rounded-lg text-sm text-white outline-none focus:ring-1 focus:ring-violet-500/40"
-            style={{ background: "#1A1A1A", border: "1px solid rgba(255,255,255,0.08)" }}
+            className="w-14 px-2 py-1.5 rounded-lg text-sm text-white outline-none focus:ring-1 focus:ring-indigo-500/40"
+            style={{ background: "#181B23", border: "1px solid rgba(255,255,255,0.08)" }}
           />
           <span className="text-xs text-white/35 capitalize">{recurrenceType}s</span>
         </div>

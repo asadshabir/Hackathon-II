@@ -1,11 +1,5 @@
 "use client"
 
-/**
- * ChatContainer Component
- *
- * Main chat interface combining messages, input, and conversation management
- */
-
 import { useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { MessageSquarePlus, History, Bot, Sparkles, MessageCircle } from "lucide-react"
@@ -20,56 +14,53 @@ interface ChatContainerProps {
 
 export function ChatContainer({ initialConversationId }: ChatContainerProps) {
   const {
-    messages,
-    isLoading,
-    conversationId,
-    conversations,
-    sendMessage,
-    loadConversation,
-    startNewConversation,
+    messages, isLoading, conversationId, conversations,
+    sendMessage, loadConversation, startNewConversation,
   } = useChat({ conversationId: initialConversationId })
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
   return (
     <div className="flex h-full gap-3">
-      {/* Conversations Sidebar */}
+      {/* Sidebar */}
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
+        initial={{ opacity: 0, x: -16 }}
         animate={{ opacity: 1, x: 0 }}
-        className="hidden md:flex flex-col w-64"
+        className="hidden md:flex flex-col w-60"
       >
         <div
           className="flex-1 flex flex-col p-3 rounded-2xl overflow-hidden"
-          style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}
+          style={{
+            background: "#111318",
+            boxShadow: "0 0 0 1px rgba(255,255,255,0.07)",
+          }}
         >
-          {/* New Chat Button */}
+          {/* New Chat */}
           <button
             onClick={startNewConversation}
-            className="w-full flex items-center gap-2.5 px-4 py-3 rounded-xl text-white font-semibold text-sm mb-3 transition-all duration-150 active:scale-95"
+            className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-white font-semibold text-sm mb-3 transition-all duration-150 active:scale-95"
             style={{
-              background: "linear-gradient(135deg, #7C3AED, #8B5CF6)",
-              boxShadow: "0 0 16px rgba(139,92,246,0.35)",
+              background: "linear-gradient(135deg, #4F46E5, #6366F1)",
+              boxShadow: "0 0 16px rgba(99,102,241,0.25)",
             }}
           >
             <MessageSquarePlus className="w-4 h-4" />
             New Conversation
           </button>
 
-          {/* Section Label */}
           <div className="flex items-center gap-2 mb-2.5 px-1">
-            <History className="w-3.5 h-3.5 text-white/30" />
-            <span className="text-xs font-semibold text-white/30 uppercase tracking-widest">Recent</span>
+            <History className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.25)" }} />
+            <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.25)" }}>
+              Recent
+            </span>
           </div>
 
-          <div className="flex-1 overflow-y-auto space-y-1.5 pr-0.5">
+          <div className="flex-1 overflow-y-auto space-y-1 pr-0.5">
             <AnimatePresence>
               {conversations.map((conv, index) => (
                 <ConversationItem
@@ -84,33 +75,34 @@ export function ChatContainer({ initialConversationId }: ChatContainerProps) {
 
             {conversations.length === 0 && (
               <div className="text-center py-8">
-                <MessageCircle className="w-7 h-7 mx-auto mb-2 text-white/15" />
-                <p className="text-xs text-white/25">No conversations yet</p>
+                <MessageCircle className="w-7 h-7 mx-auto mb-2" style={{ color: "rgba(255,255,255,0.12)" }} />
+                <p className="text-xs" style={{ color: "rgba(255,255,255,0.22)" }}>No conversations yet</p>
               </div>
             )}
           </div>
         </div>
       </motion.div>
 
-      {/* Chat Area */}
+      {/* Chat area */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex-1 flex flex-col"
       >
         <div
           className="flex-1 flex flex-col overflow-hidden rounded-2xl"
-          style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}
+          style={{
+            background: "#111318",
+            boxShadow: "0 0 0 1px rgba(255,255,255,0.07)",
+          }}
         >
-          {/* Messages Area */}
+          {/* Messages */}
           <div
             ref={messagesContainerRef}
             className="flex-1 overflow-y-auto p-4 space-y-4"
-            style={{ background: "#080808" }}
+            style={{ background: "#0D0E13" }}
           >
-            {messages.length === 0 ? (
-              <EmptyState />
-            ) : (
+            {messages.length === 0 ? <EmptyState /> : (
               <>
                 <div className="flex flex-col space-y-3">
                   {messages.map((message) => (
@@ -122,10 +114,13 @@ export function ChatContainer({ initialConversationId }: ChatContainerProps) {
             )}
           </div>
 
-          {/* Input Area */}
+          {/* Input */}
           <div
             className="p-3"
-            style={{ borderTop: "1px solid rgba(255,255,255,0.06)", background: "#0A0A0A" }}
+            style={{
+              borderTop: "1px solid rgba(255,255,255,0.06)",
+              background: "#111318",
+            }}
           >
             <ChatInput onSend={sendMessage} isLoading={isLoading} />
           </div>
@@ -135,14 +130,8 @@ export function ChatContainer({ initialConversationId }: ChatContainerProps) {
   )
 }
 
-/**
- * Conversation Item Component
- */
 function ConversationItem({
-  conversation,
-  isActive,
-  onClick,
-  index,
+  conversation, isActive, onClick, index,
 }: {
   conversation: Conversation
   isActive: boolean
@@ -150,28 +139,19 @@ function ConversationItem({
   index: number
 }) {
   const date = new Date(conversation.last_activity_at)
-  const timeString = date.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  })
+  const timeString = date.toLocaleDateString(undefined, { month: "short", day: "numeric" })
 
   return (
     <motion.button
-      initial={{ opacity: 0, x: -10 }}
+      initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ delay: index * 0.04 }}
       onClick={onClick}
       className="w-full text-left px-3 py-2.5 rounded-xl transition-all duration-150 active:scale-95"
       style={
         isActive
-          ? {
-              background: "rgba(139,92,246,0.15)",
-              boxShadow: "0 0 0 1px rgba(139,92,246,0.3)",
-            }
-          : {
-              background: "transparent",
-              boxShadow: "0 0 0 1px transparent",
-            }
+          ? { background: "rgba(99,102,241,0.14)", boxShadow: "0 0 0 1px rgba(99,102,241,0.25)" }
+          : { background: "transparent" }
       }
       onMouseEnter={(e) => {
         if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.04)"
@@ -185,51 +165,47 @@ function ConversationItem({
           className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
           style={
             isActive
-              ? { background: "linear-gradient(135deg,#7C3AED,#8B5CF6)" }
+              ? { background: "linear-gradient(135deg,#4F46E5,#6366F1)" }
               : { background: "rgba(255,255,255,0.06)" }
           }
         >
-          <MessageCircle className={`w-3.5 h-3.5 ${isActive ? "text-white" : "text-white/35"}`} />
+          <MessageCircle className={`w-3.5 h-3.5 ${isActive ? "text-white" : ""}`}
+            style={isActive ? {} : { color: "rgba(255,255,255,0.30)" }} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className={`text-sm font-medium truncate ${isActive ? "text-white" : "text-white/60"}`}>
+          <p className="text-sm font-medium truncate" style={{ color: isActive ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.55)" }}>
             Conversation
           </p>
-          <p className="text-xs text-white/25">{timeString}</p>
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>{timeString}</p>
         </div>
       </div>
     </motion.button>
   )
 }
 
-/**
- * Empty State Component
- */
 function EmptyState() {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       className="h-full flex items-center justify-center"
     >
-      <div className="text-center max-w-sm px-4">
-        {/* Bot Icon */}
+      <div className="text-center max-w-xs px-4">
         <div
-          className="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center mb-5"
+          className="mx-auto w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
           style={{
-            background: "linear-gradient(135deg,#7C3AED,#06B6D4)",
-            boxShadow: "0 0 32px rgba(139,92,246,0.4)",
+            background: "linear-gradient(135deg, #4F46E5, #6366F1)",
+            boxShadow: "0 0 24px rgba(99,102,241,0.28)",
           }}
         >
-          <Bot className="w-8 h-8 text-white" />
+          <Bot className="w-7 h-7 text-white" />
         </div>
 
-        <h3 className="text-lg font-bold text-white mb-2">AI Task Assistant</h3>
-        <p className="text-sm text-white/40 mb-5 leading-relaxed">
+        <h3 className="text-base font-bold text-white mb-2">AI Task Assistant</h3>
+        <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.40)" }}>
           Manage your tasks using natural language. Try:
         </p>
 
-        {/* Suggestion Chips */}
         <div className="flex flex-wrap justify-center gap-2">
           {[
             "Add a task to buy groceries",
@@ -239,16 +215,17 @@ function EmptyState() {
           ].map((suggestion, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + index * 0.08 }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-white/55"
+              transition={{ delay: 0.15 + index * 0.07 }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs"
               style={{
-                background: "rgba(139,92,246,0.1)",
-                border: "1px solid rgba(139,92,246,0.2)",
+                background: "rgba(99,102,241,0.08)",
+                border: "1px solid rgba(99,102,241,0.18)",
+                color: "rgba(255,255,255,0.55)",
               }}
             >
-              <Sparkles className="w-3 h-3 text-violet-400" />
+              <Sparkles className="w-3 h-3" style={{ color: "#818CF8" }} />
               {suggestion}
             </motion.div>
           ))}

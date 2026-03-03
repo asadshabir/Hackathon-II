@@ -20,8 +20,8 @@ export function StatsCard({ title, value, icon: Icon, accentColor }: StatsCardPr
     <div
       className="relative overflow-hidden rounded-xl p-4 flex flex-col gap-3"
       style={{
-        background: "#0F0F0F",
-        boxShadow: `0 0 0 1px rgba(255,255,255,0.05)`,
+        background: "#111318",
+        boxShadow: `0 0 0 1px rgba(255,255,255,0.06)`,
       }}
     >
       <div className="flex items-center justify-between">
@@ -35,7 +35,7 @@ export function StatsCard({ title, value, icon: Icon, accentColor }: StatsCardPr
       </div>
       <p
         className="text-3xl font-bold"
-        style={{ color: accentColor, textShadow: `0 0 20px ${accentColor}60` }}
+        style={{ color: accentColor }}
       >
         {value}
       </p>

@@ -1,13 +1,5 @@
 "use client"
 
-/**
- * Dashboard Layout — AMOLED mobile-first
- *
- * Mobile : 56px top header + 64px bottom nav. Content gets
- *          pt-14 (header) + pb-20 (bottom nav clearance).
- * Desktop: 56px header only. No bottom nav.
- */
-
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
@@ -26,13 +18,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0A0B0F" }}>
         <div
-          className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
+          className="w-9 h-9 rounded-full border-2 border-transparent animate-spin"
           style={{
-            borderTopColor: "#8B5CF6",
-            borderRightColor: "rgba(139,92,246,0.3)",
-            boxShadow: "0 0 16px rgba(139,92,246,0.4)",
+            borderTopColor: "#6366F1",
+            borderRightColor: "rgba(99,102,241,0.25)",
           }}
         />
       </div>
@@ -43,18 +34,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="relative min-h-screen bg-background">
-      {/* Top header */}
       <DashboardHeader onSignOut={signOut} userEmail={user?.email} />
-
-      {/* Main content
-          Mobile : pt-14 (header) + pb-20 (bottom nav + safe area)
-          Desktop: pt-14 (header) + pb-8
-      */}
       <main className="container mx-auto px-4 pt-14 pb-24 md:pb-8">
         {children}
       </main>
-
-      {/* Mobile bottom tab bar */}
       <MobileBottomNav />
     </div>
   )

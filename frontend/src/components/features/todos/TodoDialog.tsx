@@ -29,10 +29,10 @@ interface TodoDialogProps {
 
 const inputClass = "w-full px-4 py-3 rounded-xl text-sm text-white placeholder:text-white/25 outline-none transition-all duration-150 focus:ring-1"
 const inputStyle = {
-  background: "#1A1A1A",
+  background: "#181B23",
   border: "1px solid rgba(255,255,255,0.08)",
 }
-const inputFocusRing = "focus:ring-violet-500/40"
+const inputFocusRing = "focus:ring-indigo-500/40"
 const labelClass = "block text-xs font-semibold text-white/50 uppercase tracking-widest mb-2"
 
 export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialogProps) {
@@ -145,7 +145,7 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="sm:max-w-[500px] border-0"
-        style={{ background: "#0D0D0D", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), 0 24px 64px rgba(0,0,0,0.8)" }}
+        style={{ background: "#0D0E13", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), 0 24px 64px rgba(0,0,0,0.8)" }}
       >
         <DialogHeader>
           <DialogTitle className="text-lg font-bold text-white">
@@ -267,8 +267,8 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
               <div
                 className="relative w-5 h-5 rounded flex items-center justify-center cursor-pointer"
                 style={{
-                  background: formData.reminderEnabled ? "linear-gradient(135deg,#7C3AED,#8B5CF6)" : "rgba(255,255,255,0.06)",
-                  border: `1px solid ${formData.reminderEnabled ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.12)"}`,
+                  background: formData.reminderEnabled ? "linear-gradient(135deg,#4F46E5,#6366F1)" : "rgba(255,255,255,0.06)",
+                  border: `1px solid ${formData.reminderEnabled ? "rgba(99,102,241,0.5)" : "rgba(255,255,255,0.12)"}`,
                 }}
                 onClick={() => handleReminderToggle(!formData.reminderEnabled)}
               >
@@ -336,7 +336,7 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
               type="submit"
               disabled={isSubmitting}
               className="min-w-[100px] text-white border-0"
-              style={{ background: "linear-gradient(135deg,#7C3AED,#8B5CF6)" }}
+              style={{ background: "linear-gradient(135deg,#4F46E5,#6366F1)" }}
             >
               {isSubmitting ? "Saving..." : mode === "create" ? "Create Task" : "Save Changes"}
             </Button>

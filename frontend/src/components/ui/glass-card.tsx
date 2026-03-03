@@ -21,11 +21,11 @@ interface GlassCardProps {
 }
 
 const glowStyles: Record<string, string> = {
-  violet:  "0 0 0 1px rgba(139,92,246,0.25), 0 4px 32px rgba(139,92,246,0.12)",
-  cyan:    "0 0 0 1px rgba(6,182,212,0.25),  0 4px 32px rgba(6,182,212,0.12)",
-  emerald: "0 0 0 1px rgba(16,185,129,0.25), 0 4px 32px rgba(16,185,129,0.12)",
-  rose:    "0 0 0 1px rgba(244,63,94,0.25),  0 4px 32px rgba(244,63,94,0.12)",
-  amber:   "0 0 0 1px rgba(245,158,11,0.25), 0 4px 32px rgba(245,158,11,0.12)",
+  violet:  "0 0 0 1px rgba(99,102,241,0.22), 0 4px 24px rgba(99,102,241,0.10)",
+  cyan:    "0 0 0 1px rgba(6,182,212,0.22),  0 4px 24px rgba(6,182,212,0.10)",
+  emerald: "0 0 0 1px rgba(16,185,129,0.22), 0 4px 24px rgba(16,185,129,0.10)",
+  rose:    "0 0 0 1px rgba(244,63,94,0.22),  0 4px 24px rgba(244,63,94,0.10)",
+  amber:   "0 0 0 1px rgba(245,158,11,0.22), 0 4px 24px rgba(245,158,11,0.10)",
 }
 
 export function GlassCard({ children, className, glow }: GlassCardProps) {
@@ -36,7 +36,7 @@ export function GlassCard({ children, className, glow }: GlassCardProps) {
         // Light mode: clean white card
         "bg-white border border-zinc-200/80 shadow-card",
         // Dark / AMOLED mode: deep black surface
-        "dark:bg-[#0F0F0F] dark:border-white/[0.06] dark:shadow-none",
+        "dark:bg-[#111318] dark:border-white/[0.06] dark:shadow-none",
         // Interaction
         "transition-all duration-180 ease-out",
         "active:scale-[0.99]",
