@@ -11,16 +11,15 @@ import { ChatContainer } from "@/components/features/chat"
 
 export default function ChatPage() {
   return (
-    <div className="relative min-h-screen flex flex-col p-6">
-      <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col space-y-6">
+    <div className="flex flex-col h-[calc(100vh-56px)] pt-4 px-0 md:px-2">
+      <div className="max-w-3xl mx-auto w-full flex-1 flex flex-col gap-3 min-h-0 px-4">
         {/* Header */}
-        <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2">
-            AI Task Assistant
+        <div>
+          <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-0.5">AI Assistant</p>
+          <h1 className="text-xl font-bold text-white leading-tight">
+            <span className="gradient-violet-cyan">AI Task Assistant</span>
           </h1>
-          <p className="text-slate-600 dark:text-slate-400 text-lg">
-            Manage your tasks using natural language
-          </p>
+          <p className="text-xs text-white/40 mt-0.5">Powered by Gemini · manage tasks naturally</p>
         </div>
 
         {/* Chat Container */}

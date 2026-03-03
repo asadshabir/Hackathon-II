@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { GlassCard } from "@/components/ui/glass-card"
 import { StatCards } from "@/components/features/analytics/StatCards"
 import { CompletionTrendChart } from "@/components/features/analytics/CompletionTrendChart"
 import { PriorityDistributionChart } from "@/components/features/analytics/PriorityDistributionChart"
@@ -76,12 +75,13 @@ export default function AnalyticsDashboard() {
 
   if (error) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-slate-600 dark:text-slate-400">Error loading analytics: {error}</p>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <p className="text-white/50 text-sm">Error loading analytics: {error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            className="px-4 py-2 rounded-xl text-sm font-semibold text-white"
+            style={{ background: "linear-gradient(135deg,#7C3AED,#8B5CF6)" }}
           >
             Retry
           </button>
@@ -92,10 +92,11 @@ export default function AnalyticsDashboard() {
 
   if (loading) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-400">Loading analytics...</p>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
+            style={{ borderTopColor: "#8B5CF6", borderRightColor: "rgba(139,92,246,0.3)", boxShadow: "0 0 16px rgba(139,92,246,0.4)" }} />
+          <p className="text-white/40 text-sm">Loading analytics...</p>
         </div>
       </div>
     )
@@ -103,10 +104,8 @@ export default function AnalyticsDashboard() {
 
   if (!analytics) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-slate-600 dark:text-slate-400">No analytics data available. Complete some tasks to see insights!</p>
-        </div>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <p className="text-white/40 text-sm">No data yet — complete some tasks to see insights!</p>
       </div>
     )
   }
@@ -124,61 +123,74 @@ export default function AnalyticsDashboard() {
   }))
 
   return (
-    <div className="relative min-h-screen p-6 bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen pt-5 pb-2 animate-fade-in">
+      <div className="max-w-4xl mx-auto space-y-5">
+
         {/* Header */}
-        <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">Analytics Dashboard</h1>
-          <p className="text-slate-600 dark:text-slate-400 text-lg">Track your productivity and task patterns</p>
+        <div className="px-1">
+          <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-0.5">Analytics</p>
+          <h1 className="text-xl font-bold text-white">
+            <span className="gradient-emerald-cyan">Productivity Insights</span>
+          </h1>
+          <p className="text-xs text-white/40 mt-0.5">Track your task patterns and streaks</p>
         </div>
 
         {/* Stat Cards */}
-        <div>
-          <GlassCard className="p-6 bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900 neumorphic">
-            <StatCards stats={analytics} />
-          </GlassCard>
+        <div
+          className="rounded-2xl p-4"
+          style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}
+        >
+          <StatCards stats={analytics} />
         </div>
 
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900 p-6 rounded-xl neumorphic">
+        {/* Charts row 1 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="rounded-2xl p-4" style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}>
             <CompletionTrendChart data={analytics.trends} />
           </div>
-          <div className="bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900 p-6 rounded-xl neumorphic">
+          <div className="rounded-2xl p-4" style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}>
             <PriorityDistributionChart data={priorityChartData} />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900 p-6 rounded-xl neumorphic">
+        {/* Charts row 2 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="rounded-2xl p-4" style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}>
             <TagDistributionChart data={tagChartData} />
           </div>
 
-          {/* Additional Analytics Card */}
-          <div className="bg-gradient-to-br from-indigo-500 to-blue-500 text-white rounded-xl p-6 neumorphic">
-            <h3 className="text-lg font-semibold mb-4">Additional Insights</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center pb-2 border-b border-white/20">
-                <span className="font-medium">Longest Streak:</span>
-                <span className="font-bold text-xl">{analytics.streak.longest} days</span>
+          {/* Insights card */}
+          <div
+            className="rounded-2xl p-5"
+            style={{
+              background: "linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(6,182,212,0.08) 100%)",
+              boxShadow: "0 0 0 1px rgba(139,92,246,0.2)",
+            }}
+          >
+            <h3 className="text-sm font-semibold text-white/80 mb-4">Additional Insights</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center py-2 border-b border-white/[0.06]">
+                <span className="text-sm text-white/50">Longest Streak</span>
+                <span className="font-bold text-white glow-text-violet">{analytics.streak.longest} days</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b border-white/20">
-                <span className="font-medium">Completion Rate:</span>
-                <span className="font-bold text-xl">
+              <div className="flex justify-between items-center py-2 border-b border-white/[0.06]">
+                <span className="text-sm text-white/50">Completion Rate</span>
+                <span className="font-bold text-white glow-text-cyan">
                   {analytics.completion_month > 0
                     ? Math.round((analytics.completion_month - analytics.overdue_count) / analytics.completion_month * 100)
                     : 0}%
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="font-medium">Last Updated:</span>
-                <span className="font-medium">
+              <div className="flex justify-between items-center py-2">
+                <span className="text-sm text-white/50">Last Updated</span>
+                <span className="text-xs text-white/40">
                   {new Date(analytics.last_updated).toLocaleString()}
                 </span>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   )

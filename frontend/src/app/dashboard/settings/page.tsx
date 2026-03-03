@@ -1,8 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { GlassCard } from "@/components/ui/glass-card"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
@@ -82,10 +80,11 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-400">Loading settings...</p>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
+            style={{ borderTopColor: "#8B5CF6", borderRightColor: "rgba(139,92,246,0.3)", boxShadow: "0 0 16px rgba(139,92,246,0.4)" }} />
+          <p className="text-white/40 text-sm">Loading settings...</p>
         </div>
       </div>
     )
@@ -93,174 +92,147 @@ export default function SettingsPage() {
 
   if (!preferences) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-slate-600 dark:text-slate-400">Unable to load settings</p>
-        </div>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <p className="text-white/40 text-sm">Unable to load settings</p>
       </div>
     )
   }
 
+  const rowClass = "flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.05]"
+  const labelClass = "text-sm font-semibold text-white/80"
+  const descClass = "text-xs text-white/35 mt-0.5"
+  const sectionClass = "rounded-2xl p-5 space-y-4"
+  const sectionStyle = { background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }
+
   return (
-    <div className="relative min-h-screen p-6">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen pt-5 pb-2 animate-fade-in">
+      <div className="max-w-2xl mx-auto space-y-5">
+
         {/* Header */}
-        <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">Settings</h1>
-          <p className="text-slate-600 dark:text-slate-400 text-lg">Customize your experience</p>
+        <div className="px-1">
+          <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-0.5">Preferences</p>
+          <h1 className="text-xl font-bold text-white">
+            <span className="gradient-pink-violet">Settings</span>
+          </h1>
+          <p className="text-xs text-white/40 mt-0.5">Customise your experience</p>
         </div>
 
-        {/* Notifications Section */}
-        <GlassCard className="p-6">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white">Notifications</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-white/80 dark:bg-slate-800/80">
-              <div>
-                <Label className="text-lg font-semibold text-slate-800 dark:text-slate-200">Channel</Label>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Where you want to receive notifications</p>
-              </div>
-              <Select
-                value={preferences.notification_channel}
-                onValueChange={(value) => handlePreferenceChange("notification_channel", value)}
-              >
-                <SelectTrigger className="w-[180px] mt-2 sm:mt-0">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="in-app">In-App Only</SelectItem>
-                  <SelectItem value="email">Email Only</SelectItem>
-                  <SelectItem value="both">Both</SelectItem>
-                </SelectContent>
-              </Select>
+        {/* Notifications */}
+        <div className={sectionClass} style={sectionStyle}>
+          <p className="text-xs font-semibold text-white/30 uppercase tracking-widest">Notifications</p>
+          <div className={rowClass}>
+            <div>
+              <Label className={labelClass}>Channel</Label>
+              <p className={descClass}>Where you receive notifications</p>
             </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-white/80 dark:bg-slate-800/80">
-              <div>
-                <Label className="text-lg font-semibold text-slate-800 dark:text-slate-200">Default Reminder Offset</Label>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Time before due date to show reminder</p>
-              </div>
-              <Select
-                value={preferences.reminder_offset_minutes.toString()}
-                onValueChange={(value) => handlePreferenceChange("reminder_offset_minutes", parseInt(value))}
-              >
-                <SelectTrigger className="w-[180px] mt-2 sm:mt-0">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5 minutes</SelectItem>
-                  <SelectItem value="15">15 minutes</SelectItem>
-                  <SelectItem value="30">30 minutes</SelectItem>
-                  <SelectItem value="60">1 hour</SelectItem>
-                </SelectContent>
-              </Select>
+            <Select value={preferences.notification_channel} onValueChange={(v) => handlePreferenceChange("notification_channel", v)}>
+              <SelectTrigger className="w-[160px] rounded-xl bg-white/[0.05] border-white/[0.08] text-white/70 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="in-app">In-App Only</SelectItem>
+                <SelectItem value="email">Email Only</SelectItem>
+                <SelectItem value="both">Both</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className={rowClass}>
+            <div>
+              <Label className={labelClass}>Reminder Offset</Label>
+              <p className={descClass}>Time before due date to remind</p>
             </div>
-          </CardContent>
-        </GlassCard>
+            <Select value={preferences.reminder_offset_minutes.toString()} onValueChange={(v) => handlePreferenceChange("reminder_offset_minutes", parseInt(v))}>
+              <SelectTrigger className="w-[160px] rounded-xl bg-white/[0.05] border-white/[0.08] text-white/70 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5">5 minutes</SelectItem>
+                <SelectItem value="15">15 minutes</SelectItem>
+                <SelectItem value="30">30 minutes</SelectItem>
+                <SelectItem value="60">1 hour</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-        {/* Task Defaults Section */}
-        <GlassCard className="p-6">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white">Task Defaults</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-white/80 dark:bg-slate-800/80">
-              <div>
-                <Label className="text-lg font-semibold text-slate-800 dark:text-slate-200">Default Priority</Label>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Priority level for new tasks</p>
-              </div>
-              <Select
-                value={preferences.default_priority}
-                onValueChange={(value) => handlePreferenceChange("default_priority", value)}
-              >
-                <SelectTrigger className="w-[180px] mt-2 sm:mt-0">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                </SelectContent>
-              </Select>
+        {/* Task Defaults */}
+        <div className={sectionClass} style={sectionStyle}>
+          <p className="text-xs font-semibold text-white/30 uppercase tracking-widest">Task Defaults</p>
+          <div className={rowClass}>
+            <div>
+              <Label className={labelClass}>Default Priority</Label>
+              <p className={descClass}>Priority for new tasks</p>
             </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-white/80 dark:bg-slate-800/80">
-              <div>
-                <Label className="text-lg font-semibold text-slate-800 dark:text-slate-200">Default Sort Order</Label>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Default way to sort tasks</p>
-              </div>
-              <Select
-                value={preferences.sort_order}
-                onValueChange={(value) => handlePreferenceChange("sort_order", value)}
-              >
-                <SelectTrigger className="w-[180px] mt-2 sm:mt-0">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="created_at_desc">Newest First</SelectItem>
-                  <SelectItem value="created_at_asc">Oldest First</SelectItem>
-                  <SelectItem value="priority">By Priority</SelectItem>
-                  <SelectItem value="due_date">By Due Date</SelectItem>
-                </SelectContent>
-              </Select>
+            <Select value={preferences.default_priority} onValueChange={(v) => handlePreferenceChange("default_priority", v)}>
+              <SelectTrigger className="w-[160px] rounded-xl bg-white/[0.05] border-white/[0.08] text-white/70 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="urgent">Urgent</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className={rowClass}>
+            <div>
+              <Label className={labelClass}>Sort Order</Label>
+              <p className={descClass}>Default task sort</p>
             </div>
-          </CardContent>
-        </GlassCard>
+            <Select value={preferences.sort_order} onValueChange={(v) => handlePreferenceChange("sort_order", v)}>
+              <SelectTrigger className="w-[160px] rounded-xl bg-white/[0.05] border-white/[0.08] text-white/70 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="created_at_desc">Newest First</SelectItem>
+                <SelectItem value="created_at_asc">Oldest First</SelectItem>
+                <SelectItem value="priority">By Priority</SelectItem>
+                <SelectItem value="due_date">By Due Date</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-        {/* Display Section */}
-        <GlassCard className="p-6">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white">Display</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-white/80 dark:bg-slate-800/80">
-              <div>
-                <Label className="text-lg font-semibold text-slate-800 dark:text-slate-200">Timezone</Label>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Used for due dates and reminders</p>
-              </div>
-              <Select
-                value={preferences.timezone}
-                onValueChange={(value) => handlePreferenceChange("timezone", value)}
-              >
-                <SelectTrigger className="w-[180px] mt-2 sm:mt-0">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="UTC">UTC</SelectItem>
-                  <SelectItem value="America/New_York">Eastern Time</SelectItem>
-                  <SelectItem value="America/Chicago">Central Time</SelectItem>
-                  <SelectItem value="America/Denver">Mountain Time</SelectItem>
-                  <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
-                  <SelectItem value="Europe/London">London</SelectItem>
-                  <SelectItem value="Europe/Paris">Paris</SelectItem>
-                  <SelectItem value="Asia/Tokyo">Tokyo</SelectItem>
-                </SelectContent>
-              </Select>
+        {/* Display */}
+        <div className={sectionClass} style={sectionStyle}>
+          <p className="text-xs font-semibold text-white/30 uppercase tracking-widest">Display</p>
+          <div className={rowClass}>
+            <div>
+              <Label className={labelClass}>Timezone</Label>
+              <p className={descClass}>Used for due dates and reminders</p>
             </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-white/80 dark:bg-slate-800/80">
-              <div>
-                <Label className="text-lg font-semibold text-slate-800 dark:text-slate-200">Theme</Label>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Visual appearance of the app</p>
-              </div>
-              <div className="flex items-center gap-4 mt-2 sm:mt-0">
-                <span className={`text-sm ${preferences.theme === "light" ? "text-slate-900 dark:text-white font-medium" : "text-slate-500"}`}>Light</span>
-                <Switch
-                  checked={preferences.theme === "dark"}
-                  onCheckedChange={(checked) => handlePreferenceChange("theme", checked ? "dark" : "light")}
-                />
-                <span className={`text-sm ${preferences.theme === "dark" ? "text-slate-900 dark:text-white font-medium" : "text-slate-500"}`}>Dark</span>
-              </div>
+            <Select value={preferences.timezone} onValueChange={(v) => handlePreferenceChange("timezone", v)}>
+              <SelectTrigger className="w-[160px] rounded-xl bg-white/[0.05] border-white/[0.08] text-white/70 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="UTC">UTC</SelectItem>
+                <SelectItem value="America/New_York">Eastern Time</SelectItem>
+                <SelectItem value="America/Chicago">Central Time</SelectItem>
+                <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
+                <SelectItem value="Europe/London">London</SelectItem>
+                <SelectItem value="Asia/Tokyo">Tokyo</SelectItem>
+                <SelectItem value="Asia/Karachi">Karachi (PKT)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className={rowClass}>
+            <div>
+              <Label className={labelClass}>Theme</Label>
+              <p className={descClass}>App visual appearance</p>
             </div>
-          </CardContent>
-        </GlassCard>
+            <div className="flex items-center gap-3">
+              <span className={`text-xs ${preferences.theme === "light" ? "text-white/70 font-semibold" : "text-white/30"}`}>Light</span>
+              <Switch checked={preferences.theme === "dark"} onCheckedChange={(c) => handlePreferenceChange("theme", c ? "dark" : "light")} />
+              <span className={`text-xs ${preferences.theme === "dark" ? "text-violet-400 font-semibold" : "text-white/30"}`}>Dark</span>
+            </div>
+          </div>
+        </div>
 
-        {/* Save Status */}
         {saving && (
           <div className="flex justify-center">
-            <div className="px-4 py-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300">
+            <div className="px-4 py-2 rounded-xl text-xs font-medium text-violet-300 bg-violet-500/15 border border-violet-500/20">
               Saving changes...
             </div>
           </div>

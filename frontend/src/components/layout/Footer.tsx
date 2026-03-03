@@ -49,47 +49,40 @@ export function Footer() {
   ]
 
   return (
-    <footer className="relative border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
-      <div className="container mx-auto px-4 py-12">
-        {/* Main Footer Content */}
+    <footer className="relative border-t border-white/[0.05] bg-black">
+      <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
-          {/* Brand Section */}
+          {/* Brand */}
           <div className="lg:col-span-2">
-            <h3 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">
-              TaskFlow
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-sm">
-              The future of task management. Beautiful, powerful, and designed to help you achieve more.
+            <h3 className="text-lg font-bold gradient-violet-cyan mb-3">TaskFlow</h3>
+            <p className="text-white/35 text-sm mb-5 max-w-xs leading-relaxed">
+              The future of task management — beautiful, AI-powered, built for AMOLED.
             </p>
-
-            {/* Social Links */}
-            <div className="flex gap-3">
-              {socialLinks.map((social, index) => (
+            <div className="flex gap-2">
+              {socialLinks.map((social, i) => (
                 <a
-                  key={index}
+                  key={i}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors duration-150"
+                  className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-150 active:scale-95"
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
                   aria-label={social.label}
                 >
-                  <social.icon className="w-5 h-5" />
+                  <social.icon className="w-4 h-4 text-white/40" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Links Sections */}
-          {footerLinks.map((section, sectionIndex) => (
-            <div key={sectionIndex}>
-              <h4 className="text-slate-900 dark:text-white font-semibold mb-4">{section.title}</h4>
-              <ul className="space-y-3">
-                {section.links.map((link, linkIndex) => (
-                  <li key={linkIndex}>
-                    <Link
-                      href={link.href}
-                      className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 text-sm"
-                    >
+          {/* Links */}
+          {footerLinks.map((section, si) => (
+            <div key={si}>
+              <h4 className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-4">{section.title}</h4>
+              <ul className="space-y-2.5">
+                {section.links.map((link, li) => (
+                  <li key={li}>
+                    <Link href={link.href} className="text-sm text-white/40 hover:text-white/75 transition-colors duration-150">
                       {link.label}
                     </Link>
                   </li>
@@ -99,18 +92,14 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-2">
-            © 2026 TaskFlow. Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> by amazing developers
+        {/* Bottom bar */}
+        <div className="pt-6 border-t border-white/[0.05] flex flex-col md:flex-row justify-between items-center gap-3">
+          <p className="text-white/25 text-xs flex items-center gap-1.5">
+            © 2026 TaskFlow. Made with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for productivity
           </p>
-          <div className="flex gap-6 text-sm">
-            <Link href="#privacy" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-150">
-              Privacy Policy
-            </Link>
-            <Link href="#terms" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-150">
-              Terms of Service
-            </Link>
+          <div className="flex gap-5 text-xs">
+            <Link href="#privacy" className="text-white/25 hover:text-white/55 transition-colors">Privacy Policy</Link>
+            <Link href="#terms" className="text-white/25 hover:text-white/55 transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
