@@ -4,7 +4,6 @@ import { useState, useMemo, useEffect, useRef, useCallback } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Plus, CheckCircle, Clock, AlertCircle, TrendingUp } from "lucide-react"
 import { AnimatedButton } from "@/components/ui/animated-button"
-import { GlassCard } from "@/components/ui/glass-card"
 import { TodoCard } from "@/components/features/todos/TodoCard"
 import { StatsCard } from "@/components/features/todos/StatsCard"
 import { TodoDialog } from "@/components/features/todos/TodoDialog"
@@ -24,17 +23,13 @@ import type { Todo, TodoPriority, TodoCategory, TodoFormData } from "@/types/tod
 import type { WebSocketEvent } from "@/hooks/useWebSocket"
 
 /**
- * TodoDashboard Page
- *
- * Advanced todo management dashboard with clean UI, filters, search, and statistics
- * Features: Full CRUD operations, API persistence, toast notifications
+ * TodoDashboard Page — AMOLED
  */
 
 export default function TodoDashboard() {
   const { toast } = useToast()
   const { session } = useAuth()
 
-  // State
   const [todos, setTodos] = useState<Todo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -93,15 +88,11 @@ export default function TodoDashboard() {
     enabled: !!session?.user?.id,
   })
 
-  // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create")
   const [editingTodo, setEditingTodo] = useState<Todo | undefined>()
-
-  // Notification timeout IDs (todoId -> timeoutId)
   const notificationTimeouts = useRef<Map<string, number>>(new Map())
 
-  // Load todos from API on mount
   useEffect(() => {
     const loadTodos = async () => {
       try {
@@ -118,11 +109,9 @@ export default function TodoDashboard() {
         setIsLoading(false)
       }
     }
-
     loadTodos()
   }, [toast])
 
-  // Filter and search todos
   const filteredTodos = useMemo(() => {
     const now = new Date()
     const todayStr = now.toISOString().split("T")[0]
@@ -134,7 +123,6 @@ export default function TodoDashboard() {
       const matchesSearch =
         todo.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         todo.description?.toLowerCase().includes(searchQuery.toLowerCase())
-
       const matchesPriority = filterPriority === "all" || todo.priority === filterPriority
       const matchesCategory = filterCategory === "all" || todo.category === filterCategory
       const matchesStatus =
@@ -145,13 +133,9 @@ export default function TodoDashboard() {
       let matchesDueDate = true
       if (dueDateFilter !== "all" && todo.dueDate) {
         const dueDateStr = todo.dueDate.split("T")[0]
-        if (dueDateFilter === "today") {
-          matchesDueDate = dueDateStr === todayStr
-        } else if (dueDateFilter === "this_week") {
-          matchesDueDate = dueDateStr >= todayStr && dueDateStr <= endOfWeekStr
-        } else if (dueDateFilter === "overdue") {
-          matchesDueDate = dueDateStr < todayStr && !todo.completed
-        }
+        if (dueDateFilter === "today") matchesDueDate = dueDateStr === todayStr
+        else if (dueDateFilter === "this_week") matchesDueDate = dueDateStr >= todayStr && dueDateStr <= endOfWeekStr
+        else if (dueDateFilter === "overdue") matchesDueDate = dueDateStr < todayStr && !todo.completed
       } else if (dueDateFilter !== "all" && !todo.dueDate) {
         matchesDueDate = false
       }
@@ -159,10 +143,8 @@ export default function TodoDashboard() {
       return matchesSearch && matchesPriority && matchesCategory && matchesStatus && matchesDueDate
     })
 
-    // Apply sorting
     filtered.sort((a, b) => {
       let comparison = 0
-
       if (sortBy === "priority") {
         const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 }
         comparison = priorityOrder[a.priority] - priorityOrder[b.priority]
@@ -173,59 +155,33 @@ export default function TodoDashboard() {
         else comparison = new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
       } else if (sortBy === "title") {
         comparison = a.title.localeCompare(b.title)
-      } else { // created_at
+      } else {
         comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       }
-
       return sortOrder === "asc" ? comparison : -comparison
     })
 
     return filtered
   }, [todos, searchQuery, filterPriority, filterCategory, filterStatus, dueDateFilter, sortBy, sortOrder])
 
-  // Calculate statistics
-  const stats = useMemo(() => {
-    return {
-      total: todos.length,
-      completed: todos.filter((t) => t.completed).length,
-      pending: todos.filter((t) => !t.completed && t.status === "pending").length,
-      inProgress: todos.filter((t) => t.status === "in-progress").length,
-    }
-  }, [todos])
+  const stats = useMemo(() => ({
+    total: todos.length,
+    completed: todos.filter((t) => t.completed).length,
+    pending: todos.filter((t) => !t.completed && t.status === "pending").length,
+    inProgress: todos.filter((t) => t.status === "in-progress").length,
+  }), [todos])
 
-  // Notification Management
-
-  /**
-   * Schedule a notification for a todo
-   */
   const scheduleReminderForTodo = (todo: Todo) => {
-    // Cancel existing notification if any
     const existingTimeoutId = notificationTimeouts.current.get(todo.id)
     if (existingTimeoutId) {
       cancelScheduledNotification(existingTimeoutId)
       notificationTimeouts.current.delete(todo.id)
     }
-
-    // Only schedule if reminder is enabled and todo is not completed
-    if (!todo.reminderEnabled || !todo.reminderTime || todo.completed) {
-      return
-    }
-
-    // Schedule the notification
-    const timeoutId = scheduleNotification(
-      todo.reminderTime,
-      todo.title,
-      todo.description || "You have a task due soon!"
-    )
-
-    if (timeoutId !== null) {
-      notificationTimeouts.current.set(todo.id, timeoutId)
-    }
+    if (!todo.reminderEnabled || !todo.reminderTime || todo.completed) return
+    const timeoutId = scheduleNotification(todo.reminderTime, todo.title, todo.description || "You have a task due soon!")
+    if (timeoutId !== null) notificationTimeouts.current.set(todo.id, timeoutId)
   }
 
-  /**
-   * Cancel a scheduled notification for a todo
-   */
   const cancelReminderForTodo = (todoId: string) => {
     const timeoutId = notificationTimeouts.current.get(todoId)
     if (timeoutId) {
@@ -234,255 +190,118 @@ export default function TodoDashboard() {
     }
   }
 
-  /**
-   * Schedule notifications for all todos on mount
-   */
   useEffect(() => {
     if (isLoading) return
-
-    // Schedule reminders for all active todos
     todos.forEach((todo) => {
-      if (todo.reminderEnabled && todo.reminderTime && !todo.completed) {
-        scheduleReminderForTodo(todo)
-      }
+      if (todo.reminderEnabled && todo.reminderTime && !todo.completed) scheduleReminderForTodo(todo)
     })
-
-    // Cleanup: cancel all notifications when component unmounts
     return () => {
-      notificationTimeouts.current.forEach((timeoutId) => {
-        cancelScheduledNotification(timeoutId)
-      })
+      notificationTimeouts.current.forEach((timeoutId) => cancelScheduledNotification(timeoutId))
       notificationTimeouts.current.clear()
     }
-  }, [isLoading]) // Only run once when loading completes
+  }, [isLoading]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // CRUD Operations
-
-  /**
-   * Create a new todo
-   */
   const handleCreateTodo = async (formData: TodoFormData) => {
     try {
-      // Request notification permission if reminder is enabled
       if (formData.reminderEnabled && formData.reminderTime) {
         const permissionGranted = await requestPermissionWithUI()
         if (!permissionGranted) {
-          // User denied permission, disable reminder
           formData.reminderEnabled = false
           formData.reminderTime = ""
-          toast({
-            title: "Reminder Disabled",
-            description: "Notification permission was denied. Task created without reminder.",
-            variant: "destructive",
-          })
+          toast({ title: "Reminder Disabled", description: "Notification permission was denied. Task created without reminder.", variant: "destructive" })
         }
       }
-
-      // Transform TodoFormData to API format
-      const todoForApi = {
-        ...formData,
-        status: "pending" as const,
-        completed: false,
-      };
-
-      // Create todo via API
+      const todoForApi = { ...formData, status: "pending" as const, completed: false }
       const newTodo = await apiClient.createTodo(todoForApi)
-
-      // Update local state
       setTodos((prev) => [newTodo, ...prev])
-
-      // Schedule notification if reminder is enabled
-      if (newTodo.reminderEnabled && newTodo.reminderTime) {
-        scheduleReminderForTodo(newTodo)
-      }
-
-      toast({
-        title: "Success",
-        description: formData.reminderEnabled
-          ? "Task created with reminder notification"
-          : "Task created successfully",
-      })
+      if (newTodo.reminderEnabled && newTodo.reminderTime) scheduleReminderForTodo(newTodo)
+      toast({ title: "Success", description: formData.reminderEnabled ? "Task created with reminder" : "Task created successfully" })
     } catch (error) {
       console.error("Failed to create todo:", error)
-      toast({
-        title: "Error",
-        description: "Failed to create task. Please try again.",
-        variant: "destructive",
-      })
+      toast({ title: "Error", description: "Failed to create task. Please try again.", variant: "destructive" })
     }
   }
 
-  /**
-   * Update an existing todo
-   */
   const handleUpdateTodo = async (formData: TodoFormData) => {
     if (!editingTodo) return
-
     try {
-      // Request notification permission if reminder is newly enabled
       if (formData.reminderEnabled && formData.reminderTime && !editingTodo.reminderEnabled) {
         const permissionGranted = await requestPermissionWithUI()
         if (!permissionGranted) {
           formData.reminderEnabled = false
           formData.reminderTime = ""
-          toast({
-            title: "Reminder Disabled",
-            description: "Notification permission was denied. Task updated without reminder.",
-            variant: "destructive",
-          })
+          toast({ title: "Reminder Disabled", description: "Notification permission was denied.", variant: "destructive" })
         }
       }
-
-      // Update todo via API
       const updatedTodo = await apiClient.updateTodo(editingTodo.id, formData)
-
-      // Update local state
-      setTodos((prev) =>
-        prev.map((todo) => (todo.id === editingTodo.id ? updatedTodo : todo))
-      )
-
-      // Re-schedule notification
-      if (updatedTodo.reminderEnabled && updatedTodo.reminderTime) {
-        scheduleReminderForTodo(updatedTodo)
-      } else {
-        // Cancel reminder if disabled
-        cancelReminderForTodo(updatedTodo.id)
-      }
-
-      toast({
-        title: "Success",
-        description: formData.reminderEnabled
-          ? "Task updated with reminder notification"
-          : "Task updated successfully",
-      })
-
+      setTodos((prev) => prev.map((todo) => (todo.id === editingTodo.id ? updatedTodo : todo)))
+      if (updatedTodo.reminderEnabled && updatedTodo.reminderTime) scheduleReminderForTodo(updatedTodo)
+      else cancelReminderForTodo(updatedTodo.id)
+      toast({ title: "Success", description: "Task updated successfully" })
       setEditingTodo(undefined)
     } catch (error) {
       console.error("Failed to update todo:", error)
-      toast({
-        title: "Error",
-        description: "Failed to update task. Please try again.",
-        variant: "destructive",
-      })
+      toast({ title: "Error", description: "Failed to update task. Please try again.", variant: "destructive" })
     }
   }
 
-  /**
-   * Toggle todo completion status
-   */
   const handleToggleTodo = async (id: string) => {
     const todo = todos.find((t) => t.id === id)
     if (!todo) return
-
     const willBeCompleted = !todo.completed
-
     try {
-      // Update todo via API
       const updatedTodo = await apiClient.toggleTodoCompletion(id, willBeCompleted)
-
-      // Update local state
-      setTodos((prev) =>
-        prev.map((t) =>
-          t.id === id
-            ? {
-                ...t,
-                completed: willBeCompleted,
-                status: willBeCompleted ? "completed" : "pending",
-                updatedAt: updatedTodo.updatedAt,
-              }
-            : t
-        )
-      )
-
-      // Cancel reminder when completing a task, re-schedule when reopening
-      if (willBeCompleted) {
-        cancelReminderForTodo(id)
-      } else if (todo.reminderEnabled && todo.reminderTime) {
-        scheduleReminderForTodo({ ...todo, completed: false }) // Use original todo but with completed = false
-      }
-
-      toast({
-        title: willBeCompleted ? "Task completed" : "Task reopened",
-        description: willBeCompleted ? "Great job!" : "Keep going!",
-      })
+      setTodos((prev) => prev.map((t) => t.id === id ? { ...t, completed: willBeCompleted, status: willBeCompleted ? "completed" : "pending", updatedAt: updatedTodo.updatedAt } : t))
+      if (willBeCompleted) cancelReminderForTodo(id)
+      else if (todo.reminderEnabled && todo.reminderTime) scheduleReminderForTodo({ ...todo, completed: false })
+      toast({ title: willBeCompleted ? "Task completed" : "Task reopened", description: willBeCompleted ? "Great job!" : "Keep going!" })
     } catch (error) {
       console.error("Failed to toggle todo:", error)
-      toast({
-        title: "Error",
-        description: "Failed to update task status. Please try again.",
-        variant: "destructive",
-      })
+      toast({ title: "Error", description: "Failed to update task status.", variant: "destructive" })
     }
   }
 
-  /**
-   * Delete a todo
-   */
   const handleDeleteTodo = async (id: string) => {
     const todo = todos.find((t) => t.id === id)
-
     if (confirm("Are you sure you want to delete \"" + (todo?.title || "") + "\"?")) {
       try {
-        // Cancel any scheduled reminder
         cancelReminderForTodo(id)
-
-        // Delete todo via API
         await apiClient.deleteTodo(id)
-
-        // Update local state
         setTodos((prev) => prev.filter((todo) => todo.id !== id))
-
-        toast({
-          title: "Deleted",
-          description: "Task deleted successfully",
-          variant: "destructive",
-        })
+        toast({ title: "Deleted", description: "Task deleted successfully", variant: "destructive" })
       } catch (error) {
         console.error("Failed to delete todo:", error)
-        toast({
-          title: "Error",
-          description: "Failed to delete task. Please try again.",
-          variant: "destructive",
-        })
+        toast({ title: "Error", description: "Failed to delete task.", variant: "destructive" })
       }
     }
   }
 
-  /**
-   * Open edit dialog
-   */
   const handleEditTodo = (todo: Todo) => {
     setEditingTodo(todo)
     setDialogMode("edit")
     setDialogOpen(true)
   }
 
-  /**
-   * Open create dialog
-   */
   const handleOpenCreateDialog = () => {
     setEditingTodo(undefined)
     setDialogMode("create")
     setDialogOpen(true)
   }
 
-  /**
-   * Handle dialog save
-   */
   const handleDialogSave = (formData: TodoFormData) => {
-    if (dialogMode === "create") {
-      handleCreateTodo(formData)
-    } else {
-      handleUpdateTodo(formData)
-    }
+    if (dialogMode === "create") handleCreateTodo(formData)
+    else handleUpdateTodo(formData)
   }
 
   if (isLoading) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-400">Loading your tasks...</p>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div
+            className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
+            style={{ borderTopColor: "#8B5CF6", borderRightColor: "rgba(139,92,246,0.3)", boxShadow: "0 0 16px rgba(139,92,246,0.4)" }}
+          />
+          <p className="text-white/40 text-sm">Loading your tasks...</p>
         </div>
       </div>
     )
@@ -490,76 +309,74 @@ export default function TodoDashboard() {
 
   return (
     <>
-      <div className="relative min-h-screen p-6">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <div className="min-h-screen pt-5 pb-2 animate-fade-in">
+        <div className="max-w-3xl mx-auto space-y-5">
+
           {/* Header */}
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">Your Tasks</h1>
-            <p className="text-slate-600 dark:text-slate-400 text-lg">Manage your todos with style and efficiency</p>
+          <div className="px-1">
+            <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-0.5">Tasks</p>
+            <h1 className="text-xl font-bold text-white">
+              <span className="gradient-emerald-cyan">Your Tasks</span>
+            </h1>
+            <p className="text-xs text-white/40 mt-0.5">Manage your todos with style and efficiency</p>
           </div>
 
-          {/* Statistics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatsCard title="Total Tasks" value={stats.total} icon={TrendingUp} gradient="from-indigo-500 to-indigo-600" accentBorder="bg-indigo-500" />
-            <StatsCard title="Completed" value={stats.completed} icon={CheckCircle} gradient="from-green-500 to-emerald-500" accentBorder="bg-emerald-500" />
-            <StatsCard title="In Progress" value={stats.inProgress} icon={Clock} gradient="from-blue-500 to-cyan-500" accentBorder="bg-cyan-500" />
-            <StatsCard title="Pending" value={stats.pending} icon={AlertCircle} gradient="from-yellow-500 to-orange-500" accentBorder="bg-orange-500" />
+          {/* Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <StatsCard title="Total" value={stats.total} icon={TrendingUp} accentColor="#8B5CF6" />
+            <StatsCard title="Done" value={stats.completed} icon={CheckCircle} accentColor="#10B981" />
+            <StatsCard title="Active" value={stats.inProgress} icon={Clock} accentColor="#06B6D4" />
+            <StatsCard title="Pending" value={stats.pending} icon={AlertCircle} accentColor="#F59E0B" />
           </div>
 
           {/* Controls */}
-          <div>
-            <GlassCard className="p-6">
-              <div className="space-y-4">
-                {/* Search Bar */}
-                <SearchBar
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  resultCount={filteredTodos.length}
-                  className="lg:max-w-md"
+          <div
+            className="rounded-2xl p-4 space-y-3"
+            style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}
+          >
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              resultCount={filteredTodos.length}
+            />
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1">
+                <FilterPanel
+                  filters={{
+                    priority: filterPriority,
+                    category: filterCategory,
+                    status: filterStatus,
+                    dueDateFilter: dueDateFilter,
+                  }}
+                  onFilterChange={(key, value) => {
+                    if (key === "priority") setFilterPriority(value as TodoPriority | "all")
+                    else if (key === "category") setFilterCategory(value as TodoCategory | "all")
+                    else if (key === "status") setFilterStatus(value as "all" | "completed" | "active")
+                    else if (key === "dueDateFilter") setDueDateFilter(value as "all" | "today" | "this_week" | "overdue")
+                  }}
                 />
-
-                {/* Filters and Sort */}
-                <div className="flex flex-col lg:flex-row gap-4">
-                  <div className="flex-1">
-                    <FilterPanel
-                      filters={{
-                        priority: filterPriority,
-                        category: filterCategory,
-                        status: filterStatus,
-                        dueDateFilter: dueDateFilter,
-                      }}
-                      onFilterChange={(key, value) => {
-                        if (key === "priority") setFilterPriority(value as TodoPriority | "all")
-                        else if (key === "category") setFilterCategory(value as TodoCategory | "all")
-                        else if (key === "status") setFilterStatus(value as "all" | "completed" | "active")
-                        else if (key === "dueDateFilter") setDueDateFilter(value as "all" | "today" | "this_week" | "overdue")
-                      }}
-                    />
-                  </div>
-
-                  <div className="flex gap-3">
-                    <SortSelector
-                      sortBy={sortBy}
-                      sortOrder={sortOrder}
-                      onChange={(newSortBy, newSortOrder) => {
-                        setSortBy(newSortBy)
-                        setSortOrder(newSortOrder)
-                      }}
-                    />
-
-                    {/* Add Button */}
-                    <AnimatedButton variant="primary" className="whitespace-nowrap" onClick={handleOpenCreateDialog}>
-                      <Plus className="w-5 h-5 mr-2" />
-                      Add Task
-                    </AnimatedButton>
-                  </div>
-                </div>
               </div>
-            </GlassCard>
+
+              <div className="flex gap-2">
+                <SortSelector
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  onChange={(newSortBy, newSortOrder) => {
+                    setSortBy(newSortBy)
+                    setSortOrder(newSortOrder)
+                  }}
+                />
+                <AnimatedButton variant="primary" className="whitespace-nowrap" onClick={handleOpenCreateDialog}>
+                  <Plus className="w-4 h-4 mr-1.5" />
+                  Add Task
+                </AnimatedButton>
+              </div>
+            </div>
           </div>
 
           {/* Todo List */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <AnimatePresence mode="popLayout">
               {filteredTodos.length > 0 ? (
                 filteredTodos.map((todo) => (
@@ -577,22 +394,22 @@ export default function TodoDashboard() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
+                  className="rounded-2xl p-10 text-center"
+                  style={{ background: "#0F0F0F", boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" }}
                 >
-                  <GlassCard className="p-12 text-center">
-                    <p className="text-slate-600 dark:text-slate-400 text-lg">
-                      {searchQuery || filterPriority !== "all" || filterCategory !== "all" || filterStatus !== "all"
-                        ? "No tasks match your filters"
-                        : "No tasks yet. Create your first task!"}
-                    </p>
-                  </GlassCard>
+                  <p className="text-white/35 text-sm">
+                    {searchQuery || filterPriority !== "all" || filterCategory !== "all" || filterStatus !== "all"
+                      ? "No tasks match your filters"
+                      : "No tasks yet — create your first task!"}
+                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
+
         </div>
       </div>
 
-      {/* Todo Dialog */}
       <TodoDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}

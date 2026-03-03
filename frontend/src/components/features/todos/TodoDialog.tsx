@@ -16,8 +16,7 @@ import type { Todo, TodoFormData, TodoPriority, TodoCategory } from "@/types/tod
 /**
  * TodoDialog Component
  *
- * Dialog for creating and editing todos
- * Clean design with solid colors and no heavy animations
+ * AMOLED dialog for creating and editing todos
  */
 
 interface TodoDialogProps {
@@ -27,6 +26,14 @@ interface TodoDialogProps {
   todo?: Todo
   mode: "create" | "edit"
 }
+
+const inputClass = "w-full px-4 py-3 rounded-xl text-sm text-white placeholder:text-white/25 outline-none transition-all duration-150 focus:ring-1"
+const inputStyle = {
+  background: "#1A1A1A",
+  border: "1px solid rgba(255,255,255,0.08)",
+}
+const inputFocusRing = "focus:ring-violet-500/40"
+const labelClass = "block text-xs font-semibold text-white/50 uppercase tracking-widest mb-2"
 
 export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialogProps) {
   const [formData, setFormData] = useState<TodoFormData>({
@@ -44,12 +51,9 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
   const [errors, setErrors] = useState<Partial<Record<keyof TodoFormData, string>>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Reset form when dialog opens/closes or todo changes
   useEffect(() => {
     if (open && todo && mode === "edit") {
-      // Extract YYYY-MM-DD from ISO datetime for date input
       const dueDateValue = todo.dueDate ? todo.dueDate.split("T")[0] : ""
-      // Extract YYYY-MM-DDTHH:MM for datetime-local input
       const reminderValue = todo.reminderTime ? todo.reminderTime.slice(0, 16) : ""
       setFormData({
         title: todo.title,
@@ -91,7 +95,6 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
       newErrors.description = "Description must be less than 500 characters"
     }
 
-    // Validate reminder time if reminder is enabled
     if (formData.reminderEnabled) {
       if (!formData.reminderTime) {
         newErrors.reminderTime = "Reminder time is required when reminder is enabled"
@@ -110,15 +113,10 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!validateForm()) {
-      return
-    }
+    if (!validateForm()) return
 
     setIsSubmitting(true)
-
     try {
-      // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 500))
       onSave(formData)
       onOpenChange(false)
@@ -131,7 +129,6 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
 
   const handleChange = (field: keyof TodoFormData, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    // Clear error when user starts typing
     if (errors[field as keyof TodoFormData]) {
       setErrors((prev) => ({ ...prev, [field as keyof TodoFormData]: undefined }))
     }
@@ -139,7 +136,6 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
 
   const handleReminderToggle = (checked: boolean) => {
     setFormData((prev) => ({ ...prev, reminderEnabled: checked }))
-    // Clear reminder time error when disabling
     if (!checked && errors.reminderTime) {
       setErrors((prev) => ({ ...prev, reminderTime: undefined }))
     }
@@ -147,38 +143,38 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
+      <DialogContent
+        className="sm:max-w-[500px] border-0"
+        style={{ background: "#0D0D0D", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), 0 24px 64px rgba(0,0,0,0.8)" }}
+      >
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-slate-900 dark:text-white">
+          <DialogTitle className="text-lg font-bold text-white">
             {mode === "create" ? "Create New Task" : "Edit Task"}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-            >
-              Title <span className="text-red-500">*</span>
+            <label htmlFor="title" className={labelClass}>
+              Title <span className="text-rose-500">*</span>
             </label>
             <input
               id="title"
               type="text"
               value={formData.title}
               onChange={(e) => handleChange("title", e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border ${
-                errors.title
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-slate-200 dark:border-slate-700 focus:border-indigo-500"
-              } text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-colors duration-150`}
+              className={`${inputClass} ${inputFocusRing} ${errors.title ? "focus:ring-rose-500/40" : ""}`}
+              style={{
+                ...inputStyle,
+                borderColor: errors.title ? "rgba(244,63,94,0.5)" : "rgba(255,255,255,0.08)",
+              }}
               placeholder="Enter task title..."
               maxLength={100}
             />
             {errors.title && (
-              <p className="flex items-center gap-1 text-red-500 text-sm mt-1.5">
-                <AlertCircle className="w-4 h-4" />
+              <p className="flex items-center gap-1 text-rose-400 text-xs mt-1.5">
+                <AlertCircle className="w-3.5 h-3.5" />
                 {errors.title}
               </p>
             )}
@@ -186,47 +182,35 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
 
           {/* Description */}
           <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-            >
-              Description
-            </label>
+            <label htmlFor="description" className={labelClass}>Description</label>
             <textarea
               id="description"
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border ${
-                errors.description
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-slate-200 dark:border-slate-700 focus:border-indigo-500"
-              } text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-colors duration-150 resize-none`}
+              className={`${inputClass} ${inputFocusRing} resize-none`}
+              style={inputStyle}
               placeholder="Enter task description..."
               rows={3}
               maxLength={500}
             />
             {errors.description && (
-              <p className="flex items-center gap-1 text-red-500 text-sm mt-1.5">
-                <AlertCircle className="w-4 h-4" />
+              <p className="flex items-center gap-1 text-rose-400 text-xs mt-1.5">
+                <AlertCircle className="w-3.5 h-3.5" />
                 {errors.description}
               </p>
             )}
           </div>
 
           {/* Priority and Category */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label
-                htmlFor="priority"
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-              >
-                Priority
-              </label>
+              <label htmlFor="priority" className={labelClass}>Priority</label>
               <select
                 id="priority"
                 value={formData.priority}
                 onChange={(e) => handleChange("priority", e.target.value as TodoPriority)}
-                className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors duration-150"
+                className={`${inputClass} ${inputFocusRing}`}
+                style={inputStyle}
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -236,17 +220,13 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
             </div>
 
             <div>
-              <label
-                htmlFor="category"
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-              >
-                Category
-              </label>
+              <label htmlFor="category" className={labelClass}>Category</label>
               <select
                 id="category"
                 value={formData.category}
                 onChange={(e) => handleChange("category", e.target.value as TodoCategory)}
-                className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors duration-150"
+                className={`${inputClass} ${inputFocusRing}`}
+                style={inputStyle}
               >
                 <option value="personal">Personal</option>
                 <option value="work">Work</option>
@@ -259,50 +239,55 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
 
           {/* Due Date */}
           <div>
-            <label
-              htmlFor="dueDate"
-              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-            >
-              Due Date
-            </label>
+            <label htmlFor="dueDate" className={labelClass}>Due Date</label>
             <input
               id="dueDate"
               type="date"
               value={formData.dueDate}
               onChange={(e) => handleChange("dueDate", e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-colors duration-150"
+              className={`${inputClass} ${inputFocusRing}`}
+              style={inputStyle}
             />
           </div>
 
           {/* Recurrence */}
           <div>
-            <label
-              htmlFor="recurrenceType"
-              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-            >
-              Recurrence
-            </label>
+            <label htmlFor="recurrenceType" className={labelClass}>Recurrence</label>
             <RecurrenceSelector
               recurrenceType={formData.recurrenceType || "none"}
               recurrenceInterval={formData.recurrenceInterval || 1}
               onTypeChange={(type) => handleChange("recurrenceType", type)}
-              onIntervalChange={(interval) => setFormData(prev => ({...prev, recurrenceInterval: interval}))}
+              onIntervalChange={(interval) => setFormData(prev => ({ ...prev, recurrenceInterval: interval }))}
             />
           </div>
 
           {/* Reminder */}
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <input
-                id="reminderEnabled"
-                type="checkbox"
-                checked={formData.reminderEnabled}
-                onChange={(e) => handleReminderToggle(e.target.checked)}
-                className="w-5 h-5 rounded border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-0 bg-slate-50 dark:bg-slate-800 cursor-pointer"
-              />
+              <div
+                className="relative w-5 h-5 rounded flex items-center justify-center cursor-pointer"
+                style={{
+                  background: formData.reminderEnabled ? "linear-gradient(135deg,#7C3AED,#8B5CF6)" : "rgba(255,255,255,0.06)",
+                  border: `1px solid ${formData.reminderEnabled ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.12)"}`,
+                }}
+                onClick={() => handleReminderToggle(!formData.reminderEnabled)}
+              >
+                {formData.reminderEnabled && (
+                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+                <input
+                  id="reminderEnabled"
+                  type="checkbox"
+                  checked={formData.reminderEnabled}
+                  onChange={(e) => handleReminderToggle(e.target.checked)}
+                  className="sr-only"
+                />
+              </div>
               <label
                 htmlFor="reminderEnabled"
-                className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer select-none"
+                className="text-sm text-white/60 cursor-pointer select-none"
               >
                 Enable Reminder Notification
               </label>
@@ -310,49 +295,48 @@ export function TodoDialog({ open, onOpenChange, onSave, todo, mode }: TodoDialo
 
             {formData.reminderEnabled && (
               <div>
-                <label
-                  htmlFor="reminderTime"
-                  className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-                >
-                  Reminder Time <span className="text-red-500">*</span>
+                <label htmlFor="reminderTime" className={labelClass}>
+                  Reminder Time <span className="text-rose-500">*</span>
                 </label>
                 <input
                   id="reminderTime"
                   type="datetime-local"
                   value={formData.reminderTime}
                   onChange={(e) => handleChange("reminderTime", e.target.value)}
-                  className={`w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border ${
-                    errors.reminderTime
-                      ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                      : "border-slate-200 dark:border-slate-700 focus:border-indigo-500"
-                  } text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-colors duration-150`}
+                  className={`${inputClass} ${inputFocusRing}`}
+                  style={{
+                    ...inputStyle,
+                    borderColor: errors.reminderTime ? "rgba(244,63,94,0.5)" : "rgba(255,255,255,0.08)",
+                  }}
                 />
                 {errors.reminderTime && (
-                  <p className="flex items-center gap-1 text-red-500 text-sm mt-1.5">
-                    <AlertCircle className="w-4 h-4" />
+                  <p className="flex items-center gap-1 text-rose-400 text-xs mt-1.5">
+                    <AlertCircle className="w-3.5 h-3.5" />
                     {errors.reminderTime}
                   </p>
                 )}
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <p className="text-xs text-white/25 mt-1">
                   You&apos;ll receive a browser notification at this time
                 </p>
               </div>
             )}
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="gap-2 sm:gap-2 pt-2">
             <Button
               type="button"
               variant="secondary"
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
+              className="border-white/10 bg-white/[0.05] text-white/60 hover:bg-white/[0.08]"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="min-w-[100px]"
+              className="min-w-[100px] text-white border-0"
+              style={{ background: "linear-gradient(135deg,#7C3AED,#8B5CF6)" }}
             >
               {isSubmitting ? "Saving..." : mode === "create" ? "Create Task" : "Save Changes"}
             </Button>
