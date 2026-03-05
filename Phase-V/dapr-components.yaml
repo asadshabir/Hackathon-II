@@ -1,0 +1,85 @@
+# Dapr Components Configuration for Docker Compose
+
+# Kafka Pub/Sub Component
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+  namespace: default
+spec:
+  type: pubsub.kafka
+  version: v1
+  metadata:
+    - name: brokers
+      value: "kafka:9092"
+    - name: consumerGroup
+      value: "todo-app-group"
+    - name: authType
+      value: "none"
+    - name: maxMessageBytes
+      value: "1048576"
+    - name: consumeRetryInterval
+      value: "200ms"
+    - name: version
+      value: "3.0.0"
+
+---
+# PostgreSQL State Store
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: statestore
+  namespace: default
+spec:
+  type: state.postgresql
+  version: v1
+  metadata:
+    - name: connectionString
+      value: "postgresql://postgres:postgres@postgres:5432/todoapp"
+    - name: tableName
+      value: "dapr_state"
+    - name: keyPrefix
+      value: "name"
+
+---
+# OpenTelemetry Tracing Configuration
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: tracing-config
+  namespace: default
+spec:
+  tracing:
+    samplingRate: "1"
+    otel:
+      endpointAddress: "jaeger:4317"
+      isSecure: false
+      protocol: grpc
+  metric:
+    enabled: true
+
+---
+# Secret Store (for development)
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: local-secret-store
+  namespace: default
+spec:
+  type: secretstores.local.env
+  version: v1
+  metadata: []
+
+---
+# Dead Letter Queue Subscription Example
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: task-created-sub
+  namespace: default
+spec:
+  pubsubname: pubsub
+  topic: task.created
+  routes:
+    default: /events/task-created
+  deadLetterTopic: task.created.deadletter
