@@ -65,7 +65,7 @@ export function ChatInput({
           style={{
             color: "rgba(255,255,255,0.88)",
           }}
-          // @ts-ignore
+          // @ts-expect-error -- non-standard placeholderStyle prop
           placeholderStyle={{ color: "rgba(255,255,255,0.25)" }}
         />
 
