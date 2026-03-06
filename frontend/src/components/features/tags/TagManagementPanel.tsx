@@ -56,7 +56,7 @@ export function TagManagementPanel({
 
   return (
     <GlassCard className="p-5 space-y-4">
-      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+      <h3 className="text-base font-semibold text-slate-900 dark:text-white/85">
         Manage Tags
       </h3>
 
@@ -68,14 +68,14 @@ export function TagManagementPanel({
           onChange={(e) => setNewName(e.target.value)}
           placeholder="Tag name..."
           maxLength={50}
-          className="flex-1 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 text-sm focus:border-indigo-500 focus:outline-none"
+          className="flex-1 px-3 py-2 rounded-xl bg-white dark:bg-[#181B23] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/25 text-sm focus:border-indigo-500 dark:focus:border-indigo-500/60 focus:outline-none transition-colors"
           onKeyDown={(e) => e.key === "Enter" && handleCreate()}
         />
         <input
           type="color"
           value={newColor}
           onChange={(e) => setNewColor(e.target.value)}
-          className="w-10 h-10 rounded-lg cursor-pointer border border-slate-200 dark:border-slate-700"
+          className="w-10 h-10 rounded-xl cursor-pointer border border-slate-200 dark:border-white/[0.08] bg-transparent"
           title="Pick tag color"
         />
         <button
@@ -104,7 +104,7 @@ export function TagManagementPanel({
       {/* Tag list */}
       <div className="flex flex-wrap gap-2">
         {tags.length === 0 && !isLoading && (
-          <p className="text-sm text-slate-400">No tags yet</p>
+          <p className="text-sm text-slate-400 dark:text-white/30">No tags yet</p>
         )}
         {tags.map((tag) => (
           <TagChip

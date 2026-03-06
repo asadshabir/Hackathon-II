@@ -31,21 +31,21 @@ export function DatePickerInput({
   return (
     <div className={className}>
       {label && (
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+        <label className="block text-xs font-medium text-slate-600 dark:text-white/50 uppercase tracking-wider mb-2">
           {label}
         </label>
       )}
       <div className="relative">
-        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25 pointer-events-none" />
         <input
           type="date"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`w-full pl-10 pr-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-colors duration-150 ${
+          className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-[#181B23] border text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-colors duration-150 [color-scheme:dark] ${
             isOverdue && showOverdueWarning
               ? "border-red-400 focus:border-red-500 focus:ring-red-500/20"
-              : "border-slate-200 dark:border-slate-700 focus:border-indigo-500 focus:ring-indigo-500/20"
+              : "border-slate-200 dark:border-white/[0.08] focus:border-indigo-500 dark:focus:border-indigo-500/60 focus:ring-indigo-500/20 dark:focus:ring-indigo-500/10"
           }`}
         />
       </div>

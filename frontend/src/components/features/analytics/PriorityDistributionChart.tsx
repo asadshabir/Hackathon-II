@@ -23,8 +23,8 @@ const COLORS = ['#22c55e', '#fbbf24', '#f97316', '#ef4444'] // green, amber, ora
 
 export function PriorityDistributionChart({ data, className = "" }: PriorityDistributionChartProps) {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-xl p-6 ${className}`}>
-      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Priority Distribution</h3>
+    <div className={`rounded-2xl p-5 ${className}`} style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.07)" }}>
+      <h3 className="text-base font-semibold text-white/85 mb-4">Priority Distribution</h3>
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -43,13 +43,8 @@ export function PriorityDistributionChart({ data, className = "" }: PriorityDist
               ))}
             </Pie>
             <Tooltip
-              formatter={(value) => [`${value} tasks`, 'Count']}
-              contentStyle={{
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid #e2e8f0',
-                borderRadius: '0.5rem'
-              }}
+              formatter={(value) => [`${value} tasks`, "Count"]}
+              contentStyle={{ background: "#181B23", border: "1px solid rgba(255,255,255,0.10)", borderRadius: "12px", color: "rgba(255,255,255,0.85)" }}
             />
             <Legend />
           </PieChart>

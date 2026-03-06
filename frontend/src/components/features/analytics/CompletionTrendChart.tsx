@@ -20,31 +20,25 @@ interface CompletionTrendChartProps {
 
 export function CompletionTrendChart({ data, className = "" }: CompletionTrendChartProps) {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-xl p-6 ${className}`}>
-      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Completion Trends</h3>
+    <div className={`rounded-2xl p-5 ${className}`} style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.07)" }}>
+      <h3 className="text-base font-semibold text-white/85 mb-4">Completion Trends</h3>
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={data}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.5} />
-            <XAxis
-              dataKey="date"
-              stroke="#64748b"
-              tick={{ fill: '#64748b', fontSize: 12 }}
-            />
-            <YAxis
-              stroke="#64748b"
-              tick={{ fill: '#64748b', fontSize: 12 }}
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <XAxis dataKey="date" stroke="rgba(255,255,255,0.20)" tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 11 }} />
+            <YAxis stroke="rgba(255,255,255,0.20)" tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 11 }} />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid #e2e8f0',
-                borderRadius: '0.5rem'
+                background: "#181B23",
+                border: "1px solid rgba(255,255,255,0.10)",
+                borderRadius: "12px",
+                color: "rgba(255,255,255,0.85)",
               }}
+              cursor={{ stroke: "rgba(99,102,241,0.3)" }}
             />
             <Legend />
             <Line

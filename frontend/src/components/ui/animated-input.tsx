@@ -29,7 +29,7 @@ export const AnimatedInput = forwardRef<HTMLInputElement, AnimatedInputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+            className="block text-xs font-medium text-slate-600 dark:text-white/50 uppercase tracking-wider mb-2"
           >
             {label}
           </label>
@@ -42,14 +42,14 @@ export const AnimatedInput = forwardRef<HTMLInputElement, AnimatedInputProps>(
           type={type}
           className={cn(
             "w-full h-11 rounded-lg border px-4 py-2",
-            "bg-white dark:bg-slate-900",
+            "bg-white dark:bg-[#181B23]",
             "text-slate-900 dark:text-white",
-            "placeholder:text-slate-400 dark:placeholder:text-slate-500",
+            "placeholder:text-slate-400 dark:placeholder:text-white/25",
             "transition-colors duration-150",
             "focus:outline-none focus:ring-2",
             error
               ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-              : "border-slate-300 dark:border-slate-700 focus:border-indigo-500 focus:ring-indigo-500/20",
+              : "border-slate-200 dark:border-white/[0.08] focus:border-indigo-500 dark:focus:border-indigo-500/60 focus:ring-indigo-500/20 dark:focus:ring-indigo-500/10",
             className
           )}
           {...props}

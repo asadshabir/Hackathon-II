@@ -29,10 +29,10 @@ export default function DashboardError({
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white/90">
             {isNetworkError ? "Connection Error" : "Something went wrong"}
           </h2>
-          <p className="text-slate-600 dark:text-slate-400">
+          <p className="text-slate-600 dark:text-white/45">
             {isNetworkError
               ? "Unable to connect to the server. Please check your internet connection and ensure the backend is running."
               : "An unexpected error occurred. Please try again."}
@@ -48,7 +48,7 @@ export default function DashboardError({
         </button>
 
         {!isNetworkError && (
-          <p className="text-xs text-slate-400 dark:text-slate-500">
+          <p className="text-xs text-slate-400 dark:text-white/25">
             Error: {error.message}
           </p>
         )}

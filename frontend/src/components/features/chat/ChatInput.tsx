@@ -61,12 +61,8 @@ export function ChatInput({
           placeholder={placeholder}
           disabled={disabled || isLoading}
           rows={1}
-          className="flex-1 bg-transparent resize-none outline-none text-sm min-h-[24px] max-h-[150px] py-1 px-2"
-          style={{
-            color: "rgba(255,255,255,0.88)",
-          }}
-          // @ts-expect-error -- non-standard placeholderStyle prop
-          placeholderStyle={{ color: "rgba(255,255,255,0.25)" }}
+          className="flex-1 bg-transparent resize-none outline-none text-sm min-h-[24px] max-h-[150px] py-1 px-2 placeholder-white/25"
+          style={{ color: "rgba(255,255,255,0.88)" }}
         />
 
         <button

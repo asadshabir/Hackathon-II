@@ -60,10 +60,11 @@ const SelectTrigger = React.forwardRef<
       aria-expanded={open}
       onClick={() => setOpen(!open)}
       className={cn(
-        "flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm",
-        "ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
-        "disabled:cursor-not-allowed disabled:opacity-50",
-        "dark:border-slate-700 dark:bg-slate-900 dark:ring-offset-slate-950 dark:placeholder:text-slate-400",
+        "flex h-10 w-full items-center justify-between rounded-xl border px-3 py-2 text-sm transition-colors",
+        "bg-white border-slate-200 text-slate-900",
+        "dark:bg-[#181B23] dark:border-white/[0.08] dark:text-white/80",
+        "focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/60",
+        "disabled:cursor-not-allowed disabled:opacity-40",
         className,
       )}
       {...props}
@@ -115,8 +116,9 @@ function SelectContent({ children, className }: { children: React.ReactNode; cla
     <div
       ref={ref}
       className={cn(
-        "absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white py-1 shadow-lg",
-        "dark:border-slate-700 dark:bg-slate-900",
+        "absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-xl border py-1 shadow-xl",
+        "bg-white border-slate-200",
+        "dark:bg-[#181B23] dark:border-white/[0.08]",
         "animate-in fade-in-0 zoom-in-95",
         className,
       )}
@@ -145,8 +147,8 @@ function SelectItem({
       onClick={() => onValueChange(itemValue)}
       className={cn(
         "relative flex cursor-pointer select-none items-center px-3 py-2 text-sm outline-none",
-        "hover:bg-slate-100 dark:hover:bg-slate-800",
-        isSelected && "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300",
+        "hover:bg-slate-100 dark:hover:bg-white/[0.05] dark:text-white/70",
+        isSelected && "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/[0.12] dark:text-indigo-300",
         className,
       )}
     >
