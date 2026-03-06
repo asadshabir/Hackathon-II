@@ -5,25 +5,25 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium btn-press transition-all duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-40 active:scale-[0.97] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-neu hover:shadow-neuHover active:shadow-neuInner active:transform active:translate-y-px",
+          "bg-gradient-to-br from-[#4F46E5] to-[#6366F1] text-white shadow-[0_0_0_1px_rgba(99,102,241,0.3),0_4px_16px_rgba(99,102,241,0.25)] hover:shadow-[0_0_0_1px_rgba(99,102,241,0.5),0_4px_24px_rgba(99,102,241,0.35)] hover:brightness-110",
         destructive:
-          "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-neu hover:shadow-neuHover active:shadow-neuInner active:transform active:translate-y-px",
+          "bg-gradient-to-br from-rose-600 to-rose-500 text-white shadow-[0_0_0_1px_rgba(239,68,68,0.3),0_4px_16px_rgba(239,68,68,0.2)] hover:brightness-110",
         outline:
-          "border-2 border-indigo-600 text-indigo-600 bg-gradient-to-br from-white to-slate-100 shadow-neu hover:shadow-neuHover active:shadow-neuInner active:transform active:translate-y-px",
+          "border border-indigo-500/40 text-indigo-400 bg-indigo-500/[0.06] hover:bg-indigo-500/[0.12] hover:border-indigo-500/60",
         secondary:
-          "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-900 dark:from-slate-700 dark:to-slate-800 dark:text-slate-100 shadow-neu hover:shadow-neuHover active:shadow-neuInner active:transform active:translate-y-px",
+          "bg-[#181B23] border border-white/[0.08] text-white/80 hover:bg-[#1F2330] hover:text-white hover:border-white/[0.12]",
         ghost:
-          "text-slate-700 dark:text-slate-300 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 hover:shadow-neuHover active:shadow-neuInner",
-        link: "text-indigo-600 dark:text-indigo-400 underline-offset-4 hover:underline bg-transparent hover:shadow-neuHover active:shadow-neuInner",
+          "text-white/60 bg-transparent hover:bg-white/[0.05] hover:text-white",
+        link: "text-indigo-400 underline-offset-4 hover:underline bg-transparent hover:text-indigo-300",
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-lg px-3 text-xs",
+        sm: "h-8 rounded-lg px-3 text-xs",
         lg: "h-11 rounded-xl px-8 text-base",
         icon: "h-10 w-10",
       },

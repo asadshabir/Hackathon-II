@@ -24,54 +24,32 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
     strong: 3,
   }[strength]
 
-  // Color classes for each strength level
-  const colorClasses = {
-    weak: "bg-slate-300 dark:bg-slate-600",
-    fair: "bg-red-500",
-    good: "bg-amber-500",
-    strong: "bg-emerald-500",
+  const colorMap = {
+    weak:   { bar: "#3F3F46",   label: "rgba(255,255,255,0.30)", text: "Weak"   },
+    fair:   { bar: "#EF4444",   label: "#F87171",                text: "Fair"   },
+    good:   { bar: "#F59E0B",   label: "#FCD34D",                text: "Good"   },
+    strong: { bar: "#10B981",   label: "#34D399",                text: "Strong" },
   }
 
-  const currentColor = colorClasses[strength]
+  const current = colorMap[strength]
 
-  // Labels for each strength level
-  const labels = {
-    weak: "Weak",
-    fair: "Fair",
-    good: "Good",
-    strong: "Strong",
-  }
-
-  if (!password) {
-    return null
-  }
+  if (!password) return null
 
   return (
-    <div className="mt-2 space-y-2">
+    <div className="mt-2.5 space-y-1.5">
       <div className="flex gap-1">
         {[0, 1, 2, 3].map((index) => (
           <div
             key={index}
-            className={`h-1 flex-1 rounded-full transition-colors duration-150 ${
-              index <= strengthLevel ? currentColor : "bg-slate-200 dark:bg-slate-700"
-            }`}
+            className="h-1 flex-1 rounded-full transition-all duration-300"
+            style={{ background: index <= strengthLevel ? current.bar : "rgba(255,255,255,0.07)" }}
           />
         ))}
       </div>
-      <p className="text-xs text-slate-500 dark:text-slate-400">
-        Password strength:{" "}
-        <span
-          className={`font-medium ${
-            strength === "weak"
-              ? "text-slate-500 dark:text-slate-400"
-              : strength === "fair"
-                ? "text-red-600 dark:text-red-400"
-                : strength === "good"
-                  ? "text-amber-600 dark:text-amber-400"
-                  : "text-emerald-600 dark:text-emerald-400"
-          }`}
-        >
-          {labels[strength]}
+      <p className="text-xs" style={{ color: "rgba(255,255,255,0.30)" }}>
+        Strength:{" "}
+        <span className="font-semibold" style={{ color: current.label }}>
+          {current.text}
         </span>
       </p>
     </div>

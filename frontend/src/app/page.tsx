@@ -6,7 +6,7 @@ import { HeroSection } from "@/components/features/landing/HeroSection"
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen flex flex-col bg-white dark:bg-black">
+    <div className="relative min-h-screen flex flex-col" style={{ background: "#0A0B0F" }}>
       <Header />
       <main className="flex-1">
         <HeroSection />
