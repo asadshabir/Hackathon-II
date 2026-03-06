@@ -36,10 +36,10 @@ export function NotificationToast({
   if (!isVisible) return null
 
   const bgColor = {
-    info: "bg-white dark:bg-slate-800 border-indigo-200 dark:border-indigo-700",
-    success: "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-700",
-    warning: "bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-700",
-    error: "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-700",
+    info: "bg-white dark:bg-[#181B23] border-indigo-200 dark:border-indigo-500/30",
+    success: "bg-green-50 dark:bg-[#181B23] border-green-200 dark:border-green-500/30",
+    warning: "bg-yellow-50 dark:bg-[#181B23] border-yellow-200 dark:border-yellow-500/30",
+    error: "bg-red-50 dark:bg-[#181B23] border-red-200 dark:border-red-500/30",
   }[type]
 
   const textColor = {
@@ -60,7 +60,7 @@ export function NotificationToast({
             setIsVisible(false)
             if (onClose) onClose()
           }}
-          className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+          className="text-slate-400 hover:text-slate-600 dark:text-white/30 dark:hover:text-white/60"
         >
           <X className="w-4 h-4" />
         </button>

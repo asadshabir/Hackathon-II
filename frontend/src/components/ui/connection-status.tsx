@@ -50,7 +50,7 @@ export function ConnectionStatus({ userId, className = "" }: ConnectionStatusPro
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <div className={`w-3 h-3 rounded-full ${getStatusColor()} animate-pulse`} />
-      <span className="text-sm text-slate-600 dark:text-slate-400 hidden sm:inline-block">
+      <span className="text-sm text-slate-600 dark:text-white/40 hidden sm:inline-block">
         {getStatusText()}
       </span>
     </div>
