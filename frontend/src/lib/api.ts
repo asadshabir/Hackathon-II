@@ -203,13 +203,14 @@ class ApiClient {
   // ==================== TODOS ====================
 
   /**
-   * Map backend Task to frontend Todo
+   * Map backend Task (snake_case) to frontend Todo (camelCase).
+   * Also accepts partial/raw objects from WebSocket events.
    */
-  private mapTaskToTodo(task: Task): Todo {
+  mapTaskToTodo(task: Task): Todo {
     return {
       id: task.id,
       title: task.title,
-      completed: task.completed,
+      completed: task.completed ?? false,
       status: task.completed ? "completed" : "pending",
       priority: (task.priority as Todo["priority"]) || "medium",
       category: "personal",

@@ -28,8 +28,8 @@ const categoryStyle: Record<string, { bg: string; color: string }> = {
 }
 
 export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
-  const accent = priorityAccent[todo.priority] ?? "#6366F1"
-  const cat = categoryStyle[todo.category] ?? categoryStyle.other
+  const accent = priorityAccent[todo.priority ?? "medium"] ?? "#6366F1"
+  const cat = categoryStyle[todo.category ?? "other"] ?? categoryStyle.other
 
   return (
     <motion.div
@@ -94,7 +94,7 @@ export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
           {/* Meta chips */}
           <div className="flex flex-wrap gap-1.5">
             <span className="px-2.5 py-1 rounded-full text-xs font-medium" style={{ background: cat.bg, color: cat.color }}>
-              {todo.category}
+              {todo.category ?? "personal"}
             </span>
 
             {todo.dueDate && (() => {
@@ -122,7 +122,7 @@ export function TodoCard({ todo, onToggle, onDelete, onEdit }: TodoCardProps) {
 
             <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs" style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.35)" }}>
               <Clock className="w-3 h-3" />
-              {todo.status.replace("-", " ")}
+              {(todo.status ?? (todo.completed ? "completed" : "pending")).replace("-", " ")}
             </span>
           </div>
 

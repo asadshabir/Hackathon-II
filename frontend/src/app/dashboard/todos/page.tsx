@@ -46,8 +46,8 @@ export default function TodoDashboard() {
     if (!data) return
 
     if (event.type === "full_state_snapshot") {
-      const tasks = (data.tasks as Todo[]) || []
-      setTodos(tasks)
+      const rawTasks = (data.tasks as import("@/lib/api").Task[]) || []
+      setTodos(rawTasks.map(t => apiClient.mapTaskToTodo(t)))
     } else if (event.type === "task.created") {
       if (data.recurrence_type && data.recurrence_type !== "none") {
         toast({
@@ -55,7 +55,8 @@ export default function TodoDashboard() {
           description: `Next occurrence of "${data.title}" has been scheduled`,
         })
       }
-      setTodos(prev => [data as unknown as Todo, ...prev])
+      const normalized = apiClient.mapTaskToTodo(data as unknown as import("@/lib/api").Task)
+      setTodos(prev => [normalized, ...prev])
     } else if (event.type === "task.updated") {
       const taskId = data.task_id as string
       const after = data.after as Record<string, unknown> | undefined
