@@ -26,14 +26,27 @@ export function Header() {
         <nav className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
+          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
             <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, #4F46E5, #6366F1)" }}
+              className="w-8 h-8 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110"
+              style={{
+                background: "linear-gradient(135deg, #4F46E5, #7C3AED)",
+                boxShadow: "0 0 16px rgba(99,102,241,0.45)",
+              }}
             >
-              <CheckSquare className="w-4 h-4 text-white" strokeWidth={2.5} />
+              <CheckSquare className="w-4 h-4 text-white" strokeWidth={2.5} style={{ filter: "drop-shadow(0 1px 4px rgba(255,255,255,0.4))" }} />
             </div>
-            <span className="font-bold text-[15px] text-white tracking-tight">TaskFlow</span>
+            <span
+              className="font-black text-[15px] tracking-tight"
+              style={{
+                background: "linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.75) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              TaskFlow
+            </span>
           </Link>
 
           {/* Desktop nav */}
