@@ -102,7 +102,7 @@ export default function SettingsPage() {
   const labelClass = "text-sm font-semibold text-white/80"
   const descClass = "text-xs text-white/35 mt-0.5"
   const sectionClass = "rounded-2xl p-5 space-y-4"
-  const sectionStyle = { background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }
+  const sectionStyle = { background: "linear-gradient(135deg, rgba(167,139,250,0.07) 0%, rgba(17,19,24,1) 100%)", boxShadow: "0 0 0 1px rgba(167,139,250,0.15)" }
 
   return (
     <div className="min-h-screen pt-5 pb-2 animate-fade-in">
@@ -110,9 +110,14 @@ export default function SettingsPage() {
 
         {/* Header */}
         <div className="px-1">
-          <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-0.5">Preferences</p>
-          <h1 className="text-xl font-bold text-white">
-            <span className="gradient-pink-violet">Settings</span>
+          <p className="text-[10px] font-bold text-white/28 uppercase tracking-widest mb-0.5">Preferences</p>
+          <h1 className="text-xl font-black text-white">
+            <span style={{
+              background: "linear-gradient(135deg, #F472B6 0%, #A78BFA 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>Settings</span>
           </h1>
           <p className="text-xs text-white/40 mt-0.5">Customise your experience</p>
         </div>

@@ -83,15 +83,20 @@ export default function CalendarPage() {
 
         {/* Header */}
         <div className="px-1">
-          <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-0.5">Calendar</p>
-          <h1 className="text-xl font-bold text-white">
-            <span className="gradient-emerald-cyan">Task Calendar</span>
+          <p className="text-[10px] font-bold text-white/28 uppercase tracking-widest mb-0.5">Calendar</p>
+          <h1 className="text-xl font-black text-white">
+            <span style={{
+              background: "linear-gradient(135deg, #38BDF8 0%, #818CF8 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>Task Calendar</span>
           </h1>
           <p className="text-xs text-white/40 mt-0.5">View tasks by due date</p>
         </div>
 
         {/* Calendar card */}
-        <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}>
+        <div className="rounded-2xl p-4" style={{ background: "linear-gradient(135deg, rgba(56,189,248,0.08) 0%, rgba(17,19,24,1) 100%)", boxShadow: "0 0 0 1px rgba(56,189,248,0.18)" }}>
           {/* Month Nav */}
           <div className="flex items-center justify-between mb-4">
             <button onClick={prevMonth} className="w-8 h-8 rounded-xl bg-white/[0.05] flex items-center justify-center active:scale-95 transition-transform">

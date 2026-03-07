@@ -15,9 +15,14 @@ export default function ChatPage() {
       <div className="max-w-3xl mx-auto w-full flex-1 flex flex-col gap-3 min-h-0 px-4">
         {/* Header */}
         <div>
-          <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-0.5">AI Assistant</p>
-          <h1 className="text-xl font-bold text-white leading-tight">
-            <span className="gradient-violet-cyan">AI Task Assistant</span>
+          <p className="text-[10px] font-bold text-white/28 uppercase tracking-widest mb-0.5">AI Assistant</p>
+          <h1 className="text-xl font-black text-white leading-tight">
+            <span style={{
+              background: "linear-gradient(135deg, #A78BFA 0%, #38BDF8 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>AI Task Assistant</span>
           </h1>
           <p className="text-xs text-white/40 mt-0.5">Powered by Gemini · manage tasks naturally</p>
         </div>

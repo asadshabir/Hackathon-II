@@ -315,25 +315,33 @@ export default function TodoDashboard() {
 
           {/* Header */}
           <div className="px-1">
-            <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-0.5">Tasks</p>
-            <h1 className="text-xl font-bold text-white">
-              <span className="gradient-emerald-cyan">Your Tasks</span>
+            <p className="text-[10px] font-bold text-white/28 uppercase tracking-widest mb-0.5">Tasks</p>
+            <h1 className="text-xl font-black text-white leading-tight">
+              <span style={{
+                background: "linear-gradient(135deg, #34D399 0%, #38BDF8 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>Your Tasks</span>
             </h1>
             <p className="text-xs text-white/40 mt-0.5">Manage your todos with style and efficiency</p>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <StatsCard title="Total" value={stats.total} icon={TrendingUp} accentColor="#6366F1" />
-            <StatsCard title="Done" value={stats.completed} icon={CheckCircle} accentColor="#10B981" />
-            <StatsCard title="Active" value={stats.inProgress} icon={Clock} accentColor="#06B6D4" />
-            <StatsCard title="Pending" value={stats.pending} icon={AlertCircle} accentColor="#F59E0B" />
+            <StatsCard title="Total"   value={stats.total}      icon={TrendingUp}  accentColor="#818CF8" gradientFrom="rgba(129,140,248,0.18)" gradientTo="rgba(99,102,241,0.04)" />
+            <StatsCard title="Done"    value={stats.completed}  icon={CheckCircle} accentColor="#34D399" gradientFrom="rgba(52,211,153,0.18)"  gradientTo="rgba(16,185,129,0.04)" />
+            <StatsCard title="Active"  value={stats.inProgress} icon={Clock}       accentColor="#38BDF8" gradientFrom="rgba(56,189,248,0.18)"  gradientTo="rgba(6,182,212,0.04)"  />
+            <StatsCard title="Pending" value={stats.pending}    icon={AlertCircle} accentColor="#FBBF24" gradientFrom="rgba(251,191,36,0.18)"  gradientTo="rgba(245,158,11,0.04)" />
           </div>
 
           {/* Controls */}
           <div
             className="rounded-2xl p-4 space-y-3"
-            style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}
+            style={{
+              background: "linear-gradient(135deg, rgba(99,102,241,0.07) 0%, rgba(17,19,24,1) 100%)",
+              boxShadow: "0 0 0 1px rgba(99,102,241,0.15)",
+            }}
           >
             <SearchBar
               value={searchQuery}

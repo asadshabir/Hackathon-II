@@ -128,9 +128,14 @@ export default function AnalyticsDashboard() {
 
         {/* Header */}
         <div className="px-1">
-          <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-0.5">Analytics</p>
-          <h1 className="text-xl font-bold text-white">
-            <span className="gradient-emerald-cyan">Productivity Insights</span>
+          <p className="text-[10px] font-bold text-white/28 uppercase tracking-widest mb-0.5">Analytics</p>
+          <h1 className="text-xl font-black text-white">
+            <span style={{
+              background: "linear-gradient(135deg, #FBBF24 0%, #F97316 50%, #EF4444 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>Productivity Insights</span>
           </h1>
           <p className="text-xs text-white/40 mt-0.5">Track your task patterns and streaks</p>
         </div>
@@ -138,24 +143,27 @@ export default function AnalyticsDashboard() {
         {/* Stat Cards */}
         <div
           className="rounded-2xl p-4"
-          style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}
+          style={{
+            background: "linear-gradient(135deg, rgba(251,191,36,0.08) 0%, rgba(17,19,24,1) 100%)",
+            boxShadow: "0 0 0 1px rgba(251,191,36,0.18)",
+          }}
         >
           <StatCards stats={analytics} />
         </div>
 
         {/* Charts row 1 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}>
+          <div className="rounded-2xl p-4" style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(17,19,24,1) 100%)", boxShadow: "0 0 0 1px rgba(99,102,241,0.15)" }}>
             <CompletionTrendChart data={analytics.trends} />
           </div>
-          <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}>
+          <div className="rounded-2xl p-4" style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.08) 0%, rgba(17,19,24,1) 100%)", boxShadow: "0 0 0 1px rgba(249,115,22,0.15)" }}>
             <PriorityDistributionChart data={priorityChartData} />
           </div>
         </div>
 
         {/* Charts row 2 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(255,255,255,0.06)" }}>
+          <div className="rounded-2xl p-4" style={{ background: "linear-gradient(135deg, rgba(52,211,153,0.08) 0%, rgba(17,19,24,1) 100%)", boxShadow: "0 0 0 1px rgba(52,211,153,0.15)" }}>
             <TagDistributionChart data={tagChartData} />
           </div>
 
