@@ -1,0 +1,104 @@
+# ============================================================
+# Todo AI Chatbot - Helm Values (Local Minikube Deployment)
+# ============================================================
+
+# -- Frontend (Next.js)
+frontend:
+  replicaCount: 1
+  image:
+    repository: todo-frontend
+    tag: "latest"
+    pullPolicy: Never  # Use local minikube image
+  service:
+    type: NodePort
+    port: 3000
+    nodePort: 30000
+  containerPort: 3000
+  env:
+    HOSTNAME: "0.0.0.0"
+    PORT: "3000"
+    NODE_ENV: "production"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 3000
+    initialDelaySeconds: 10
+    periodSeconds: 30
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 3000
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+# -- Backend (FastAPI)
+backend:
+  replicaCount: 1
+  image:
+    repository: todo-backend
+    tag: "latest"
+    pullPolicy: Never  # Use local minikube image
+  service:
+    type: NodePort
+    port: 8000
+    nodePort: 30001
+  containerPort: 8000
+  env:
+    PORT: "8000"
+    GEMINI_MODEL: "gemini-2.5-flash"
+    JWT_ALGORITHM: "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: "1440"
+    RATE_LIMIT_REQUESTS: "60"
+    RATE_LIMIT_WINDOW: "60"
+    CONTEXT_WINDOW_SIZE: "20"
+    CORS_ORIGINS: "http://localhost:3000,http://localhost:30000,http://192.168.49.2:30000,http://127.0.0.1:3000"
+  # Sensitive values - override via --set or external secret
+  secrets:
+    DATABASE_URL: "postgresql+asyncpg://neondb_owner:npg_5BfglOWzc1wt@ep-snowy-sun-ahj05f5f.c-3.us-east-1.aws.neon.tech/neondb"
+    GOOGLE_API_KEY: "AIzaSyDyq8F676FZSaGaixS43an1pnbrTU2W9CI"
+    JWT_SECRET: "-UtKBbFeK-lQ7f6XpKJAh_3A23uTYiOqBtlVx6hq9Qs"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  livenessProbe:
+    httpGet:
+      path: /api/health
+      port: 8000
+    initialDelaySeconds: 15
+    periodSeconds: 30
+  readinessProbe:
+    httpGet:
+      path: /api/health
+      port: 8000
+    initialDelaySeconds: 10
+    periodSeconds: 10
+
+# -- Service Account
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+# -- Ingress (disabled for local minikube - using NodePort)
+ingress:
+  enabled: false
+
+# -- HTTPRoute (disabled for local)
+httpRoute:
+  enabled: false
+
+# -- Autoscaling (disabled for local)
+autoscaling:
+  enabled: false

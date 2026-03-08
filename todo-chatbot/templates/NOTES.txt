@@ -1,0 +1,22 @@
+====================================================
+  Todo AI Chatbot - Deployed Successfully!
+====================================================
+
+Frontend (Next.js):
+  Access via Minikube:
+    minikube service {{ include "todo-chatbot.fullname" . }}-frontend --url
+
+Backend (FastAPI):
+  Access via Minikube:
+    minikube service {{ include "todo-chatbot.fullname" . }}-backend --url
+
+  API Docs:
+    <backend-url>/docs
+
+Quick Access (port-forward):
+  kubectl port-forward svc/{{ include "todo-chatbot.fullname" . }}-frontend 3000:{{ .Values.frontend.service.port }}
+  kubectl port-forward svc/{{ include "todo-chatbot.fullname" . }}-backend 8000:{{ .Values.backend.service.port }}
+
+Then visit:
+  Frontend: http://localhost:3000
+  Backend:  http://localhost:8000/docs
