@@ -96,7 +96,8 @@
       "Bash(python:*)",
       "WebFetch(domain:todo-app-asadshabir.vercel.app)",
       "Bash(git add:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
