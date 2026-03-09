@@ -7,31 +7,43 @@ import { useEffect, useState } from 'react';
 
 export function PWAInstallButton() {
   const { isInstallable, installPWA, isPWASupported } = usePWA();
-  const [showButton, setShowButton] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [showTemporary, setShowTemporary] = useState(false);
 
   useEffect(() => {
     // Check if the user is on iOS (which has special PWA installation instructions)
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
     setIsIOS(isIOSDevice);
 
-    // Only show the button if the app is installable and supported
-    if (isPWASupported && isInstallable) {
-      setShowButton(true);
-    } else if (isIOSDevice) {
-      // Show install instructions for iOS users
-      setShowButton(true);
-    }
-  }, [isInstallable, isPWASupported]);
+    // Show temporary install prompt on app start for a few seconds
+    const timer = setTimeout(() => {
+      setShowTemporary(true);
 
-  if (!showButton) return null;
+      // Auto-hide after 5 seconds
+      const hideTimer = setTimeout(() => {
+        setShowTemporary(false);
+      }, 5000);
+
+      return () => clearTimeout(hideTimer);
+    }, 1000); // Show after 1 second on app start
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Show the button if:
+  // 1. The app is PWA supported and either installable on regular browsers or we're on iOS
+  // 2. OR we're showing the temporary prompt on app start
+  const isInstallableOrIOS = isPWASupported && (isInstallable || isIOS);
+  const shouldShow = isInstallableOrIOS || showTemporary;
+
+  if (!shouldShow) return null;
 
   if (isIOS) {
     // Special instructions for iOS users
     return (
-      <div className="fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto">
+      <div className={`fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto transition-opacity duration-500 ${showTemporary ? 'animate-in fade-in slide-in-from-bottom-4 duration-300' : 'animate-in slide-in-from-bottom-4 duration-300'}`}>
         <div
-          className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center animate-in slide-in-from-bottom-4 duration-300"
+          className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center"
           style={{ background: 'rgba(17,19,24,0.95)', backdropFilter: 'blur(12px)' }}
         >
           <div className="flex items-center justify-center gap-2 mb-2">
@@ -52,9 +64,9 @@ export function PWAInstallButton() {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto">
+    <div className={`fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto transition-opacity duration-500 ${showTemporary ? 'animate-in fade-in slide-in-from-bottom-4 duration-300' : 'animate-in slide-in-from-bottom-4 duration-300'}`}>
       <div
-        className="bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-sm animate-in slide-in-from-bottom-4 duration-300"
+        className="bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-sm"
         style={{ background: 'rgba(79,70,229,0.12)', backdropFilter: 'blur(12px)' }}
       >
         <div className="flex items-center justify-between">

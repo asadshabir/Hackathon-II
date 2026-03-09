@@ -101,7 +101,8 @@
       "Bash(git push:*)",
       "Bash(git remote:*)",
       "Bash(./deploy.sh:*)",
-      "Bash(./VERIFY_PWA.sh:*)"
+      "Bash(./VERIFY_PWA.sh:*)",
+      "Bash(./deploy_updated_features.sh:*)"
     ],
     "deny": [],
     "ask": []
