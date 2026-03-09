@@ -7,21 +7,29 @@
  * - ThemeProvider for theme management
  * - QueryClientProvider for TanStack Query
  * - NotificationProvider for push notifications
+ * - PWAProvider for Progressive Web App functionality
+ * - DeveloperProvider for developer information
  */
 
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "@/lib/query-client"
 import { ThemeProvider } from "@/contexts/ThemeContext"
 import { NotificationProvider } from "@/components/providers/NotificationProvider"
+import { PWAProvider } from "@/contexts/PWAContext"
+import { DeveloperProvider } from "@/contexts/DeveloperContext"
 import { ReactNode } from "react"
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        {children}
-        <NotificationProvider />
-      </QueryClientProvider>
-    </ThemeProvider>
+    <DeveloperProvider>
+      <PWAProvider>
+        <ThemeProvider>
+          <QueryClientProvider client={queryClient}>
+            {children}
+            <NotificationProvider />
+          </QueryClientProvider>
+        </ThemeProvider>
+      </PWAProvider>
+    </DeveloperProvider>
   )
 }

@@ -1,6 +1,18 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
 
+// Check if next-pwa can be loaded
+let withPWA = (config) => config;
+try {
+  withPWA = require('next-pwa')({
+    dest: 'public',
+    disable: process.env.NODE_ENV === 'development', // Enable PWA in production
+    cacheOnFrontEndNav: true,
+  });
+} catch (error) {
+  console.log('PWA configuration not available');
+}
+
 const nextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
@@ -51,4 +63,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = withPWA(nextConfig);

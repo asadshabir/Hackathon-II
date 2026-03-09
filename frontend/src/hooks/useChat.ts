@@ -9,6 +9,7 @@
 import { useState, useCallback, useRef, useEffect } from "react"
 import { apiClient, type Conversation } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
+import { useDeveloper } from "@/contexts/DeveloperContext"
 
 export interface ChatMessage {
   id: string
@@ -25,6 +26,7 @@ interface UseChatOptions {
 
 export function useChat(options: UseChatOptions = {}) {
   const { toast } = useToast()
+  const { developerInfo } = useDeveloper()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -91,6 +93,32 @@ export function useChat(options: UseChatOptions = {}) {
       setIsLoading(true)
       setError(null)
 
+      // Check if the message is asking about the developer
+      const lowerContent = content.toLowerCase();
+      const developerQuestions = [
+        'who created this app',
+        'who developed this',
+        'who is the developer',
+        'tell me about the developer',
+        'who built this',
+        'who made this',
+        'who is asad shabir',
+        'who is the creator',
+        'developer info',
+        'about the developer',
+        'who created taskflow',
+        'who made taskflow',
+        'who created taskflow ai',
+        'who built taskflow ai',
+        'who is the author',
+        'author info',
+        'who programmed this'
+      ];
+
+      const isDeveloperQuery = developerQuestions.some(question =>
+        lowerContent.includes(question)
+      );
+
       // Add user message immediately
       const userMessage: ChatMessage = {
         id: `user-${Date.now()}`,
@@ -111,7 +139,34 @@ export function useChat(options: UseChatOptions = {}) {
       setMessages((prev) => [...prev, assistantPlaceholder])
 
       try {
-        const response = await apiClient.sendMessage(content.trim(), conversationId)
+        let response;
+
+        if (isDeveloperQuery) {
+          // Generate a response with developer information
+          const devInfoResponse = `Hello! I'm the AI assistant for TaskFlow AI. Here's information about the developer who created this app:
+
+**Name:** ${developerInfo.name}
+**Role:** ${developerInfo.role}
+**Email:** ${developerInfo.email}
+**GitHub:** ${developerInfo.github}
+**LinkedIn:** ${developerInfo.linkedin}
+**Website:** ${developerInfo.website}
+
+**Bio:** ${developerInfo.bio}
+
+**Skills:** ${developerInfo.skills.join(', ')}
+
+**Experience:** ${developerInfo.experience}
+
+**Contact:** ${developerInfo.contactMethod}
+
+The developer specializes in creating full-stack applications with modern technologies and AI-powered systems. Feel free to reach out if you have any questions about the application!`;
+
+          response = { response: devInfoResponse };
+        } else {
+          // Send to the backend AI service
+          response = await apiClient.sendMessage(content.trim(), conversationId)
+        }
 
         // Update conversation ID if new
         if (!conversationId && response.conversation_id) {
@@ -151,7 +206,7 @@ export function useChat(options: UseChatOptions = {}) {
         setIsLoading(false)
       }
     },
-    [conversationId, isLoading, toast, options, loadConversations]
+    [conversationId, isLoading, toast, options, loadConversations, developerInfo]
   )
 
   /**
