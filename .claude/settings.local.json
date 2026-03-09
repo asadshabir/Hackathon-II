@@ -97,7 +97,11 @@
       "WebFetch(domain:todo-app-asadshabir.vercel.app)",
       "Bash(git add:*)",
       "Bash(git rm:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git remote:*)",
+      "Bash(./deploy.sh:*)",
+      "Bash(./VERIFY_PWA.sh:*)"
     ],
     "deny": [],
     "ask": []
