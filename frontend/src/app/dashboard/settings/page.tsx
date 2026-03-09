@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/hooks/useAuth"
 import { useTheme } from "@/contexts/ThemeContext"
@@ -49,8 +48,8 @@ export default function SettingsPage() {
     setPreferences(newPreferences)
 
     // Apply theme change immediately via ThemeContext
-    if (field === "theme" && (value === "light" || value === "dark")) {
-      applyTheme(value)
+    if (field === "theme" && value === "dark") {
+      applyTheme("dark") // Only dark theme is supported now
     }
 
     setSaving(true)
@@ -66,7 +65,7 @@ export default function SettingsPage() {
       // Revert on error
       setPreferences(oldPreferences)
       if (field === "theme") {
-        applyTheme(oldPreferences.theme as "light" | "dark")
+        applyTheme("dark") // Only dark theme is supported now
       }
       toast({
         title: "Error",
@@ -228,9 +227,7 @@ export default function SettingsPage() {
               <p className={descClass}>App visual appearance</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className={`text-xs ${preferences.theme === "light" ? "text-white/70 font-semibold" : "text-white/30"}`}>Light</span>
-              <Switch checked={preferences.theme === "dark"} onCheckedChange={(c) => handlePreferenceChange("theme", c ? "dark" : "light")} />
-              <span className={`text-xs ${preferences.theme === "dark" ? "text-indigo-400 font-semibold" : "text-white/30"}`}>Dark</span>
+              <span className="text-xs text-indigo-400 font-semibold">Dark</span>
             </div>
           </div>
         </div>

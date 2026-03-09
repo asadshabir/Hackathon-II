@@ -2,10 +2,11 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react"
 
-type Theme = "light" | "dark"
+type Theme = "dark"
 
 interface ThemeContextType {
   theme: Theme
+  // Keeping toggleTheme for potential future use, but it won't change the theme
   toggleTheme: () => void
   setTheme: (theme: Theme) => void
 }
@@ -16,17 +17,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark")
   const [mounted, setMounted] = useState(false)
 
-  // Load theme from localStorage on mount
+  // Only set dark theme, no more light theme
   useEffect(() => {
     setMounted(true)
-    const savedTheme = localStorage.getItem("theme") as Theme | null
-    if (savedTheme) {
-      setTheme(savedTheme)
-    } else {
-      // Check system preference
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-      setTheme(prefersDark ? "dark" : "light")
-    }
+    // Always set to dark theme
+    setTheme("dark")
   }, [])
 
   // Apply theme to document
@@ -35,12 +30,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     const root = document.documentElement
     root.classList.remove("light", "dark")
-    root.classList.add(theme)
-    localStorage.setItem("theme", theme)
-  }, [theme, mounted])
+    root.classList.add("dark")
+    localStorage.setItem("theme", "dark")
+  }, [mounted])
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"))
+    // No-op function since we're only supporting dark mode
+    console.log("Theme toggle disabled - only dark mode is available")
   }
 
   // Prevent flash of unstyled content

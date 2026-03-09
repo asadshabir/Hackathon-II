@@ -78,51 +78,85 @@ export default function CalendarPage() {
   const selectedTodos = selectedDate ? (todosByDate[selectedDate] || []) : []
 
   return (
-    <div className="min-h-screen pt-5 pb-2 animate-fade-in">
-      <div className="max-w-2xl mx-auto space-y-4">
+    <div className="min-h-screen pt-5 pb-6 animate-fade-in">
+      <div className="max-w-4xl mx-auto space-y-8 px-4">
 
         {/* Header */}
-        <div className="px-1">
-          <p className="text-[10px] font-bold text-white/28 uppercase tracking-widest mb-0.5">Calendar</p>
-          <h1 className="text-xl font-black text-white">
+        <div className="text-center">
+          <p className="text-[11px] font-bold text-white/30 uppercase tracking-widest mb-2">TaskFlow Calendar</p>
+          <h1 className="text-3xl font-black text-white mb-3">
             <span style={{
-              background: "linear-gradient(135deg, #38BDF8 0%, #818CF8 100%)",
+              background: "linear-gradient(135deg, #00e6b3 0%, #6366F1 30%, #8B5CF6 60%, #EC4899 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-            }}>Task Calendar</span>
+            }}>TaskFlow Calendar</span>
           </h1>
-          <p className="text-xs text-white/40 mt-0.5">View tasks by due date</p>
+          <p className="text-sm text-white/60 max-w-md mx-auto">View tasks by due date with beautiful visual indicators</p>
         </div>
 
         {/* Calendar card */}
-        <div className="rounded-2xl p-4" style={{ background: "linear-gradient(135deg, rgba(56,189,248,0.08) 0%, rgba(17,19,24,1) 100%)", boxShadow: "0 0 0 1px rgba(56,189,248,0.18)" }}>
+        <div className="rounded-3xl p-6" style={{
+          background: "linear-gradient(145deg, #0f172a 0%, #1e293b 30%, #111827 100%)",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(99, 102, 241, 0.1)",
+          backdropFilter: "blur(10px)"
+        }}>
           {/* Month Nav */}
-          <div className="flex items-center justify-between mb-4">
-            <button onClick={prevMonth} className="w-8 h-8 rounded-xl bg-white/[0.05] flex items-center justify-center active:scale-95 transition-transform">
-              <ChevronLeft className="w-4 h-4 text-white/60" />
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={prevMonth}
+              className="w-10 h-10 rounded-xl flex items-center justify-center active:scale-95 transition-all duration-200 hover:bg-indigo-500/20"
+              style={{
+                background: "linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.1) 100%)",
+                boxShadow: "0 0 0 1px rgba(99,102,241,0.2)"
+              }}
+            >
+              <ChevronLeft className="w-5 h-5 text-indigo-300" />
             </button>
-            <h2 className="text-sm font-semibold text-white">
+            <h2 className="text-lg font-bold text-white px-4 py-2 rounded-xl" style={{
+              background: "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.15) 100%)",
+              boxShadow: "inset 0 0 0 1px rgba(99,102,241,0.2)"
+            }}>
               {currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
             </h2>
-            <button onClick={nextMonth} className="w-8 h-8 rounded-xl bg-white/[0.05] flex items-center justify-center active:scale-95 transition-transform">
-              <ChevronRight className="w-4 h-4 text-white/60" />
+            <button
+              onClick={nextMonth}
+              className="w-10 h-10 rounded-xl flex items-center justify-center active:scale-95 transition-all duration-200 hover:bg-indigo-500/20"
+              style={{
+                background: "linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.1) 100%)",
+                boxShadow: "0 0 0 1px rgba(99,102,241,0.2)"
+              }}
+            >
+              <ChevronRight className="w-5 h-5 text-indigo-300" />
             </button>
           </div>
 
           {/* Day headers */}
-          <div className="grid grid-cols-7 gap-1 mb-1">
-            {DAYS.map((d) => (
-              <div key={d} className="text-center text-[10px] font-semibold text-white/25 py-1">
-                {d}
+          <div className="grid grid-cols-7 gap-2 mb-3">
+            {DAYS.map((d, index) => (
+              <div
+                key={d}
+                className="text-center text-xs font-bold py-2 rounded-lg"
+                style={{
+                  background: index === 0 || index === 6
+                    ? "linear-gradient(135deg, rgba(244,63,94,0.15) 0%, rgba(249,115,22,0.15) 100%)"
+                    : "linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%)",
+                  boxShadow: index === 0 || index === 6
+                    ? "0 0 0 1px rgba(244,63,94,0.3)"
+                    : "0 0 0 1px rgba(99,102,241,0.2)"
+                }}
+              >
+                <span className={index === 0 || index === 6 ? "text-rose-400" : "text-indigo-300"}>
+                  {d}
+                </span>
               </div>
             ))}
           </div>
 
           {/* Calendar grid */}
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-3">
             {calendarDays.map((day, i) => {
-              if (day === null) return <div key={`empty-${i}`} className="h-14" />
+              if (day === null) return <div key={`empty-${i}`} className="h-20" />
 
               const dateKey = getDateKey(day)
               const dayTodos = todosByDate[dateKey] || []
@@ -134,43 +168,56 @@ export default function CalendarPage() {
                 <button
                   key={dateKey}
                   onClick={() => setSelectedDate(isSelected ? null : dateKey)}
-                  className="h-14 p-1 rounded-xl text-left transition-all duration-150 active:scale-95 flex flex-col"
+                  className="h-20 p-2 rounded-2xl text-left transition-all duration-300 active:scale-95 flex flex-col group hover:scale-[1.03]"
                   style={{
                     background: isSelected
-                      ? "linear-gradient(135deg,#4F46E5,#6366F1)"
+                      ? "linear-gradient(135deg, #6366F1, #8B5CF6, #EC4899)"
                       : isToday
-                        ? "rgba(99,102,241,0.15)"
+                        ? "radial-gradient(circle at 30% 30%, #6366F1, transparent 70%), linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(139,92,246,0.15) 100%)"
                         : isOverdue
-                          ? "rgba(244,63,94,0.10)"
-                          : "rgba(255,255,255,0.03)",
+                          ? "radial-gradient(circle at 30% 30%, #F43F5E, transparent 70%), linear-gradient(135deg, rgba(244,63,94,0.2) 0%, rgba(249,115,22,0.15) 100%)"
+                          : dayTodos.length > 0
+                            ? "linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%)"
+                            : "linear-gradient(135deg, rgba(30,41,59,0.6) 0%, rgba(15,23,42,0.8) 100%)",
                     boxShadow: isSelected
-                      ? "0 0 0 1px rgba(99,102,241,0.4)"
+                      ? "0 8px 20px rgba(99,102,241,0.3), 0 0 0 2px rgba(99,102,241,0.4)"
                       : isToday
-                        ? "0 0 0 1px rgba(99,102,241,0.22)"
+                        ? "0 4px 15px rgba(99,102,241,0.2), 0 0 0 1px rgba(99,102,241,0.3)"
                         : isOverdue
-                          ? "0 0 0 1px rgba(244,63,94,0.18)"
-                          : "0 0 0 1px rgba(255,255,255,0.04)",
+                          ? "0 4px 15px rgba(244,63,94,0.2), 0 0 0 1px rgba(244,63,94,0.3)"
+                          : dayTodos.length > 0
+                            ? "0 2px 8px rgba(99,102,241,0.1), 0 0 0 1px rgba(99,102,241,0.15)"
+                            : "0 2px 6px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.06)",
                   }}
                 >
                   <span
-                    className="text-xs font-semibold leading-none"
+                    className="text-sm font-bold leading-none"
                     style={{
                       color: isSelected ? "#fff"
                         : isToday ? "#818CF8"
                         : isOverdue ? "#FB7185"
-                        : "rgba(255,255,255,0.6)",
+                        : dayTodos.length > 0 ? "#C7D2FE" : "rgba(255,255,255,0.7)",
+                      textShadow: isSelected ? "0 0 8px rgba(0,0,0,0.5)" : "none",
                     }}
                   >
                     {day}
                   </span>
                   {dayTodos.length > 0 && (
                     <span
-                      className="mt-auto text-[9px] font-bold px-1 py-0.5 rounded-md self-start"
+                      className="mt-auto text-[10px] font-bold px-2 py-1 rounded-full self-center"
                       style={{
-                        background: isOverdue ? "rgba(244,63,94,0.25)"
-                          : isSelected ? "rgba(255,255,255,0.22)"
-                          : "rgba(99,102,241,0.25)",
-                        color: isSelected ? "#fff" : isOverdue ? "#FB7185" : "#818CF8",
+                        background: isSelected
+                          ? "rgba(255,255,255,0.25)"
+                          : isOverdue
+                            ? "radial-gradient(circle, rgba(244,63,94,0.4) 0%, rgba(244,63,94,0.2) 70%)"
+                            : "radial-gradient(circle, rgba(99,102,241,0.4) 0%, rgba(99,102,241,0.2) 70%)",
+                        boxShadow: isSelected
+                          ? "0 0 8px rgba(255,255,255,0.2)"
+                          : isOverdue
+                            ? "0 0 8px rgba(244,63,94,0.3)"
+                            : "0 0 8px rgba(99,102,241,0.2)",
+                        backdropFilter: "blur(4px)",
+                        color: isSelected ? "#fff" : isOverdue ? "#FECACA" : "#C7D2FE",
                       }}
                     >
                       {dayTodos.length}
@@ -184,29 +231,68 @@ export default function CalendarPage() {
 
         {/* Selected date tasks */}
         {selectedDate && (
-          <div className="rounded-2xl p-4" style={{ background: "#111318", boxShadow: "0 0 0 1px rgba(99,102,241,0.18)" }}>
-            <h3 className="text-sm font-semibold text-white/80 mb-3">
-              {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
-            </h3>
+          <div className="rounded-3xl p-6" style={{
+            background: "linear-gradient(145deg, #111827 0%, #1e293b 30%, #0f172a 100%)",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(99, 102, 241, 0.1)",
+            backdropFilter: "blur(10px)"
+          }}>
+            <div className="flex items-center gap-3 mb-4">
+              <h3 className="text-lg font-bold text-white">
+                {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+              </h3>
+              <span className="text-sm font-bold px-3 py-1 rounded-full" style={{
+                background: "linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(139,92,246,0.2) 100%)",
+                boxShadow: "0 0 8px rgba(99,102,241,0.2)",
+                color: "#C7D2FE"
+              }}>
+                {selectedTodos.length} tasks
+              </span>
+            </div>
             {selectedTodos.length === 0 ? (
-              <p className="text-white/35 text-xs">No tasks due on this date.</p>
+              <div className="text-center py-8">
+                <p className="text-white/40 text-base">No tasks due on this date.</p>
+                <p className="text-white/30 text-sm mt-1">Enjoy your free time! 🌟</p>
+              </div>
             ) : (
-              <div className="space-y-2">
-                {selectedTodos.map((todo) => (
+              <div className="space-y-3">
+                {selectedTodos.map((todo) => {
+                  const isTodoOverdue = todo.dueDate ? new Date(todo.dueDate) < new Date() && !todo.completed : false;
+                  const isTodoToday = todo.dueDate ? new Date(todo.dueDate).toDateString() === new Date().toDateString() : false;
+
+                  return (
                   <div
                     key={todo.id}
-                    className="flex items-center gap-3 p-3 rounded-xl border"
+                    className="flex items-center gap-4 p-4 rounded-2xl"
                     style={{
-                      background: todo.completed ? "rgba(16,185,129,0.08)" : "rgba(255,255,255,0.03)",
-                      borderColor: todo.completed ? "rgba(16,185,129,0.2)" : "rgba(255,255,255,0.05)",
+                      background: todo.completed
+                        ? "linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(34,197,94,0.1) 100%)"
+                        : isTodoOverdue
+                          ? "linear-gradient(135deg, rgba(244,63,94,0.15) 0%, rgba(249,115,22,0.1) 100%)"
+                          : isTodoToday
+                            ? "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.1) 100%)"
+                            : "linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.08) 100%)",
+                      boxShadow: todo.completed
+                        ? "0 0 0 1px rgba(16,185,129,0.2)"
+                        : isTodoOverdue
+                          ? "0 0 0 1px rgba(244,63,94,0.2)"
+                          : isTodoToday
+                            ? "0 0 0 1px rgba(99,102,241,0.25)"
+                            : "0 0 0 1px rgba(99,102,241,0.15)"
                     }}
                   >
-                    <span className={`flex-1 text-sm ${todo.completed ? "line-through text-white/30" : "text-white/75"}`}>
-                      {todo.title}
-                    </span>
+                    <div className="flex-1">
+                      <span className={`text-base font-medium ${todo.completed ? "line-through text-white/40" : "text-white/90"}`}>
+                        {todo.title}
+                      </span>
+                      {todo.description && (
+                        <p className={`text-sm mt-1 ${todo.completed ? "line-through text-white/30" : "text-white/50"}`}>
+                          {todo.description}
+                        </p>
+                      )}
+                    </div>
                     <PriorityBadge priority={todo.priority} />
                   </div>
-                ))}
+                )})}
               </div>
             )}
           </div>

@@ -19,13 +19,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
-        <meta name="theme-color" content="#6366F1" />
+        <meta name="theme-color" content="#111318" />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={`${inter.className} dark:bg-[#0A0B0F] dark:text-white`} suppressHydrationWarning>
         <Providers>
           {children}
           <Toaster />
